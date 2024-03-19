@@ -3,8 +3,12 @@ import router from './routes/index.js'
 import swaggerDocs from './swagger.js'
 import mongoose from "mongoose";
 import cors from 'cors'
+import dotenv from 'dotenv'
 const app = express()
 const port = 5001
+
+dotenv.config();
+const dataUrl = process.env.DATA_URL;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }))
@@ -13,7 +17,7 @@ app.use(express.static('./public'))
 app.use(router)
 app.use(cors())
 
-mongoose.connect('mongodb+srv://maiduy190802:1Gwal0o5GFaPBrSH@wordwizard.cz0yj5d.mongodb.net/word_wizard?retryWrites=true&w=majority&appName=WordWizard')
+mongoose.connect(dataUrl)
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
 

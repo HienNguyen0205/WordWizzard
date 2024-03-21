@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wordwizzard/constants/constants.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/screens/sign_in_screen.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({Key? key}) : super(key: key);
 
-  void handleDoneBtn (BuildContext context) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const SignInScreen()));
+  void handleDoneBtn(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const SignInScreen()));
   }
 
   @override
@@ -17,17 +19,17 @@ class IntroScreen extends StatelessWidget {
             showNextButton: true,
             showSkipButton: true,
             showDoneButton: true,
-            skip: const Text(
-              "Bỏ qua",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            skip: Text(
+              getTranslated(context, "skip"),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
-            next: const Text(
-              "Tiếp",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            next: Text(
+              getTranslated(context, "next"),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
-            done: const Text(
-              "Hoàn thành",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            done: Text(
+              getTranslated(context, "done"),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             onDone: () {
               handleDoneBtn(context);
@@ -43,8 +45,8 @@ class IntroScreen extends StatelessWidget {
             ),
             pages: introData
                 .map((item) => PageViewModel(
-                    title: item.title,
-                    body: item.body,
+                    title: getTranslated(context, item.title),
+                    body: getTranslated(context, item.body),
                     image: Image.asset(item.imageUrl),
                     decoration: const PageDecoration(
                         pageMargin: EdgeInsets.symmetric(vertical: 60))))

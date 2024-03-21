@@ -8,18 +8,18 @@ class IntroDataDef {
 
 final List<IntroDataDef> introData = [
   IntroDataDef(
-    title: 'Chào mừng bạn đến với ứng dụng WordWizzard',
-    body: 'Bắt đầu hành trình nâng cao kỹ năng tiếng Anh của bạn ngay hôm nay',
+    title: 'title_intro_1',
+    body: 'body_intro_1',
     imageUrl: 'assets/images/intro/intro.png',
   ),
   IntroDataDef(
-    title: 'Khám phá phương pháp học tiếng Anh mới mẻ',
-    body: 'Tìm hiểu các phương pháp học tiếng Anh hiệu quả và thú vị',
+    title: 'title_intro_2',
+    body: 'body_intro_2',
     imageUrl: 'assets/images/intro/intro.png',
   ),
   IntroDataDef(
-    title: 'Kiểm tra trình độ tiếng Anh của bạn',
-    body: 'Thử thách trình độ tiếng Anh của bạn với các bài kiểm tra đa dạng',
+    title: 'title_intro_3',
+    body: 'body_intro_3',
     imageUrl: 'assets/images/intro/intro.png',
   ),
 ];

@@ -7,5 +7,15 @@
     "title_intro_2": "Khám phá phương pháp học tiếng Anh mới mẻ",
     "body_intro_2": "Tìm hiểu các phương pháp học tiếng Anh hiệu quả và thú vị",
     "title_intro_3": "Kiểm tra trình độ tiếng Anh của bạn",
-    "body_intro_3": "Thử thách trình độ tiếng Anh của bạn với các bài kiểm tra đa dạng"
+    "body_intro_3": "Thử thách trình độ tiếng Anh của bạn với các bài kiểm tra đa dạng",
+    "sign_in": "Đăng nhập",
+    "sign_up": "Đăng kí",
+    "sign_out": "Đăng xuất",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "empty_email_err_mess": "Trường bắt buộc",
+    "invalid_email_err_mess": "Email không hợp lệ",
+    "empty_password_err_mess": "Trường bắt buộc",
+    "invalid_password_err_mess": "Mật khẩu phải bao gồm 8 ký tự chữ hoa và chữ thường",
+    "empty_name_err_mess": "Trường bắt buộc"
 }

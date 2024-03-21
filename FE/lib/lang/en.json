@@ -7,5 +7,15 @@
   "title_intro_2": "Explore new methods of learning English",
   "body_intro_2": "Discover effective and interesting methods for learning English",
   "title_intro_3": "Test your English proficiency",
-  "body_intro_3": "Challenge your English proficiency with a variety of tests"
+  "body_intro_3": "Challenge your English proficiency with a variety of tests",
+  "sign_in": "Sign in",
+  "sign_up": "Sign up",
+  "sign_out": "Sign out",
+  "email": "Email",
+  "password": "Password",
+  "empty_email_err_mess": "Please enter your email address",
+  "invalid_email_err_mess": "Invalid email address",
+  "empty_password_err_mess": "Please enter your password",
+  "invalid_password_err_mess": "The password must contain 8 characters with uppercase and lowercase letters",
+  "empty_name_err_mess": "Please enter your name"
 }

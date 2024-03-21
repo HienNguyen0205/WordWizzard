@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/main.dart';
@@ -12,9 +13,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  void handleChangeLanguage () {
-    Locale newLocale = locale('english');
-    MyApp.setLocale(context, newLocale);
+  void changeLanguage() async {
+    Locale locale = await setLocale('vi');
+    MyApp.setLocale(context, locale);
   }
   
   @override
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         Text(getTranslated(context, 'next')),
-        OutlinedButton(onPressed: handleChangeLanguage, child: const Text('change'))
+        OutlinedButton(onPressed: changeLanguage, child: const Text('change'))
       ],
     );
   }

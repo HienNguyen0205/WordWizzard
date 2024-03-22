@@ -1,10 +1,14 @@
 import express, { response } from "express";
-import controller from "../controllers/userController.js";
+import userController from "../controllers/userController.js";
+import authentication from "../middleware.js";
 const router = express.Router();
 
-// add new user
-router.post("/api/user", controller.addOne);
+// register
+router.post("/api/user/register", userController.register);
+// login
+router.post("/api/user/login", userController.login);
+// me
+router.get("/api/user/me", authentication, userController.me);
 
-// get all users
-router.get("/api/user", controller.getAll);
+
 export default router;

@@ -5,10 +5,10 @@ import mongoose from "mongoose";
 import cors from 'cors'
 import dotenv from 'dotenv'
 const app = express()
-const port = 5001
 
 dotenv.config();
-const dataUrl = process.env.DATA_URL;
+const port = process.env.PORT || 5001
+const dbUrl = process.env.DB_URL;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }))
@@ -17,7 +17,7 @@ app.use(express.static('./public'))
 app.use(router)
 app.use(cors())
 
-mongoose.connect(dataUrl)
+mongoose.connect(dbUrl)
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
 

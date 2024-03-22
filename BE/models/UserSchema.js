@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 import mongoose_delete from "mongoose-delete";
 import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema({
-  // id: {
-  //   type: Number,
-  //   required: true,
-  //   unique: true,
-  // },
   username: {
     type: String,
     trim: true,
@@ -14,7 +9,11 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
+    match: [
+      /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+      "Email format is not correct",
+    ],
     lowercase: true,
     unique: true,
   },

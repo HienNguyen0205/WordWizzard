@@ -7,13 +7,16 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
-  after_layout: ^1.2.0
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_localizations:
     sdk: flutter
   flutter_spinkit: ^5.2.0
+  flutter_svg: ^2.0.10+1
+  font_awesome_flutter: ^10.7.0
   google_fonts: 6.1.0
+  http: ^1.2.1
   introduction_screen: ^3.1.12
   provider: ^6.1.2
   shared_preferences: ^2.2.2
@@ -27,5 +30,10 @@ flutter:
   uses-material-design: true
   assets:
   - assets/images/intro/intro.png
+  - assets/images/logo/logo.png
+  - assets/images/logo/logo-removebg.png
+  - assets/icon/facebook.svg
+  - assets/icon/apple.svg
+  - assets/icon/google.svg
   - lib/lang/vi.json
   - lib/lang/en.json

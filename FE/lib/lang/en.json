@@ -17,5 +17,7 @@
   "invalid_email_err_mess": "Invalid email address",
   "empty_password_err_mess": "Please enter your password",
   "invalid_password_err_mess": "The password must contain 8 characters with uppercase and lowercase letters",
-  "empty_name_err_mess": "Please enter your name"
+  "empty_name_err_mess": "Please enter your name",
+  "forget_pass": "Forget password?",
+  "new_user": "New user?"
 }

@@ -23,3 +23,9 @@ final List<IntroDataDef> introData = [
     imageUrl: 'assets/images/intro/intro.png',
   ),
 ];
+
+final List<String> iconList = [
+  'assets/icon/facebook.svg',
+  'assets/icon/apple.svg',
+  'assets/icon/google.svg',
+];

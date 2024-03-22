@@ -17,5 +17,7 @@
     "invalid_email_err_mess": "Email không hợp lệ",
     "empty_password_err_mess": "Trường bắt buộc",
     "invalid_password_err_mess": "Mật khẩu phải bao gồm 8 ký tự chữ hoa và chữ thường",
-    "empty_name_err_mess": "Trường bắt buộc"
+    "empty_name_err_mess": "Trường bắt buộc",
+    "forget_pass": "Quên mật khẩu?",
+    "new_user": "Người dùng mới?"
 }

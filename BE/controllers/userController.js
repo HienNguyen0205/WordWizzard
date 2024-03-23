@@ -59,7 +59,7 @@ userController.login = async (req, res, next) => {
     if (!user_in_db) {
       return res.status(400).json({ error: "User does not exist" });
     }
-    const isPasswordValid = verify_password(user_in_db.password, password);
+    const isPasswordValid = await verify_password(password,user_in_db.password);
     if (!isPasswordValid) {
       return res.status(400).json({ error: "Password is not correct" });
     }

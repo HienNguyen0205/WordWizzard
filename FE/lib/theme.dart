@@ -3,20 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppColors {
-  static const secondary = Color(0xFF3B76F6);
-  static const accent = Color(0xFFD6755B);
+  static const mainDarkColor = Color(0xFF5E69EE);
+  static const secondaryDarkColor = Color(0xFFF4F4FB);
+  static const accent = Color(0xFF39AFEA);
   static const textDark = Color(0xFF53585A);
-  static const textLight = Color(0xFFF5F5F5);
+  static const textLight = secondaryDarkColor;
   static const textFaded = Color(0xFF9899A5);
   static const iconLight = Color(0xFFB1B4C0);
   static const iconDark = Color(0xFFB1B3C1);
-  static const textHighlight = secondary;
-  static const cardLight = Color.fromARGB(255, 210, 211, 219);
+  static const cardLight = secondaryDarkColor;
+  static const cardLightText = mainDarkColor;
   static const cardDark = Color.fromARGB(255, 46, 46, 46);
 }
 
 abstract class _LightColors {
-  static const background = Color.fromARGB(255, 245, 245, 245);
+  static const background = AppColors.mainDarkColor;
   static const card = AppColors.cardLight;
 }
 
@@ -53,15 +54,18 @@ class AppTheme {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              backgroundColor: AppColors.secondary,
+              backgroundColor: AppColors.accent,
               textStyle: const TextStyle(fontSize: 18, color: AppColors.textLight)),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: AppColors.textLight),
+          floatingLabelStyle: TextStyle(color: AppColors.textLight),
         ),
         cardColor: _LightColors.card,
         primaryTextTheme: const TextTheme(
           titleLarge: TextStyle(color: AppColors.textDark),
         ),
         iconTheme: const IconThemeData(color: AppColors.iconDark),
-        
         colorScheme: lightBase.colorScheme
             .copyWith(secondary: accentColor)
             .copyWith(background: _LightColors.background),
@@ -85,7 +89,7 @@ class AppTheme {
         scaffoldBackgroundColor: _DarkColors.background,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.secondary,
+            backgroundColor: AppColors.secondaryDarkColor,
             padding: const EdgeInsets.symmetric(vertical: 14),
             textStyle: const TextStyle(fontSize: 18, color: AppColors.textLight),
           ),

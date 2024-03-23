@@ -21,11 +21,15 @@ class _SignInScreenState extends State<SignInScreen> {
   void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
       authProvider.logIn(_email, _password).then(
         (val) => {
-          
+          if (val){
+            debugPrint("SUCCESS")
+          }else{
+            debugPrint("FAILED")
+          }
         }
       );
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<bool> handleLogin(String email, String password) async {
-  final url = Uri.parse('http://localhost:5001/api/user/login');
+  final url = Uri.parse('http://192.168.1.104:5001/api/user/login');
 
   try {
     final res = await http.post(

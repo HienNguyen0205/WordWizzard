@@ -15,7 +15,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static('./public'))
 app.use(router)
-app.use(cors())
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
 
 mongoose.connect(dbUrl)
 .then(() => console.log('MongoDB connected'))

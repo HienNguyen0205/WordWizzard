@@ -7,6 +7,10 @@ const router = express.Router();
 router.post("/api/user/register", userController.register);
 // login
 router.post("/api/user/login", userController.login);
+// login with OTP
+router.post("/api/user/login-otp/:id", userController.loginOtp);
+// change password
+router.post("/api/user/change-password", authentication, userController.changePassword);
 // me
 router.get("/api/user/me", authentication, userController.me);
 // create OTP

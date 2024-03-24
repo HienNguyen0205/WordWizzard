@@ -510,7 +510,7 @@ const send_email_reset = async (res, user, otp) => {
       return res.status(500).send("Error sending email");
     }
   });
-  return res.send({
+  return res.status(200).send({
     status: true,
     success: "sendData",
     user_id: user._id,
@@ -537,7 +537,7 @@ const send_email_register = async (res, user, otp) => {
       return res.status(500).send("Error sending email");
     }
   });
-  return res.send({
+  return res.status(200).send({
     status: true,
     message: "Add OTP to verify your account",
     user_id: user._id,
@@ -705,7 +705,7 @@ userController.changePassword = async (req, res, next) => {
     }
     user.password = get_hashed_password(newPassword);
     await user.save();
-    return res.send({
+    return res.status(200).send({
       status: true,
       success: "sendData",
       message: "Password changed successfully",
@@ -773,7 +773,7 @@ userController.verifyOTP = async (req, res, next) => {
         message: "OTP is expired",
       });
     }
-    return res.send({
+    return res.status(200).send({
       status: true,
       success: "sendData",
       message: "OTP is correct",

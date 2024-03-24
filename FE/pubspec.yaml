@@ -12,6 +12,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_localizations:
     sdk: flutter
+  flutter_secure_storage: ^4.2.1
   flutter_spinkit: ^5.2.0
   flutter_svg: ^2.0.10+1
   font_awesome_flutter: ^10.7.0

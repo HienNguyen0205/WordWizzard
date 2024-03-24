@@ -19,5 +19,11 @@
     "invalid_password_err_mess": "Mật khẩu phải bao gồm 8 ký tự chữ hoa và chữ thường",
     "empty_name_err_mess": "Trường bắt buộc",
     "forget_pass": "Quên mật khẩu?",
-    "new_user": "Người dùng mới?"
+    "new_user": "Người dùng mới?",
+    "old_user": "Bạn đã có tài khoản?",
+    "user_name": "Tên người dùng",
+    "confirm_password": "Xác nhận lại mật khẩu",
+    "wrong_confirm_password_error_mess": "Mật khẩu xác nhận không đúng",
+    "exist_email": "Đã có tài khoản sử dụng email này",
+    "login_error": "Sai email hoặc mật khẩu"
 }

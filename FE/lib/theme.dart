@@ -3,21 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppColors {
-  static const mainDarkColor = Color(0xFF5E69EE);
-  static const secondaryDarkColor = Color(0xFFF4F4FB);
-  static const accent = Color(0xFF39AFEA);
+  static const mainColor = Color(0xFF263238);
+  static const secondaryColor = Color(0xFFE5F6FF);
+  static const accent = Color(0xFF111118);
   static const textDark = Color(0xFF53585A);
-  static const textLight = secondaryDarkColor;
-  static const textFaded = Color(0xFF9899A5);
-  static const iconLight = Color(0xFFB1B4C0);
+  static const textLight = accent;
+  static const textHighLight = Colors.blue;
+  static const iconLight = accent;
   static const iconDark = Color(0xFFB1B3C1);
-  static const cardLight = secondaryDarkColor;
-  static const cardLightText = mainDarkColor;
+  static const cardLight = mainColor;
+  static const cardLightText = secondaryColor;
   static const cardDark = Color.fromARGB(255, 46, 46, 46);
 }
 
 abstract class _LightColors {
-  static const background = AppColors.mainDarkColor;
+  static const background = AppColors.secondaryColor;
   static const card = AppColors.cardLight;
 }
 
@@ -55,11 +55,15 @@ class AppTheme {
           style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
               backgroundColor: AppColors.accent,
-              textStyle: const TextStyle(fontSize: 18, color: AppColors.textLight)),
+              textStyle: const TextStyle(fontSize: 18, color: AppColors.cardLightText)),
         ),
-        inputDecorationTheme: const InputDecorationTheme(
-          labelStyle: TextStyle(color: AppColors.textLight),
-          floatingLabelStyle: TextStyle(color: AppColors.textLight),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: const TextStyle(color: AppColors.textLight),
+          floatingLabelStyle: const TextStyle(color: AppColors.textLight),
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(color: AppColors.accent),
+            borderRadius: BorderRadius.circular(10.0),
+          )
         ),
         cardColor: _LightColors.card,
         primaryTextTheme: const TextTheme(
@@ -89,7 +93,7 @@ class AppTheme {
         scaffoldBackgroundColor: _DarkColors.background,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.secondaryDarkColor,
+            backgroundColor: AppColors.secondaryColor,
             padding: const EdgeInsets.symmetric(vertical: 14),
             textStyle: const TextStyle(fontSize: 18, color: AppColors.textLight),
           ),

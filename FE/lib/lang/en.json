@@ -19,5 +19,11 @@
   "invalid_password_err_mess": "The password must contain 8 characters with uppercase and lowercase letters",
   "empty_name_err_mess": "Please enter your name",
   "forget_pass": "Forget password?",
-  "new_user": "New user?"
+  "new_user": "New user?",
+  "old_user": "Already have an account?",
+  "user_name": "User name",
+  "confirm_password": "Confirm password",
+  "wrong_confirm_password_error_mess": "Wrong confirm password",
+  "exist_email": "This email address is already in use",
+  "login_error": "Wrong email or password"
 }

@@ -17,13 +17,10 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
   },
-  phone: {
-    type: String,
-    required: true,
-  },
+
   password: {
     type: String,
-    required: false,
+    required: true,
     default: bcrypt.hashSync("12345678"),
   },
 

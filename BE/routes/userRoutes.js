@@ -19,5 +19,6 @@ router.post("/api/user/otp", userController.createOTP);
 router.post("/api/user/verify-otp/:id", userController.verifyOTP);
 // reset password
 router.post("/api/user/reset-password/:id", userController.resetPassword);
-
+// renew otp
+router.post("/api/user/renew-otp", userController.renewOTP);
 export default router;

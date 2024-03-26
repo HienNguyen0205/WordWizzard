@@ -33,6 +33,7 @@ flutter:
   - assets/images/intro/intro.png
   - assets/images/logo/logo.png
   - assets/images/logo/logo-removebg.png
+  - assets/images/otp_verify/otp_verify_img.svg
   - assets/icon/facebook.svg
   - assets/icon/apple.svg
   - assets/icon/google.svg

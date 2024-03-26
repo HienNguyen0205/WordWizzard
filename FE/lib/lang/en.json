@@ -25,5 +25,10 @@
   "confirm_password": "Confirm password",
   "wrong_confirm_password_error_mess": "Wrong confirm password",
   "exist_email": "This email address is already in use",
-  "login_error": "Wrong email or password"
+  "login_error": "Wrong email or password",
+  "otp_verify": "OTP Verification",
+  "otp_send_to": "Enter the OTP send to ",
+  "not_receive_otp": "Don't receive the OTP?",
+  "resent": "Send again",
+  "can_resent_after": "You resend OTP after"
 }

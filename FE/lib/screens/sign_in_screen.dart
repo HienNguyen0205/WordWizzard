@@ -33,13 +33,13 @@ class _SignInScreenState extends State<SignInScreen> {
         authProvider.logIn();
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()));
-      } else if (resCode == 1) {
+      } else if (resCode == 2 || resCode == 3) {
         setState(() {
           _emailErrMess = getTranslated(context, 'login_error');
           _passErrMess = getTranslated(context, 'login_error');
         });
       } else {
-        debugPrint('signIn Error');
+        debugPrint('signIn Error with code: $resCode');
       }
     }
   }
@@ -58,8 +58,18 @@ class _SignInScreenState extends State<SignInScreen> {
   void handleForgetPass() {}
 
   void handleSignUpRoute() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const SignUpScreen()));
+    Navigator.of(context).push(PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const SignUpScreen(),
+        transitionDuration: const Duration(milliseconds: 300),
+        transitionsBuilder: (_, animation, __, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }));
   }
 
   @override
@@ -84,26 +94,27 @@ class _SignInScreenState extends State<SignInScreen> {
                       TextFormField(
                         autofocus: true,
                         decoration: InputDecoration(
-                          labelText: getTranslated(context, "email"),
-                          errorText: _emailErrMess != '' ? _emailErrMess : ''
-                        ),
+                            labelText: getTranslated(context, "email"),
+                            errorText:
+                                _emailErrMess != '' ? _emailErrMess : null),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
                               _emailErrMess = getTranslated(
-                                context, "empty_email_err_mess");
+                                  context, "empty_email_err_mess");
                             });
                           } else if (!isEmailValid(value)) {
                             setState(() {
                               _emailErrMess = getTranslated(
-                                context, "invalid_email_err_mess");
+                                  context, "invalid_email_err_mess");
                             });
                           } else {
                             setState(() {
                               _emailErrMess = '';
                             });
                           }
+                          return null;
                         },
                         onSaved: (value) {
                           _email = value!;
@@ -115,26 +126,27 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: InputDecoration(
-                          labelText: getTranslated(context, "password"),
-                          errorText: _passErrMess != '' ? _passErrMess : ''
-                        ),
+                            labelText: getTranslated(context, "password"),
+                            errorText:
+                                _passErrMess != '' ? _passErrMess : null),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
-                              _passErrMess =
-                                  getTranslated(context, 'empty_password_err_mess');
+                              _passErrMess = getTranslated(
+                                  context, 'empty_password_err_mess');
                             });
                           } else if (!isPasswordValid(value)) {
                             setState(() {
-                              _passErrMess =
-                                  getTranslated(context, 'invalid_password_err_mess');
+                              _passErrMess = getTranslated(
+                                  context, 'invalid_password_err_mess');
                             });
                           } else {
                             setState(() {
                               _passErrMess = '';
                             });
                           }
+                          return null;
                         },
                         onSaved: (value) {
                           _password = value!;
@@ -147,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           onTap: handleForgetPass,
                           child: Text(
                             getTranslated(context, 'forget_pass'),
-                            style: const TextStyle(color: Colors.blue),
+                            style: const TextStyle(color: Colors.blue, fontSize: 16),
                           ),
                         ),
                       ),
@@ -175,7 +187,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           Text(getTranslated(context, 'new_user'),
                               style: const TextStyle(
-                                color: Colors.black,
+                                fontSize: 16,
                               )),
                           const SizedBox(
                             width: 4,
@@ -185,6 +197,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: Text(getTranslated(context, 'sign_up'),
                                 style: const TextStyle(
                                   color: Colors.blue,
+                                  fontSize: 16,
                                 )),
                           )
                         ],

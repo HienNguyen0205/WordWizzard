@@ -25,5 +25,10 @@
     "confirm_password": "Xác nhận lại mật khẩu",
     "wrong_confirm_password_error_mess": "Mật khẩu xác nhận không đúng",
     "exist_email": "Đã có tài khoản sử dụng email này",
-    "login_error": "Sai email hoặc mật khẩu"
+    "login_error": "Sai email hoặc mật khẩu",
+    "otp_verify": "Xác thực mã OTP",
+    "otp_send_to": "Nhập mã OTP đã gửi tới ",
+    "not_receive_otp": "Không nhận được mã OTP?",
+    "resent": "Gửi lại",
+    "can_resent_after": "Bạn có thể gửi lại OTP sau"
 }

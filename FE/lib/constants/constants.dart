@@ -29,3 +29,5 @@ final List<String> iconList = [
   'assets/icon/apple.svg',
   'assets/icon/google.svg',
 ];
+
+const String ipv4 = '192.168.1.104';

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wordwizzard/auth/auth_provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/screens/home_screen.dart';
-import 'package:wordwizzard/screens/sign_in_screen.dart';
+import 'package:wordwizzard/screens/otp_verify_screen.dart';
 import 'package:wordwizzard/services/auth.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -27,16 +26,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (form != null && form.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
-      final resCode = await handleRegister(_userName, _email, _password);
-      if(resCode == 0){
+      final res = await handleRegister(_userName, _email, _password);
+      if(res['code'] == 0){
         authProvider.logIn();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
-      }else if(resCode == 1){
+        Navigator.of(context).push(PageRouteBuilder(
+        pageBuilder: (_, __, ___) => OtpVerifyScreen(email: _email, userId: res['userId']),
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (_, animation, __, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }));
+      }else if(res['code'] == 2){
         setState(() {
           emailErrMess = getTranslated(context, 'exist_email');
         });
       }else{
-        debugPrint('signUp Error');
+        debugPrint('signUp Error with code: $res');
       }
     }
   }
@@ -60,7 +70,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void handleSignInRoute() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const SignInScreen()));
+    if(Navigator.of(context).canPop()){
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -105,7 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: getTranslated(context, "email"),
-                          errorText: emailErrMess != '' ? emailErrMess : '',
+                          errorText: emailErrMess != '' ? emailErrMess : null,
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (val) {
@@ -122,6 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               emailErrMess = '';
                             });
                           }
+                          return null;
                         },
                         onSaved: (value) {
                           _email = value!;
@@ -177,7 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ElevatedButton(
                         onPressed: _submitForm,
                         child: Text(
-                          getTranslated(context, "sign_in"),
+                          getTranslated(context, "sign_up"),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -188,6 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Text(getTranslated(context, 'old_user'),
                               style: const TextStyle(
                                 color: Colors.black,
+                                fontSize: 16
                               )),
                           const SizedBox(
                             width: 4,
@@ -197,6 +211,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Text(getTranslated(context, 'sign_in'),
                                 style: const TextStyle(
                                   color: Colors.blue,
+                                  fontSize: 16
                                 )),
                           )
                         ],

@@ -36,8 +36,9 @@ class AppTheme {
   ThemeData get light => ThemeData(
         brightness: Brightness.light,
         visualDensity: visualDensity,
-        textTheme:
-            GoogleFonts.mulishTextTheme().apply(bodyColor: AppColors.textDark),
+        textTheme: GoogleFonts.mulishTextTheme().apply(
+          bodyColor: AppColors.textDark
+        ),
         appBarTheme: lightBase.appBarTheme.copyWith(
           iconTheme: lightBase.iconTheme,
           backgroundColor: Colors.transparent,

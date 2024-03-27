@@ -40,8 +40,10 @@ const generateHtmlWelcome = (username, otp) => {
             background-color: white;
             padding: 32px 48px;
             border-radius: 12px;
+            margin: 0 auto;
           "
         >
+
           <tbody style="width: 100%; height: 100%">
             <tr>
               <td style="text-align: center">
@@ -278,6 +280,7 @@ const generateHtmlRenew = (username, otp) => {
               background-color: white;
               padding: 32px 48px;
               border-radius: 12px;
+              margin: 0 auto;
             "
           >
           <tbody style="width: 100%; height: 100%">
@@ -506,6 +509,7 @@ const generateHtmlReset = (username, otp) => {
           height: 680px;
           background-color: white;
           padding: 32px 48px;
+          margin: 0 auto;
         "
       >
         <tbody style="width: 100%; height: 100%">
@@ -720,7 +724,7 @@ const create_otp = async () => {
   return OTP;
 };
 
-const send_email_reset = async (res, user, otp) => {
+const send_email_reset = (res, user, otp) => {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -746,7 +750,7 @@ const send_email_reset = async (res, user, otp) => {
     user_id: user._id,
   });
 };
-const send_email_register = async (res, user, otp) => {
+const send_email_register = (res, user, otp) => {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -773,7 +777,7 @@ const send_email_register = async (res, user, otp) => {
   });
 };
 
-const send_email_renew = async (res, user, otp) => {
+const send_email_renew = (res, user, otp) => {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -851,7 +855,7 @@ const handle_register = async (req, res) => {
   const user = await newUser.save();
   const OTP = await create_otp();
   await create_or_update_otp(user, OTP);
-  return await send_email_register(res, user, OTP);
+  return send_email_register(res, user, OTP);
 };
 
 const handle_renew_otp = async (email, res) => {
@@ -864,7 +868,7 @@ const handle_renew_otp = async (email, res) => {
   }
   let OTP = await create_otp();
   await create_or_update_otp(user, OTP);
-  return await send_email_renew(res, user, OTP);
+  return send_email_renew(res, user, OTP);
 };
 
 const handle_login_otp = async (otp, userId, res) => {
@@ -946,7 +950,7 @@ const handle_create_otp = async (email, res) => {
   }
   let OTP = await create_otp();
   await create_or_update_otp(user, OTP);
-  return await send_email_reset(res, user, OTP);
+  return send_email_reset(res, user, OTP);
 };
 
 const handle_verify_otp = async (otp, userId, res) => {
@@ -981,25 +985,25 @@ const handle_reset_password = async (userId, password, res) => {
   });
 };
 
-export  {
-    handle_register,
-    handle_login,
-    handle_login_otp,
-    handle_change_password,
-    handle_create_otp,
-    handle_verify_otp,
-    handle_reset_password,
-    handle_renew_otp,
-    generate_access_token,
-    get_hashed_password,
-    verify_password,
-    create_otp,
-    send_email_reset,
-    send_email_register,
-    send_email_renew,
-    create_or_update_otp,
-    create_token,
-    generateHtmlWelcome,
-    generateHtmlRenew,
-    generateHtmlReset,
+export {
+  handle_register,
+  handle_login,
+  handle_login_otp,
+  handle_change_password,
+  handle_create_otp,
+  handle_verify_otp,
+  handle_reset_password,
+  handle_renew_otp,
+  generate_access_token,
+  get_hashed_password,
+  verify_password,
+  create_otp,
+  send_email_reset,
+  send_email_register,
+  send_email_renew,
+  create_or_update_otp,
+  create_token,
+  generateHtmlWelcome,
+  generateHtmlRenew,
+  generateHtmlReset,
 };

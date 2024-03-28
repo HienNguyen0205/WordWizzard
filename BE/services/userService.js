@@ -929,6 +929,12 @@ const handle_change_password = async (
       message: "Current password is not correct",
     });
   }
+  if(currentPassword === newPassword){
+    return res.status(400).send({
+      errorCode: "3",
+      message: "New password is the same as the current password",
+    });
+  }
   user.password = get_hashed_password(newPassword);
   await user.save();
   return res.status(200).send({

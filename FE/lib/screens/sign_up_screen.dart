@@ -5,6 +5,7 @@ import 'package:wordwizzard/auth/auth_provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/screens/otp_verify_screen.dart';
 import 'package:wordwizzard/services/auth.dart';
+import 'package:wordwizzard/utils/verify.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if(res['code'] == 0){
         authProvider.logIn();
         Navigator.of(context).push(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => OtpVerifyScreen(email: _email, userId: res['userId']),
+        pageBuilder: (_, __, ___) => OtpVerifyScreen(email: _email, userId: res['userId'], action: 'sign_up',),
         transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (_, animation, __, child) {
           return SlideTransition(
@@ -49,17 +50,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugPrint('signUp Error with code: $res');
       }
     }
-  }
-
-  bool isEmailValid(String email) {
-    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
-  }
-
-  bool isPasswordValid(String password) {
-    final RegExp passwordRegex =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-    return passwordRegex.hasMatch(password);
   }
 
   bool isCorrectConfirmPass(String confirmPass) {

@@ -30,5 +30,13 @@
     "otp_send_to": "Nhập mã OTP đã gửi tới ",
     "not_receive_otp": "Không nhận được mã OTP?",
     "resent": "Gửi lại",
-    "can_resent_after": "Bạn có thể gửi lại OTP sau"
+    "can_resent_after": "Bạn có thể gửi lại OTP sau",
+    "wrong_otp": "Mã OTP không đúng",
+    "forgot_pass": "Quên Mật Khẩu",
+    "send": "Gửi",
+    "verify_email": "Xác Thực Email Của Bạn",
+    "create_new_pass": "Tạo Mật Khẩu Mới",
+    "save": "Lưu",
+    "change_pass_success": "Đổi mật khẩu thành công!",
+    "change_pass_fail": "Đổi mật khẩu thất bại"
 }

@@ -100,3 +100,72 @@ Future<int> handleResendOTP(String email) async {
     return -1;
   }
 }
+
+Future<dynamic> handleForgetPass(String email) async {
+  final url = Uri.parse('http://$ipv4:5001/api/user/otp');
+
+  try {
+    final res = await http.post(
+      url,
+      body: {
+        'email': email
+      },
+    );
+
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {'code': 0, 'userId': resData['user_id']};
+    }else{
+      return {'code': int.parse(resData['errorCode'])};
+    }
+  } catch (error) {
+    debugPrint('Failed to send data: $error');
+    return {'code': -1 };
+  }
+}
+
+Future<dynamic> handleResetPassOTP(String otp, String userId) async {
+  final url = Uri.parse('http://$ipv4:5001/api/user/verify-otp/$userId');
+
+  try {
+    final res = await http.post(
+      url,
+      body: {
+        'otp': otp,
+      },
+    );
+
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {'code': 0, 'userId': resData['user_id']};
+    }else{
+      return {'code': int.parse(resData['errorCode'])};
+    }
+  } catch (error) {
+    debugPrint('Failed to send data: $error');
+    return {'code': -1 };
+  }
+}
+
+Future<dynamic> handleChangePass(String pass, String userId) async {
+  final url = Uri.parse('http://$ipv4:5001/api/user/reset-password/$userId');
+
+  try {
+    final res = await http.post(
+      url,
+      body: {
+        'password': pass,
+      },
+    );
+
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {'code': 0, 'userId': resData['user_id']};
+    }else{
+      return {'code': int.parse(resData['errorCode'])};
+    }
+  } catch (error) {
+    debugPrint('Failed to send data: $error');
+    return {'code': -1 };
+  }
+}

@@ -46,7 +46,7 @@ class AppTheme {
           centerTitle: true,
           titleTextStyle: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 20,
             color: AppColors.textDark,
           ),
           systemOverlayStyle: SystemUiOverlayStyle.dark,

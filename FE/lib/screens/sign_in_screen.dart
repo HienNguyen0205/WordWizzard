@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:wordwizzard/auth/auth_provider.dart';
 // import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/screens/forget_pass_screen.dart';
 import 'package:wordwizzard/screens/home_screen.dart';
 import 'package:wordwizzard/screens/sign_up_screen.dart';
 import 'package:wordwizzard/services/auth.dart';
+import 'package:wordwizzard/utils/verify.dart';
 // import 'package:wordwizzard/widgets/icon_btn.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -44,18 +46,20 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  bool isEmailValid(String email) {
-    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
+  void handleForgetPass() {
+    Navigator.of(context).push(PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const ForgetPassScreen(),
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (_, animation, __, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }));
   }
-
-  bool isPasswordValid(String password) {
-    final RegExp passwordRegex =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-    return passwordRegex.hasMatch(password);
-  }
-
-  void handleForgetPass() {}
 
   void handleSignUpRoute() {
     Navigator.of(context).push(PageRouteBuilder(

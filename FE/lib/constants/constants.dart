@@ -10,17 +10,17 @@ final List<IntroDataDef> introData = [
   IntroDataDef(
     title: 'title_intro_1',
     body: 'body_intro_1',
-    imageUrl: 'assets/images/intro/intro.png',
+    imageUrl: 'assets/images/intro/studying.svg',
   ),
   IntroDataDef(
     title: 'title_intro_2',
     body: 'body_intro_2',
-    imageUrl: 'assets/images/intro/intro.png',
+    imageUrl: 'assets/images/intro/research_paper.svg',
   ),
   IntroDataDef(
     title: 'title_intro_3',
     body: 'body_intro_3',
-    imageUrl: 'assets/images/intro/intro.png',
+    imageUrl: 'assets/images/intro/online_test.svg',
   ),
 ];
 

@@ -38,5 +38,12 @@
     "create_new_pass": "Tạo Mật Khẩu Mới",
     "save": "Lưu",
     "change_pass_success": "Đổi mật khẩu thành công!",
-    "change_pass_fail": "Đổi mật khẩu thất bại"
+    "change_pass_fail": "Đổi mật khẩu thất bại",
+    "home": "Trang chủ",
+    "add": "Thêm",
+    "library": "Thư viện",
+    "profile": "Hồ sơ",
+    "topic": "Chủ đề",
+    "folder": "Thư mục",
+    "popular": "Phổ biến"
 }

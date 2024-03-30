@@ -38,5 +38,12 @@
   "create_new_pass": "Create New Password",
   "save": "Save",
   "change_pass_success": "Change password success!",
-  "change_pass_fail": "Change password fail"
+  "change_pass_fail": "Change password fail",
+  "home": "Home",
+  "add": "Add",
+  "library": "Library",
+  "profile": "Profile",
+  "topic": "Topic",
+  "folder": "Folder",
+  "popular": "Popular"
 }

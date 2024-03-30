@@ -1,79 +1,54 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wordwizzard/auth/auth_provider.dart';
 // import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/screens/forget_pass_screen.dart';
-import 'package:wordwizzard/screens/home_screen.dart';
-import 'package:wordwizzard/screens/sign_up_screen.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
 import 'package:wordwizzard/utils/verify.dart';
 // import 'package:wordwizzard/widgets/icon_btn.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  SignInScreenState createState() => SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
   String _emailErrMess = '';
   String _passErrMess = '';
 
-  void _submitForm() async {
+  void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
-      final resCode = await handleLogin(_email, _password);
-      if (resCode == 0) {
-        authProvider.logIn();
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
-      } else if (resCode == 2 || resCode == 3) {
-        setState(() {
-          _emailErrMess = getTranslated(context, 'login_error');
-          _passErrMess = getTranslated(context, 'login_error');
-        });
-      } else {
-        debugPrint('signIn Error with code: $resCode');
-      }
+      handleLogin(_email, _password).then((value) {
+        if (value == 0) {
+          authProvider.logIn();
+          Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
+        } else if (value == 2 || value == 3) {
+          setState(() {
+            _emailErrMess = getTranslated(context, 'login_error');
+            _passErrMess = getTranslated(context, 'login_error');
+          });
+        } else {
+          debugPrint('signIn Error with code: $value');
+        }
+      });
     }
   }
 
   void handleForgetPass() {
-    Navigator.of(context).push(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const ForgetPassScreen(),
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (_, animation, __, child) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        }));
+    Navigator.of(context).pushNamed(forgetPassRoute);
   }
 
   void handleSignUpRoute() {
-    Navigator.of(context).push(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const SignUpScreen(),
-        transitionDuration: const Duration(milliseconds: 300),
-        transitionsBuilder: (_, animation, __, child) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        }));
+    Navigator.of(context).pushNamed(signUpRoute);
   }
 
   @override
@@ -167,11 +142,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
-                      ElevatedButton(
+                      FilledButton(
                         onPressed: _submitForm,
                         child: Text(
                           getTranslated(context, "sign_in"),
-                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       // Padding(

@@ -1,4 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -6,27 +5,25 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/screens/change_pass_screen.dart';
-import 'package:wordwizzard/screens/home_screen.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   const OtpVerifyScreen(
-      {Key? key,
+      {super.key,
       required this.email,
       required this.userId,
-      required this.action})
-      : super(key: key);
+      required this.action});
 
   final String email;
   final String userId;
   final String action;
 
   @override
-  _OtpVerifyScreenState createState() => _OtpVerifyScreenState();
+  OtpVerifyScreenState createState() => OtpVerifyScreenState();
 }
 
-class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
+class OtpVerifyScreenState extends State<OtpVerifyScreen> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
   bool isErrorBorder = false;
@@ -75,21 +72,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     if (resCode == 0) {
       if(action == 'sign_up') {
         Navigator.of(context).popUntil((route) => route.isFirst);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
       }else if(action == 'forget_pass'){
-        Navigator.of(context).push(PageRouteBuilder(
-            pageBuilder: (_, __, ___) => ChangePassScreen(userId: widget.userId),
-            transitionDuration: const Duration(milliseconds: 500),
-            transitionsBuilder: (_, animation, __, child) {
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              );
-            }));
+        Navigator.of(context).pushNamed(changePassRoute, arguments: {"userId": widget.userId});
       }
     } else if (resCode == 3) {
       setState(() {

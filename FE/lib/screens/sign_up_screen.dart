@@ -1,20 +1,19 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wordwizzard/auth/auth_provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/screens/otp_verify_screen.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
 import 'package:wordwizzard/utils/verify.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController passInputController = TextEditingController();
   String _userName = '';
@@ -22,45 +21,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _password = '';
   String emailErrMess = '';
 
-  void _submitForm() async {
+  void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
-      final res = await handleRegister(_userName, _email, _password);
-      if(res['code'] == 0){
-        authProvider.logIn();
-        Navigator.of(context).push(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => OtpVerifyScreen(email: _email, userId: res['userId'], action: 'sign_up',),
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (_, animation, __, child) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        }));
-      }else if(res['code'] == 2){
-        setState(() {
-          emailErrMess = getTranslated(context, 'exist_email');
-        });
-      }else{
-        debugPrint('signUp Error with code: $res');
-      }
+      handleRegister(_userName, _email, _password).then((value) {
+        if (value['code'] == 0) {
+          authProvider.logIn();
+          Navigator.of(context).pushNamed(otpVerifyRoute, arguments: {
+            "email": _email,
+            "userId": value['userId'],
+            "action": "sign_up"
+          });
+        } else if (value['code'] == 2) {
+          setState(() {
+            emailErrMess = getTranslated(context, 'exist_email');
+          });
+        } else {
+          debugPrint('signUp Error with code: $value');
+        }
+      });
     }
   }
 
   bool isCorrectConfirmPass(String confirmPass) {
-    if(confirmPass == passInputController.text){
+    if (confirmPass == passInputController.text) {
       return true;
     }
     return false;
   }
 
   void handleSignInRoute() {
-    if(Navigator.of(context).canPop()){
+    if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
   }
@@ -92,7 +85,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         keyboardType: TextInputType.name,
                         validator: (val) {
                           if (val == null || val.isEmpty) {
-                            return getTranslated(context, "empty_name_err_mess");
+                            return getTranslated(
+                                context, "empty_name_err_mess");
                           }
                           return null;
                         },
@@ -113,11 +107,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         validator: (val) {
                           if (val == null || val.isEmpty) {
                             setState(() {
-                              emailErrMess = getTranslated(context, "empty_email_err_mess");
+                              emailErrMess = getTranslated(
+                                  context, "empty_email_err_mess");
                             });
                           } else if (!isEmailValid(val)) {
                             setState(() {
-                              emailErrMess = getTranslated(context, "invalid_email_err_mess");
+                              emailErrMess = getTranslated(
+                                  context, "invalid_email_err_mess");
                             });
                           } else {
                             setState(() {
@@ -176,23 +172,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         },
                       ),
-                      const SizedBox(height: 20,),
-                      ElevatedButton(
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      FilledButton(
                         onPressed: _submitForm,
                         child: Text(
                           getTranslated(context, "sign_up"),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      const SizedBox(height: 24,),
+                      const SizedBox(
+                        height: 24,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(getTranslated(context, 'old_user'),
                               style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16
-                              )),
+                                  color: Colors.black, fontSize: 16)),
                           const SizedBox(
                             width: 4,
                           ),
@@ -200,9 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             onTap: handleSignInRoute,
                             child: Text(getTranslated(context, 'sign_in'),
                                 style: const TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16
-                                )),
+                                    color: Colors.blue, fontSize: 16)),
                           )
                         ],
                       )

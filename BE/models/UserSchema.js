@@ -17,31 +17,33 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
   },
-
   password: {
     type: String,
     required: true,
     default: bcrypt.hashSync("12345678"),
   },
-
+  fullname: {
+    type: String,
+    trim: true,
+    required: false,
+    default: null,
+  },
+  phone: {
+    type: String,
+    trim: true,
+    required: false,
+    default: null,
+  },
+  image: {
+    type: String,
+    required: false,
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
-// plugin soft delete
-// userSchema.plugin(mongoose_delete, { overrideMethods: true });
-// userSchema.pre("save", async function (next) {
-//   try {
-//     if (!this.code) {
-//       this.code = await indexController.getNumber("TTSC");
-//     }
-//   } catch (error) {
-//     console.error("Error:", error);
-//   } finally {
-//     next();
-//   }
-// });
 const User = mongoose.model("Users", userSchema);
 
 export default User;

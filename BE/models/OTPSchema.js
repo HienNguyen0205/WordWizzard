@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import mongoose_delete from "mongoose-delete";
 const otpSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: "Users",
     required: true,
   },

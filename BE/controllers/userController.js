@@ -76,7 +76,12 @@ userController.changePassword = async (req, res, next) => {
         message: "Current password and new password are required",
       });
     }
-    return await userService.handle_change_password(req, currentPassword, newPassword, res);
+    return await userService.handle_change_password(
+      req,
+      currentPassword,
+      newPassword,
+      res
+    );
   } catch (error) {
     next(error);
   }
@@ -132,6 +137,23 @@ userController.resetPassword = async (req, res, next) => {
   }
 };
 
+// Update Profile
+userController.updateProfile = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const imagePath = req.file.path;
+    const { fullname, phone } = req.body;
+    if (!userId) {
+      return res.status(400).send({
+        errorCode: "1",
+        message: "User Id is required",
+      });
+    }
+    return await userService.handle_update_profile(userId, fullname, phone, imagePath, res);
+  } catch (error) {
+    next(error);
+  }
+};
 // Me
 userController.me = async (req, res, next) => {
   try {

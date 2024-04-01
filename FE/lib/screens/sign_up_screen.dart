@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wordwizzard/auth/auth_provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
@@ -24,11 +22,9 @@ class SignUpScreenState extends State<SignUpScreen> {
   void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
       handleRegister(_userName, _email, _password).then((value) {
         if (value['code'] == 0) {
-          authProvider.logIn();
           Navigator.of(context).pushNamed(otpVerifyRoute, arguments: {
             "email": _email,
             "userId": value['userId'],
@@ -86,7 +82,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         validator: (val) {
                           if (val == null || val.isEmpty) {
                             return getTranslated(
-                                context, "empty_name_err_mess");
+                                context, "require_input");
                           }
                           return null;
                         },

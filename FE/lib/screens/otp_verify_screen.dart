@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wordwizzard/auth/auth.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
@@ -71,6 +72,7 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
     debugPrint(resCode.toString());
     if (resCode == 0) {
       if(action == 'sign_up') {
+        setLogin(true);
         Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
       }else if(action == 'forget_pass'){

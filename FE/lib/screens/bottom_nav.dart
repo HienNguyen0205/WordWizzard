@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/screens/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -23,6 +24,10 @@ class BottomNavState extends State<BottomNav> {
 
     final theme = Theme.of(context).bottomNavigationBarTheme;
 
+    void handleAddTopicBtn (){
+      Navigator.of(context).pushNamed(addTopicRoute);
+    }
+
     void handleShowBottomSheet() {
       showMaterialModalBottomSheet(
         expand: false,
@@ -37,9 +42,7 @@ class BottomNavState extends State<BottomNav> {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
-                  onTap: () {
-                    debugPrint('Card tapped.');
-                  },
+                  onTap: handleAddTopicBtn,
                   child: Container(
                     padding: const EdgeInsets.only(left: 18),
                     alignment: Alignment.centerLeft,
@@ -63,9 +66,7 @@ class BottomNavState extends State<BottomNav> {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
-                  onTap: () {
-                    debugPrint('Card tapped.');
-                  },
+                  onTap: handleAddTopicBtn,
                   child: Container(
                     padding: const EdgeInsets.only(left: 18),
                     alignment: Alignment.centerLeft,

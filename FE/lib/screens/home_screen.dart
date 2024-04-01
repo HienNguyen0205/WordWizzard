@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tab_container/tab_container.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
@@ -11,13 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  int index = 0;
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         forceMaterialTransparency: true,
         title: const Text("WordWizzard",
             style: TextStyle(
@@ -41,9 +45,13 @@ class HomeScreenState extends State<HomeScreen> {
             top: 0,
             left: 0,
             right: 0,
-            child: Image.asset(
-              "assets/images/banner/banner.png",
-              fit: BoxFit.fitWidth,
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.srcOver),
+              child: Image.asset(
+                "assets/images/banner/banner.png",
+                fit: BoxFit.fitWidth,
+              ),
             )),
         Positioned(
           top: 180,
@@ -52,28 +60,20 @@ class HomeScreenState extends State<HomeScreen> {
           bottom: 0,
           child: TabContainer(
             tabEdge: TabEdge.top,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.background,
             isStringTabs: false,
             tabs: [
               Text(getTranslated(context, "topic"),
-                  style: const TextStyle(
+                  style: TextStyle(
+                      color: index == 0 ? Colors.black : Colors.white,
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,)),
-                      // color: currentThemeMode == Brightness.light
-                      //     ? Colors.black
-                      //     : Colors.white)),
+                      fontWeight: FontWeight.w500)),
               Text(getTranslated(context, 'popular'),
-                  style: const TextStyle(
+                  style: TextStyle(
+                      color: index == 1 ? Colors.black : Colors.white,
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,))
-                      // color: currentThemeMode == Brightness.light
-                      //     ? Colors.black
-                      //     : Colors.white)),
+                      fontWeight: FontWeight.w500))
             ],
-            selectedTextStyle:
-                textTheme.bodyMedium,
-            unselectedTextStyle:
-                textTheme.bodyMedium?.copyWith(color: Colors.white),
             children: [
               Container(
                 child: Text('Child 1'),
@@ -82,6 +82,15 @@ class HomeScreenState extends State<HomeScreen> {
                 child: Text('Child 2'),
               ),
             ],
+            onEnd: () {
+              setState(() {
+                if (index == 0) {
+                  index = 1;
+                } else {
+                  index = 0;
+                }
+              });
+            },
           ),
         ),
       ]),

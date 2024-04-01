@@ -1,25 +1,29 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wordwizzard/auth/auth_provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/localization/localization.dart';
 import 'package:wordwizzard/routes/custom_route.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-  String initialRoute = isFirstLaunch ? introRoute : signInRoute;
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => AuthProvider()),
-    ],
-    child: MyApp(route: initialRoute),
-  ));
+  bool isLogin = prefs.getBool('isLogin') ?? false;
+  String initialRoute;
+  if(isFirstLaunch){
+    initialRoute = introRoute;
+  }else{
+    if(isLogin){
+      initialRoute = bottomNavBarRoute;
+    }else{
+      initialRoute = signInRoute;
+    }
+  }
+  runApp(MyApp(route: initialRoute),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -69,7 +73,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     return MaterialApp(
       title: 'WordWiizzard',
       theme: FlexThemeData.light(
@@ -140,7 +143,7 @@ class MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       onGenerateRoute: CustomRouter.generatedRoute,
-      initialRoute: authProvider.isLoggedIn ? bottomNavBarRoute : widget.route,
+      initialRoute: widget.route,
     );
   }
 }

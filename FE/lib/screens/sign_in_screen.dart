@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wordwizzard/auth/auth_provider.dart';
+import 'package:wordwizzard/auth/auth.dart';
 // import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
@@ -25,11 +24,10 @@ class SignInScreenState extends State<SignInScreen> {
   void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
       handleLogin(_email, _password).then((value) {
         if (value == 0) {
-          authProvider.logIn();
+          setLogin(true);
           Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
         } else if (value == 2 || value == 3) {
           setState(() {
@@ -81,7 +79,7 @@ class SignInScreenState extends State<SignInScreen> {
                           if (value == null || value.isEmpty) {
                             setState(() {
                               _emailErrMess = getTranslated(
-                                  context, "empty_email_err_mess");
+                                  context, "require_input");
                             });
                           } else if (!isEmailValid(value)) {
                             setState(() {

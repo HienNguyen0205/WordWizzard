@@ -6,3 +6,5 @@ const String otpVerifyRoute = "otpVerify";
 const String forgetPassRoute = "forgetPass";
 const String changePassRoute = "changePass";
 const String bottomNavBarRoute = "bottomNavBar";
+const String addTopicRoute = "addTopic";
+const String settingAddTopicRoute = "settingAddTopic";

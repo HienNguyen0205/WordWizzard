@@ -4,6 +4,8 @@ import OTPSchema from "../models/OTPSchema.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import {uploadImage} from "./uploadService.js";
+import { ObjectId } from "mongodb";
 dotenv.config();
 
 const generateHtmlWelcome = (username, otp) => {
@@ -991,6 +993,29 @@ const handle_reset_password = async (userId, password, res) => {
   });
 };
 
+const handle_update_profile = async (userId, fullname, phone, imagePath, res) => {
+  const user = await UserSchema.findById(userId);
+  if (!user) {
+    return res.status(404).send({
+      errorCode: "2",
+      message: "User not found",
+    });
+  }
+  if(imagePath){
+    const uploadImageFile = await uploadImage(imagePath);
+    user.image = uploadImageFile;
+  }
+  user.fullname = fullname;
+  user.phone = phone;
+  await user.save();
+  return res.send({
+    status: true,
+    success: "sendData",
+    message: "Profile updated successfully",
+    data: user,
+  });
+}
+
 export {
   handle_register,
   handle_login,
@@ -1012,4 +1037,5 @@ export {
   generateHtmlWelcome,
   generateHtmlRenew,
   generateHtmlReset,
+  handle_update_profile,
 };

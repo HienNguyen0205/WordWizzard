@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/screens/add_folder_screen.dart';
 import 'package:wordwizzard/screens/add_topic_screen.dart';
 import 'package:wordwizzard/screens/bottom_nav.dart';
 import 'package:wordwizzard/screens/change_pass_screen.dart';
@@ -8,6 +9,7 @@ import 'package:wordwizzard/screens/home_screen.dart';
 import 'package:wordwizzard/screens/intro_screen.dart';
 import 'package:wordwizzard/screens/not_found_screen.dart';
 import 'package:wordwizzard/screens/otp_verify_screen.dart';
+import 'package:wordwizzard/screens/setting_access_scope_screen.dart';
 import 'package:wordwizzard/screens/setting_add_topic_screen.dart';
 import 'package:wordwizzard/screens/sign_in_screen.dart';
 import 'package:wordwizzard/screens/sign_up_screen.dart';
@@ -26,7 +28,7 @@ class CustomRouter {
       case signUpRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => const SignUpScreen(),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
@@ -42,7 +44,7 @@ class CustomRouter {
                 email: args?["email"],
                 userId: args?["userId"],
                 action: args?["action"]),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
@@ -55,7 +57,7 @@ class CustomRouter {
       case forgetPassRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => const ForgetPassScreen(),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
@@ -69,7 +71,7 @@ class CustomRouter {
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) =>
                 ChangePassScreen(userId: args?["userId"]),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
@@ -82,7 +84,7 @@ class CustomRouter {
       case bottomNavBarRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => const BottomNav(),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return ScaleTransition(
                 scale: animation,
@@ -93,7 +95,7 @@ class CustomRouter {
       case addTopicRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => const AddTopicScreen(),
-            transitionDuration: const Duration(milliseconds: 500),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
@@ -105,12 +107,42 @@ class CustomRouter {
             });
       case settingAddTopicRoute:
         return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const SettingAddTopicScreen(),
-            transitionDuration: const Duration(milliseconds: 500),
+            pageBuilder: (_, __, ___) => SettingAddTopicScreen(
+                accessScope: args?["accessScope"],
+                setAccessScope: args?["setAccessScope"]),
+            transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+      case settingAccessScopeRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => SettingAccessScope(
+                accessScope: args?["accessScope"],
+                setAccessScope: args?["setAccessScope"]),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+      case addFolderRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const AddFolderScreen(),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 1.0),
                   end: Offset.zero,
                 ).animate(animation),
                 child: child,

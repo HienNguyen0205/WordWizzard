@@ -6,6 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/widgets/add_topic_secttion.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
@@ -24,17 +25,24 @@ class AddTopicScreen extends StatefulWidget {
 
 class AddTopicScreenState extends State<AddTopicScreen> {
   String topic = '';
+  String description = '';
   int tagIndex = 0;
+  String accessScope = 'only_me';
   List<TermDef> topicInputs = [
     TermDef(term: '', definition: ''),
     TermDef(term: '', definition: ''),
   ];
 
   void handlleSetting() {
-    Navigator.of(context).pushNamed(settingAddTopicRoute);
+    Navigator.of(context).pushNamed(settingAddTopicRoute,
+        arguments: {"accessScope": accessScope, "setAccessScope": setAccessScope});
   }
 
-  void handleAddTopic() {}
+  void handleDone() {
+    if(topic.isNotEmpty && topicInputs.length >= 2){
+      handleAddTopic(topic, description, accessScope, topicInputs);
+    }
+  }
 
   void handleUploadTopic() {}
 
@@ -102,6 +110,10 @@ class AddTopicScreenState extends State<AddTopicScreen> {
     }
   }
 
+  void setAccessScope(String scope) {
+    accessScope = scope;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,10 +127,9 @@ class AddTopicScreenState extends State<AddTopicScreen> {
         centerTitle: true,
         actions: [
           TextButton(
-              onPressed: handleAddTopic,
+              onPressed: handleDone,
               child: Text(
                 getTranslated(context, "done"),
-                style: const TextStyle(fontSize: 18),
               ))
         ],
       ),
@@ -141,6 +152,19 @@ class AddTopicScreenState extends State<AddTopicScreen> {
               ),
               onChanged: (value) {
                 topic = value;
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(
+                fillColor: Colors.transparent,
+                labelText: getTranslated(context, "description"),
+                border: const UnderlineInputBorder(),
+                enabledBorder: const UnderlineInputBorder(),
+                focusedBorder:
+                    const UnderlineInputBorder(), // Customize the color as needed
+              ),
+              onChanged: (value) {
+                description = value;
               },
             ),
             Padding(
@@ -198,10 +222,13 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                         removeTopicInput(index);
                       },
                       background: Container(
-                        decoration: const BoxDecoration(color: Colors.red , borderRadius: BorderRadius.all(Radius.circular(8))),
+                        decoration: const BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         alignment: Alignment.center,
                         padding: const EdgeInsets.symmetric(horizontal: 18),
-                        child: const FaIcon(FontAwesomeIcons.trashCan, size: 32, color: Colors.white),
+                        child: const FaIcon(FontAwesomeIcons.trashCan,
+                            size: 32, color: Colors.white),
                       ),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),

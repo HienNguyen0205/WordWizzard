@@ -8,3 +8,5 @@ const String changePassRoute = "changePass";
 const String bottomNavBarRoute = "bottomNavBar";
 const String addTopicRoute = "addTopic";
 const String settingAddTopicRoute = "settingAddTopic";
+const String settingAccessScopeRoute = "settingAccessScope";
+const String addFolderRoute = "addFolder";

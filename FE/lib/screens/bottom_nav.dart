@@ -24,8 +24,14 @@ class BottomNavState extends State<BottomNav> {
 
     final theme = Theme.of(context).bottomNavigationBarTheme;
 
-    void handleAddTopicBtn (){
+    void handleAddTopicBtn() {
+      Navigator.pop(context);
       Navigator.of(context).pushNamed(addTopicRoute);
+    }
+
+    void handleAddFolderBtn() {
+      Navigator.pop(context);
+      Navigator.of(context).pushNamed(addFolderRoute);
     }
 
     void handleShowBottomSheet() {
@@ -48,16 +54,14 @@ class BottomNavState extends State<BottomNav> {
                     alignment: Alignment.centerLeft,
                     width: double.infinity,
                     height: 64,
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 18),
-                          child: FaIcon(FontAwesomeIcons.clone),
-                        ),
-                        Text(getTranslated(context, "topic"),
+                    child: Row(children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 18),
+                        child: FaIcon(FontAwesomeIcons.clone),
+                      ),
+                      Text(getTranslated(context, "topic"),
                           style: const TextStyle(fontSize: 18)),
-                      ]
-                    ),
+                    ]),
                   ),
                 ),
               ),
@@ -66,22 +70,20 @@ class BottomNavState extends State<BottomNav> {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
-                  onTap: handleAddTopicBtn,
+                  onTap: handleAddFolderBtn,
                   child: Container(
                     padding: const EdgeInsets.only(left: 18),
                     alignment: Alignment.centerLeft,
                     width: double.infinity,
                     height: 64,
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 18),
-                          child: FaIcon(FontAwesomeIcons.folder),
-                        ),
-                        Text(getTranslated(context, "folder"),
+                    child: Row(children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 18),
+                        child: FaIcon(FontAwesomeIcons.folder),
+                      ),
+                      Text(getTranslated(context, "folder"),
                           style: const TextStyle(fontSize: 18)),
-                      ]
-                    ),
+                    ]),
                   ),
                 ),
               ),
@@ -101,36 +103,42 @@ class BottomNavState extends State<BottomNav> {
         style: TabStyle.fixedCircle,
         items: [
           TabItem(
-              icon: FaIcon(FontAwesomeIcons.house, color: theme.unselectedItemColor),
+              icon: FaIcon(FontAwesomeIcons.house,
+                  color: theme.unselectedItemColor),
               activeIcon: FaIcon(FontAwesomeIcons.house,
                   color: theme.selectedItemColor),
               title: getTranslated(context, "home")),
           TabItem(
-              icon: FaIcon(FontAwesomeIcons.house, color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.house, color: theme.selectedItemColor),
+              icon: FaIcon(FontAwesomeIcons.house,
+                  color: theme.unselectedItemColor),
+              activeIcon: FaIcon(FontAwesomeIcons.house,
+                  color: theme.selectedItemColor),
               title: getTranslated(context, "home")),
           const TabItem(
             icon: Center(
               child: FaIcon(FontAwesomeIcons.plus),
-            ), 
+            ),
             isIconBlend: true,
           ),
           TabItem(
-              icon: FaIcon(FontAwesomeIcons.folderOpen, color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.folderOpen, color: theme.selectedItemColor),
+              icon: FaIcon(FontAwesomeIcons.folderOpen,
+                  color: theme.unselectedItemColor),
+              activeIcon: FaIcon(FontAwesomeIcons.folderOpen,
+                  color: theme.selectedItemColor),
               title: getTranslated(context, "library")),
           TabItem(
-              icon:FaIcon(FontAwesomeIcons.user, color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.user,
-                  color: theme.selectedItemColor),
+              icon: FaIcon(FontAwesomeIcons.user,
+                  color: theme.unselectedItemColor),
+              activeIcon:
+                  FaIcon(FontAwesomeIcons.user, color: theme.selectedItemColor),
               title: getTranslated(context, "profile")),
         ],
         onTap: (index) {
-          if(index != 2){
+          if (index != 2) {
             setState(() {
               selectedIndex = index;
             });
-          }else{
+          } else {
             handleShowBottomSheet();
           }
         },

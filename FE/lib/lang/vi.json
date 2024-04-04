@@ -70,5 +70,17 @@
   "select_topic": "Chọn Chủ Đề",
   "definition": "Định nghĩa",
   "term": "Thuật ngữ",
-  "setting": "Cài đặt"
+  "setting": "Cài đặt",
+  "private_policy": "Quyền riêng tư",
+  "who_can_see": "Ai có thể xem",
+  "everyone": "Mọi người",
+  "only_me": "Chỉ mình tôi",
+  "description": "Mô tả",
+  "cancel": "Hủy",
+  "new_folder": "Thư mục mới",
+  "folder_title": "Tiêu đề thư mục",
+  "optional": "Tùy chọn",
+  "see_more": "Xem thêm",
+  "topics": "Các chủ đề",
+  "my_folder": "Thư mục của tôi"
 }

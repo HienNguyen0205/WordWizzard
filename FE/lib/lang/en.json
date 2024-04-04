@@ -71,5 +71,17 @@
   "select_topic": "Select Topic",
   "definition": "Definition",
   "term": "Term",
-  "setting": "Setting"
+  "setting": "Setting",
+  "private_policy": "Private policy",
+  "who_can_see": "Who can see",
+  "everyone": "Everyone",
+  "only_me": "Only me",
+  "description": "Description",
+  "cancel": "Cencel",
+  "new_folder": "New folder",
+  "folder_title": "Folder title",
+  "optional": "Optional",
+  "see_more": "See more",
+  "topics": "Topics",
+  "my_folder": "My folder"
 }

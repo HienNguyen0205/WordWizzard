@@ -13,16 +13,17 @@ void main() async {
   bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
   bool isLogin = prefs.getBool('isLogin') ?? false;
   String initialRoute;
-  if(isFirstLaunch){
+  if (isFirstLaunch) {
     initialRoute = introRoute;
-  }else{
-    if(isLogin){
+  } else {
+    if (isLogin) {
       initialRoute = bottomNavBarRoute;
-    }else{
+    } else {
       initialRoute = signInRoute;
     }
   }
-  runApp(MyApp(route: initialRoute),
+  runApp(
+    MyApp(route: initialRoute),
   );
 }
 
@@ -94,6 +95,9 @@ class MyAppState extends State<MyApp> {
           navigationBarMutedUnselectedIcon: false,
           navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
           navigationBarIndicatorOpacity: 1.00,
+          textButtonTextStyle: MaterialStatePropertyAll(
+              TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+          cardElevation: 4,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
@@ -117,6 +121,8 @@ class MyAppState extends State<MyApp> {
           navigationBarMutedUnselectedIcon: false,
           navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
           navigationBarIndicatorOpacity: 1.00,
+          textButtonTextStyle: MaterialStatePropertyAll(
+              TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,

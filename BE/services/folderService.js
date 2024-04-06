@@ -167,7 +167,6 @@ const getOne = async (req, res) => {
         as: "listTopicsInfo",
       },
     },
-
     {
       $unwind: "$user",
     },
@@ -216,22 +215,27 @@ const getOne = async (req, res) => {
   });
 };
 
-// const updateOne = async (req, res) => {
-//   const { id } = req.params;
-//   const folder = await Folder().findById(id);
-//   if (!folder) {
-//     return res.status(404).send({
-//       msg: "Folder not found!",
-//     });
-//   }
-//   folder.name = req.body.name;
-//   folder.description = req.body.description;
-//   await folder.save();
-//   return res.status(200).send({
-//     msg: "Folder updated successfully!",
-//     data: folder,
-//   });
-// };
+const updateOne = async (req, res) => {
+  const { id } = req.params;
+  const folder = await Folder.findById(id);
+  if (!folder) {
+    return res.status(404).send({
+      msg: "Folder not found!",
+    });
+  }
+  if(!req.body.name){
+    return res.status(400).send({
+      msg: "Name is required!",
+    });
+  }
+  folder.name = req.body.name;
+  folder.description = req.body.description;
+  await folder.save();
+  return res.status(200).send({
+    msg: "Folder updated successfully!",
+    data: folder,
+  });
+};
 // const deleteOne = async (req, res) => {
 //   const { id } = req.params;
 //   const folder = await Folder().findById(id);
@@ -246,4 +250,4 @@ const getOne = async (req, res) => {
 //     msg: "Folder deleted successfully!",
 //   });
 // };
-export { addOne, getAll, getOne };
+export { addOne, getAll, getOne, updateOne };

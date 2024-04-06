@@ -5,11 +5,12 @@ const router = express.Router();
 
 // create folder
 router.post("/api/folder/add", authentication,folderController.addOne);
+// update folder
+router.post("/api/folder/update/:id", authentication, folderController.updateOne);
 // get folder detail
 router.get("/api/folder/detail/:id", authentication, folderController.getOne);
 // get all folder
 router.get("/api/folder/all", authentication, folderController.getAll);
-// update topics to folder
 
 
 // // change password

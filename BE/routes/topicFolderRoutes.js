@@ -24,7 +24,7 @@ router.get(
   topicFolderController.getFolders
 );
 
-// Get all folders and chosen folders
+// Get all topics and chosen topics
 router.get(
   "/api/folder/get-folders/:id",
   authentication,

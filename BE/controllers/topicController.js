@@ -3,22 +3,52 @@ import * as topicService from "../services/topicService.js";
 
 const topicController = {};
 
-topicController.addOne = async (req, res) => {
+topicController.addOne = async (req, res, next) => {
   try {
     if (!req.body.name) {
       return res.status(400).send({
         errorCode: "1",
         message: "Name is required.",
       });
-    } else if (!req.body.generalType) {
+    } else if (!req.body.tag) {
       return res.status(400).send({
         errorCode: "2",
-        message: "General Type is required.",
+        message: "Tag is required.",
       });
-    } else if (!req.body.meaningType) {
+    } else if (!req.body.listWords) {
       return res.status(400).send({
         errorCode: "3",
-        message: "Meaning Type is required.",
+        message: "List Words is required.",
+      });
+    } else if (req.body.listWords.length < 2) {
+      return res.status(400).send({
+        errorCode: "4",
+        message: "List Words must have at least 2 words.",
+      });
+    } else {
+      return await topicService.addOne(req, res);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+topicController.updateOne = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return res.status(400).send({
+        errorCode: "1",
+        message: "Id is required.",
+      });
+    } else if (!req.body.name) {
+      return res.status(400).send({
+        errorCode: "2",
+        message: "Name is required.",
+      });
+    } else if (!req.body.tag) {
+      return res.status(400).send({
+        errorCode: "3",
+        message: "Tag is required.",
       });
     } else if (!req.body.listWords) {
       return res.status(400).send({
@@ -31,22 +61,21 @@ topicController.addOne = async (req, res) => {
         message: "List Words must have at least 2 words.",
       });
     } else {
-      return await topicService.addOne(req, res);
+      return await topicService.updateOne(req, res);
     }
   } catch (error) {
-    res.status(400).send(error);
+    next(error);
   }
 };
-
-topicController.getAll = async (req, res) => {
+topicController.getAll = async (req, res, next) => {
   try {
     return await topicService.getAll(req, res);
   } catch (error) {
-    res.status(400).send(error);
+    next(error);
   }
 };
 
-topicController.getOne = async (req, res) => {
+topicController.getOne = async (req, res, next) => {
   try {
     if (!req.params.id) {
       return res.status(400).send({
@@ -56,7 +85,16 @@ topicController.getOne = async (req, res) => {
     }
     return await topicService.getOne(req, res);
   } catch (error) {
-    res.status(400).send(error);
+    next(error);
+  }
+};
+
+topicController.getAllClient = async (req, res, next) => {
+  try {
+    return await topicService.getAllClient(req, res);
+  }
+  catch(error) {
+    next(error)
   }
 }
 export default topicController;

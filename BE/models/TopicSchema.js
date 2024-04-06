@@ -13,28 +13,8 @@ const topicSchema = new mongoose.Schema({
   },
   securityView: {
     type: String,
-    enum: ["PUBLIC", "HASKEY", "PRIVATE"],
+    enum: ["PUBLIC", "PRIVATE"],
     default: "PUBLIC",
-  },
-  securityEdit: {
-    type: String,
-    enum: ["HASKEY", "PRIVATE"],
-    default: "PRIVATE",
-  },
-  generalType: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  meaningType: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  key: {
-    type: String,
-    trim: true,
-    required: false,
   },
   listWords: [
     {
@@ -50,6 +30,11 @@ const topicSchema = new mongoose.Schema({
       },
     },
   ],
+  tag: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tags",
+    require: true
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",

@@ -158,7 +158,7 @@ userController.updateProfile = async (req, res, next) => {
 userController.me = async (req, res, next) => {
   try {
     const user = await UserSchema.findById(req.user._id).select(
-      "id email username"
+      "id email username fullname phone image"
     );
     if (!user) {
       return res.status(404).send({

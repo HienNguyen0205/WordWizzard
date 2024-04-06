@@ -188,9 +188,21 @@ const getTopics = async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userInfo",
+      },
+    },
+    // {
+    //   $unwind: "$userInfo"
+    // },
+    {
       $project: {
         _id: 1,
         name: 1,
+        listWords: 1,
         topicFolderInfo: {
           $filter: {
             input: "$topicFolderInfo",
@@ -198,12 +210,16 @@ const getTopics = async (req, res) => {
             cond: { $eq: ["$$topicFolder.folderId", ObjectId(id)] },
           },
         },
+        userInfo: {
+          $arrayElemAt: ["$userInfo", 0]
+        }
       },
     },
     {
       $project: {
         _id: 1,
         name: 1,
+        listWords: 1,
         isChosen: {
           $cond: {
             if: { $eq: [{ $size: "$topicFolderInfo" }, 0] },
@@ -211,6 +227,10 @@ const getTopics = async (req, res) => {
             else: true,
           },
         },
+        createdBy: {
+          name: "$userInfo.username",
+          image: "$userInfo.image",
+        }
       },
     },
   ]);

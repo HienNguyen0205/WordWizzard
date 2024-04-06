@@ -1,6 +1,7 @@
 import Topic from "../models/TopicSchema.js";
 import mongoose from "mongoose";
 import Tags from "../seed/seed.js";
+import topicController from "../controllers/topicController.js";
 const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const addOne = async (req, res) => {
@@ -186,7 +187,7 @@ const getOne = async (req, res) => {
     {
       $match: {
         _id: ObjectId(id),
-        createdBy: ObjectId(req.user._id),
+        // createdBy: ObjectId(req.user._id),
         isDeleted: false,
       },
     },
@@ -245,4 +246,97 @@ const getOne = async (req, res) => {
   });
 };
 
-export { addOne, getOne, getAll, updateOne };
+const getAllClient = async (req, res) => {
+  const userId = req.user.id;
+  const { search, page, limit } = req.query;
+
+  let queryObject = {};
+  if (search) {
+    queryObject.$or = [{ name: { $regex: `${search}`, $options: "i" } }];
+  }
+  const pages = Number(page);
+  const limits = Number(limit);
+  const skip = (pages - 1) * limits;
+  const topics = await Topic.aggregate([
+    {
+      $match: {
+        securityView: "PUBLIC",
+        createdBy: { $ne: ObjectId(userId) },
+        isDeleted: false,
+        ...queryObject,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $lookup: {
+        from: "tags",
+        localField: "tag",
+        foreignField: "_id",
+        as: "topic_tag",
+      },
+    },
+    {
+      $unwind: "$topic_tag",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: {
+          $first: "$name",
+        },
+        description: {
+          $first: "$description",
+        },
+        securityView: {
+          $first: "$securityView",
+        },
+        tag: {
+          $first: {
+            name: "$topic_tag.name",
+            image: "$topic_tag.image",
+          },
+        },
+        createdBy: {
+          $first: {
+            _id: "$user._id",
+            username: "$user.username",
+          },
+        },
+        createdAt: {
+          $first: "$createdAt",
+        },
+        words: {
+          $sum: {
+            $size: "$listWords",
+          },
+        },
+      },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limits,
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+  ]);
+  return res.status(200).send({
+    msg: "Topic fetched successfully!",
+    data: topics,
+  });
+};
+export { addOne, getOne, getAll, updateOne, getAllClient };

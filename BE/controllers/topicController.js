@@ -88,4 +88,13 @@ topicController.getOne = async (req, res, next) => {
     next(error);
   }
 };
+
+topicController.getAllClient = async (req, res, next) => {
+  try {
+    return await topicService.getAllClient(req, res);
+  }
+  catch(error) {
+    next(error)
+  }
+}
 export default topicController;

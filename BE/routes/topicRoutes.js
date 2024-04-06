@@ -15,4 +15,7 @@ router.get('/api/topic/all', authentication, topicController.getAll);
 
 // get topic detail
 router.get('/api/topic/detail/:id', authentication, topicController.getOne);
+
+// get all topic client
+router.get('/api/topic/all-client', authentication, topicController.getAllClient);
 export default router;

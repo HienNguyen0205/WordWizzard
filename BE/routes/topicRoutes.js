@@ -7,6 +7,9 @@ const router = express.Router();
 // add topic
 router.post('/api/topic/add', authentication, topicController.addOne);
 
+//update topic
+router.post('/api/topic/update/:id', authentication, topicController.updateOne);
+
 // get all topics
 router.get('/api/topic/all', authentication, topicController.getAll);
 

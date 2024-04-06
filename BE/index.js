@@ -1,33 +1,40 @@
-import express from 'express'
-import router from './routes/index.js'
-import swaggerDocs from './swagger.js'
+import express from "express";
+import router from "./routes/index.js";
+import swaggerDocs from "./swagger.js";
 import mongoose from "mongoose";
-import cors from 'cors'
-import dotenv from 'dotenv'
-          
-
-const app = express()
-
+import cors from "cors";
+import dotenv from "dotenv";
+import Tags from "./seed/seed.js";
+import { listTags } from "./seed/seedData.js";
+const app = express();
 
 dotenv.config();
-const port = process.env.PORT || 5001
+const port = process.env.PORT || 5001;
 const dbUrl = process.env.DB_URL;
 
 // Middleware
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(express.static('./public'))
-app.use(router)
-app.use(cors({
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("./public"));
+app.use(router);
+app.use(
+  cors({
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
-mongoose.connect(dbUrl)
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('Failed to connect to MongoDB', err));
-
+mongoose
+  .connect(dbUrl)
+  .then(async () => {
+    const tagsCount = await Tags.countDocuments();
+    if (tagsCount === 0) {
+      await Tags.insertMany(listTags);
+    }
+    console.log("MongoDB connected and seed successfully");
+  })
+  .catch((err) => console.error("Failed to connect to MongoDB", err));
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-  swaggerDocs(app, port)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+  swaggerDocs(app, port);
+});

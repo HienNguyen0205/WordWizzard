@@ -5,7 +5,7 @@ import topicController from "../controllers/topicController.js";
 const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const addOne = async (req, res) => {
-  const listWords = req.body.listWords.map((word) => {
+  const listWords = JSON.parse(req.body.listWords).map((word) => {
     return {
       general: word.general,
       meaning: word.meaning,
@@ -56,7 +56,7 @@ const updateOne = async (req, res) => {
     });
   }
   const topic = await Topic.findById(id);
-  const listWords = req.body.listWords.map((word) => {
+  const listWords = JSON.parse(req.body.listWords).map((word) => {
     return {
       general: word.general,
       meaning: word.meaning,

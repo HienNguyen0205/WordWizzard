@@ -15,7 +15,7 @@ topicController.addOne = async (req, res, next) => {
         errorCode: "2",
         message: "Tag is required.",
       });
-    } else if (!req.body.listWords) {
+    } else if (!JSON.parse(req.body.listWords)) {
       return res.status(400).send({
         errorCode: "3",
         message: "List Words is required.",
@@ -50,7 +50,7 @@ topicController.updateOne = async (req, res, next) => {
         errorCode: "3",
         message: "Tag is required.",
       });
-    } else if (!req.body.listWords) {
+    } else if (!JSON.parse(req.body.listWords)) {
       return res.status(400).send({
         errorCode: "4",
         message: "List Words is required.",

@@ -19,7 +19,7 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
   @override
   void initState() {
     super.initState();
-    accessScopeItem = ['only_me', 'everyone'];
+    accessScopeItem = ['PRIVATE', 'PUBLIC'];
     selectedIndex = accessScopeItem.indexOf(widget.accessScope);
   }
 

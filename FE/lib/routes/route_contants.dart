@@ -10,3 +10,4 @@ const String addTopicRoute = "addTopic";
 const String settingAddTopicRoute = "settingAddTopic";
 const String settingAccessScopeRoute = "settingAccessScope";
 const String addFolderRoute = "addFolder";
+const String searchRoute = "search";

@@ -67,7 +67,7 @@
   "Politics": "Politics",
   "Literature": "Literature",
   "Animals and Wildlife": "Animals and Wildlife",
-  "Travel and Transportation": "Travel and Transportation",
+  "Travel": "Travel and Transportation",
   "select_topic": "Select Topic",
   "definition": "Definition",
   "term": "Term",
@@ -83,5 +83,15 @@
   "optional": "Optional",
   "see_more": "See more",
   "topics": "Topics",
-  "my_folder": "My folder"
+  "my_folder": "My folder",
+  "search": "Search",
+  "notifications": "Notifications",
+  "Other": "Other",
+  "content_not_done_topic": "Need at least 2 terms to save topic",
+  "title_not_done_topic": "Save Draft",
+  "delete": "Delete",
+  "ranking": "Ranking",
+  "all": "All",
+  "created": "Created",
+  "learnt": "Learnt"
 }

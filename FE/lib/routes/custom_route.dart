@@ -9,6 +9,7 @@ import 'package:wordwizzard/screens/home_screen.dart';
 import 'package:wordwizzard/screens/intro_screen.dart';
 import 'package:wordwizzard/screens/not_found_screen.dart';
 import 'package:wordwizzard/screens/otp_verify_screen.dart';
+import 'package:wordwizzard/screens/search_screen.dart';
 import 'package:wordwizzard/screens/setting_access_scope_screen.dart';
 import 'package:wordwizzard/screens/setting_add_topic_screen.dart';
 import 'package:wordwizzard/screens/sign_in_screen.dart';
@@ -138,6 +139,19 @@ class CustomRouter {
       case addFolderRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => const AddFolderScreen(),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 1.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+      case searchRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const SearchScreen(),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(

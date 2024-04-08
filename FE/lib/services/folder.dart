@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:wordwizzard/constants/constants.dart';
 
-Future<dynamic> handleGetAllFolders(int page, String search, int limit) async {
+Future<dynamic> handleGetAllFolders(int? page, String? search, int? limit) async {
   final url =
       Uri.parse('http://$ipv4:5001/api/folder/all?search=$search&page=$page&limit=$limit');
   const storage = FlutterSecureStorage();

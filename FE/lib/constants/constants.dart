@@ -6,7 +6,8 @@ class IntroDataDef {
   String body = '';
   String imageUrl = '';
 
-  IntroDataDef({required this.title, required this.body, required this.imageUrl});
+  IntroDataDef(
+      {required this.title, required this.body, required this.imageUrl});
 }
 
 final List<IntroDataDef> introData = [
@@ -33,34 +34,52 @@ final List<String> iconList = [
   'assets/icon/google.svg',
 ];
 
-// const String ipv4 = '172.20.10.2';
-const String ipv4 = '192.168.1.104';
+const String ipv4 = '192.168.1.103';
 
 class ListItem {
   final String title;
   final IconData icon;
+  final String tag;
 
-  ListItem({required this.title, required this.icon});
+  ListItem({required this.title, required this.icon, required this.tag});
 }
 
 final List<ListItem> topicTagItems = [
-  ListItem(title: "Vegetables", icon: FontAwesomeIcons.carrot),
-  ListItem(title: "Fruits", icon: FontAwesomeIcons.apple),
-  ListItem(title: "Technology", icon: FontAwesomeIcons.laptop),
-  ListItem(title: "Sports", icon: FontAwesomeIcons.football),
-  ListItem(title: "Music", icon: FontAwesomeIcons.music),
-  ListItem(title: "Art and Culture", icon: FontAwesomeIcons.paintbrush),
-  ListItem(title: "Education", icon: FontAwesomeIcons.graduationCap),
-  ListItem(title: "Health and Wellness", icon: FontAwesomeIcons.heartPulse),
-  ListItem(title: "Environment", icon: FontAwesomeIcons.leaf),
-  ListItem(title: "Cooking and Cuisine", icon: FontAwesomeIcons.utensils),
-  ListItem(title: "History", icon: FontAwesomeIcons.landmark),
-  ListItem(title: "Science", icon: FontAwesomeIcons.microscope),
-  ListItem(title: "Movies and Entertainment", icon: FontAwesomeIcons.film),
-  ListItem(title: "Fashion", icon: FontAwesomeIcons.shirt),
-  ListItem(title: "Economics and Business", icon: FontAwesomeIcons.chartBar),
-  ListItem(title: "Politics", icon: FontAwesomeIcons.flag),
-  ListItem(title: "Literature", icon: FontAwesomeIcons.book),
-  ListItem(title: "Animals and Wildlife", icon: FontAwesomeIcons.paw),
-  ListItem(title: "Travel and Transportation", icon: FontAwesomeIcons.bus),
+  ListItem(title: "Other", icon: FontAwesomeIcons.question, tag: 'tag_20'),
+  ListItem(title: "Travel", icon: FontAwesomeIcons.bus, tag: 'tag_1'),
+  ListItem(title: "Vegetables", icon: FontAwesomeIcons.carrot, tag: 'tag_2'),
+  ListItem(title: "Fruits", icon: FontAwesomeIcons.apple, tag: 'tag_3'),
+  ListItem(title: "Technology", icon: FontAwesomeIcons.laptop, tag: 'tag_4'),
+  ListItem(title: "Sports", icon: FontAwesomeIcons.football, tag: 'tag_5'),
+  ListItem(title: "Music", icon: FontAwesomeIcons.music, tag: 'tag_6'),
+  ListItem(
+      title: "Art and Culture",
+      icon: FontAwesomeIcons.paintbrush,
+      tag: 'tag_7'),
+  ListItem(
+      title: "Education", icon: FontAwesomeIcons.graduationCap, tag: 'tag_8'),
+  ListItem(
+      title: "Health and Wellness",
+      icon: FontAwesomeIcons.heartPulse,
+      tag: 'tag_9'),
+  ListItem(title: "Environment", icon: FontAwesomeIcons.leaf, tag: 'tag_10'),
+  ListItem(
+      title: "Cooking and Cuisine",
+      icon: FontAwesomeIcons.utensils,
+      tag: 'tag_11'),
+  ListItem(title: "History", icon: FontAwesomeIcons.landmark, tag: 'tag_12'),
+  ListItem(title: "Science", icon: FontAwesomeIcons.microscope, tag: 'tag_13'),
+  ListItem(
+      title: "Movies and Entertainment",
+      icon: FontAwesomeIcons.film,
+      tag: 'tag_14'),
+  ListItem(title: "Fashion", icon: FontAwesomeIcons.shirt, tag: 'tag_15'),
+  ListItem(
+      title: "Economics and Business",
+      icon: FontAwesomeIcons.chartBar,
+      tag: 'tag_16'),
+  ListItem(title: "Politics", icon: FontAwesomeIcons.flag, tag: 'tag_17'),
+  ListItem(title: "Literature", icon: FontAwesomeIcons.book, tag: 'tag_18'),
+  ListItem(
+      title: "Animals and Wildlife", icon: FontAwesomeIcons.paw, tag: 'tag_19'),
 ];

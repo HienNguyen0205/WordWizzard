@@ -5,6 +5,9 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/screens/home_screen.dart';
+import 'package:wordwizzard/screens/library_screen.dart';
+import 'package:wordwizzard/screens/profile_screen.dart';
+import 'package:wordwizzard/screens/ranking_screen.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -14,14 +17,15 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
+  int selectedIndex = 0;
+  final List<Widget> screens = [
+    const HomeScreen(),
+    const RankingScreen(),
+    const LibraryScreen(),
+    const ProfileScreen()
+  ];
   @override
   Widget build(BuildContext context) {
-    int selectedIndex = 0;
-
-    final List<Widget> screens = [
-      const HomeScreen(),
-    ];
-
     final theme = Theme.of(context).bottomNavigationBarTheme;
 
     void handleAddTopicBtn() {
@@ -109,11 +113,11 @@ class BottomNavState extends State<BottomNav> {
                   color: theme.selectedItemColor),
               title: getTranslated(context, "home")),
           TabItem(
-              icon: FaIcon(FontAwesomeIcons.house,
+              icon: FaIcon(FontAwesomeIcons.rankingStar,
                   color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.house,
+              activeIcon: FaIcon(FontAwesomeIcons.rankingStar,
                   color: theme.selectedItemColor),
-              title: getTranslated(context, "home")),
+              title: getTranslated(context, "ranking")),
           const TabItem(
             icon: Center(
               child: FaIcon(FontAwesomeIcons.plus),
@@ -127,16 +131,16 @@ class BottomNavState extends State<BottomNav> {
                   color: theme.selectedItemColor),
               title: getTranslated(context, "library")),
           TabItem(
-              icon: FaIcon(FontAwesomeIcons.user,
+              icon: FaIcon(FontAwesomeIcons.solidAddressBook,
                   color: theme.unselectedItemColor),
               activeIcon:
-                  FaIcon(FontAwesomeIcons.user, color: theme.selectedItemColor),
+                  FaIcon(FontAwesomeIcons.solidAddressBook, color: theme.selectedItemColor),
               title: getTranslated(context, "profile")),
         ],
         onTap: (index) {
           if (index != 2) {
             setState(() {
-              selectedIndex = index;
+              selectedIndex = index > 2 ? index - 1 : index;
             });
           } else {
             handleShowBottomSheet();

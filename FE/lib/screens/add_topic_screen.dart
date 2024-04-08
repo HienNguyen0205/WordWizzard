@@ -1,5 +1,6 @@
 // ignore_for_file: dead_code
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -9,12 +10,6 @@ import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/widgets/add_topic_secttion.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
-
-class TermDef {
-  String term;
-  String definition;
-  TermDef({required this.definition, required this.term});
-}
 
 class AddTopicScreen extends StatefulWidget {
   const AddTopicScreen({super.key});
@@ -27,20 +22,90 @@ class AddTopicScreenState extends State<AddTopicScreen> {
   String topic = '';
   String description = '';
   int tagIndex = 0;
-  String accessScope = 'only_me';
-  List<TermDef> topicInputs = [
-    TermDef(term: '', definition: ''),
-    TermDef(term: '', definition: ''),
-  ];
+  String accessScope = 'PRIVATE';
+  late List<dynamic> topicInputs;
+
+  @override
+  void initState() {
+    super.initState();
+    topicInputs = [
+      {"term": "", "definition": ""},
+      {"term": "", "definition": ""},
+    ];
+  }
+
+  void setAccessScope(String scope) {
+    accessScope = scope;
+  }
 
   void handlleSetting() {
-    Navigator.of(context).pushNamed(settingAddTopicRoute,
-        arguments: {"accessScope": accessScope, "setAccessScope": setAccessScope});
+    Navigator.of(context).pushNamed(settingAddTopicRoute, arguments: {
+      "accessScope": accessScope,
+      "setAccessScope": setAccessScope
+    });
+  }
+
+  Widget adaptiveAction(
+      {required BuildContext context,
+      required VoidCallback onPressed,
+      required Widget child}) {
+    final ThemeData theme = Theme.of(context);
+    switch (theme.platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return TextButton(onPressed: onPressed, child: child);
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return CupertinoDialogAction(onPressed: onPressed, child: child);
+    }
   }
 
   void handleDone() {
-    if(topic.isNotEmpty && topicInputs.length >= 2){
-      handleAddTopic(topic, description, accessScope, topicInputs);
+    bool flag = true;
+    for (var ele in topicInputs) {
+      if (ele["term"] == '' || ele["definition"] == '') {
+        flag = false;
+        break;
+      }
+    }
+    if (topic.isNotEmpty && topicInputs.length >= 2 && flag) {
+      handleAddTopic(topic, description, accessScope,
+              topicTagItems[tagIndex].tag, topicInputs)
+          .then((val) {
+        if (val["code"] == 0) {}
+      });
+    } else if (topic.isNotEmpty || flag) {
+      showAdaptiveDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(getTranslated(context, "title_not_done_topic")),
+              content: Text(getTranslated(context, "content_not_done_topic")),
+              actions: [
+                adaptiveAction(
+                    context: context,
+                    onPressed: () {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    },
+                    child: Text(getTranslated(context, "delete"))),
+                adaptiveAction(
+                    context: context,
+                    onPressed: () {
+                      handleAddTopic(topic, description, "DRAFT", topicTagItems[tagIndex].tag, topicInputs).then((val) {
+                        debugPrint(val["code"].toString());
+                        if (val["code"] == 0) {
+                          
+                        }
+                      });
+                    },
+                    child: Text(getTranslated(context, "save"))),
+              ],
+            );
+          });
+    }else{
+      Navigator.of(context).pop();
     }
   }
 
@@ -91,7 +156,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
 
   void addTopicInput() {
     setState(() {
-      topicInputs.add(TermDef(definition: '', term: ''));
+      topicInputs.add({"term": "", "definition": ""});
     });
   }
 
@@ -103,15 +168,11 @@ class AddTopicScreenState extends State<AddTopicScreen> {
 
   void updateTopic(int index, String? term, String? definition) {
     if (term != null) {
-      topicInputs[index].term = term;
+      topicInputs[index]["term"] = term;
     }
     if (definition != null) {
-      topicInputs[index].definition = definition;
+      topicInputs[index]["definition"] = definition;
     }
-  }
-
-  void setAccessScope(String scope) {
-    accessScope = scope;
   }
 
   @override
@@ -151,7 +212,9 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                     const UnderlineInputBorder(), // Customize the color as needed
               ),
               onChanged: (value) {
-                topic = value;
+                if(value.length <= 30){
+                  topic = value;
+                }
               },
             ),
             TextField(
@@ -190,6 +253,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: topicInputs.length,
+              padding: const EdgeInsets.only(bottom: 40),
               itemBuilder: (context, index) {
                 bool isSwiped = false;
                 double dragStartX = 0.0;
@@ -238,7 +302,9 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                           0.0,
                         ),
                         child: AddTopicSecttion(
-                            index: index, handleChange: updateTopic),
+                            index: index,
+                            termVal: topicInputs[index],
+                            handleChange: updateTopic),
                       )),
                 );
               },

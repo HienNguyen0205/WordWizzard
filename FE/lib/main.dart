@@ -1,3 +1,5 @@
+import 'package:cloudinary_flutter/cloudinary_context.dart';
+import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +14,8 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
   bool isLogin = prefs.getBool('isLogin') ?? false;
+  CloudinaryContext.cloudinary =
+      Cloudinary.fromCloudName(cloudName: "dtrtjisrv");
   String initialRoute;
   if (isFirstLaunch) {
     initialRoute = introRoute;

@@ -5,15 +5,7 @@ const topicController = {};
 
 topicController.addOne = async (req, res, next) => {
   try {
-    if (req.body.name || JSON.parse(req.body.listWords).length !== 0) {
-      return await topicService.addOne(req, res);
-    }
-    else {
-      return res.status(200).send({
-        msg: "Success",
-        data: {},
-      });
-    }
+    return await topicService.addOne(req, res);
   } catch (error) {
     next(error);
   }
@@ -23,9 +15,7 @@ topicController.updateOne = async (req, res, next) => {
   try {
     if (req.body.name || JSON.parse(req.body.listWords).length !== 0) {
       return await topicService.updateOne(req, res);
-    }
-    else {
-      
+    } else {
       return await topicService.deleteDraft(req, res);
     }
   } catch (error) {

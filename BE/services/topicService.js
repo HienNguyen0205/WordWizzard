@@ -6,6 +6,7 @@ const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const addOne = async (req, res) => {
   let listWords = [];
+  
   if (JSON.parse(req.body.listWords).length !== 0) {
     listWords = JSON.parse(req.body.listWords).map((word) => {
       return {

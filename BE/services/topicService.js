@@ -5,12 +5,16 @@ import topicController from "../controllers/topicController.js";
 const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const addOne = async (req, res) => {
-  const listWords = JSON.parse(req.body.listWords).map((word) => {
-    return {
-      general: word.general,
-      meaning: word.meaning,
-    };
-  });
+  let listWords = [];
+  if (JSON.parse(req.body.listWords).length !== 0) {
+    listWords = JSON.parse(req.body.listWords).map((word) => {
+      return {
+        general: word.general,
+        meaning: word.meaning,
+      };
+    });
+  }
+
   const tag = await Tags.findOne({ value: req.body.tag });
   if (!tag) {
     return res.status(400).send({
@@ -151,6 +155,7 @@ const getAll = async (req, res) => {
           $first: {
             _id: "$user._id",
             username: "$user.username",
+            image: "$user.image",
           },
         },
         createdAt: {
@@ -229,6 +234,7 @@ const getOne = async (req, res) => {
           $first: {
             _id: "$user._id",
             username: "$user.username",
+            image: "$user.image",
           },
         },
         createdAt: {
@@ -310,6 +316,7 @@ const getAllClient = async (req, res) => {
           $first: {
             _id: "$user._id",
             username: "$user.username",
+            image: "$user.image",
           },
         },
         createdAt: {

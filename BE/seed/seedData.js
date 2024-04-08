@@ -92,7 +92,7 @@ export const listTags = [
     {
         name: "Animals and Wildlife",
         value: "tag_19",
-        image: "",
+        image: "https://res.cloudinary.com/dtrtjisrv/image/upload/v1712495215/Animals_and_Wildlife_cc3lwr.webp",
     },
     {
         name: "Other",

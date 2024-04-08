@@ -4,7 +4,7 @@ const topicSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
@@ -13,7 +13,7 @@ const topicSchema = new mongoose.Schema({
   },
   securityView: {
     type: String,
-    enum: ["PUBLIC", "PRIVATE"],
+    enum: ["PUBLIC", "DRAFT", "PRIVATE"],
     default: "PUBLIC",
   },
   listWords: [

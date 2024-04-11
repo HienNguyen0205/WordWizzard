@@ -4,6 +4,14 @@ import Tags from "../seed/seed.js";
 import topicController from "../controllers/topicController.js";
 const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
+const checkListWordsEmpty = (listWords) => {
+  if (listWords.every((word) => !word.general && !word.meaning)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const addOne = async (req, res) => {
   let listWords = [];
   if (JSON.parse(req.body.listWords).length !== 0) {
@@ -14,81 +22,96 @@ const addOne = async (req, res) => {
       };
     });
   }
-
-  const tag = await Tags.findOne({ value: req.body.tag });
-  if (!tag) {
-    return res.status(400).send({
-      errorCode: "6",
-      message: "Tag not found",
+  if (checkListWordsEmpty(listWords) && !req.body.name) {
+    return res.status(200).send({
+      msg: "Nothing to create",
+      data: [],
+    });
+  } else {
+    const tag = await Tags.findOne({ value: req.body.tag });
+    if (!tag) {
+      return res.status(400).send({
+        errorCode: "6",
+        message: "Tag not found",
+      });
+    }
+    const topic = new Topic({
+      name: req.body.name,
+      description: req.body.description,
+      securityView: req.body.securityView,
+      listWords: listWords,
+      tag: tag._id,
+      createdBy: req.user._id,
+    });
+    await topic.save();
+    const response_data = {
+      _id: topic._id,
+      name: topic.name,
+      description: topic.description,
+      securityView: topic.securityView,
+      listWords: topic.listWords,
+      tag: {
+        tag_name: tag.name,
+        tag_image: tag.image,
+      },
+      createdBy: topic.createdBy,
+      createdAt: topic.createdAt,
+    };
+    return res.status(201).send({
+      msg: "Topic created successfully!",
+      data: response_data,
     });
   }
-  const topic = new Topic({
-    name: req.body.name,
-    description: req.body.description,
-    securityView: req.body.securityView,
-    listWords: listWords,
-    tag: tag._id,
-    createdBy: req.user._id,
-  });
-  await topic.save();
-  const response_data = {
-    _id: topic._id,
-    name: topic.name,
-    description: topic.description,
-    securityView: topic.securityView,
-    listWords: topic.listWords,
-    tag: {
-      tag_name: tag.name,
-      tag_image: tag.image,
-    },
-    createdBy: topic.createdBy,
-    createdAt: topic.createdAt,
-  };
-  return res.status(201).send({
-    msg: "Topic created successfully!",
-    data: response_data,
-  });
 };
 
 const updateOne = async (req, res) => {
-  const { id } = req.params;
-  const tag = await Tags.findOne({ value: req.body.tag });
-  if (!tag) {
-    return res.status(400).send({
-      errorCode: "6",
-      message: "Tag not found",
-    });
-  }
-  const topic = await Topic.findById(id);
   const listWords = JSON.parse(req.body.listWords).map((word) => {
     return {
       general: word.general,
       meaning: word.meaning,
     };
   });
-  topic.name = req.body.name;
-  topic.description = req.body.description;
-  topic.securityView = req.body.securityView;
-  topic.listWords = listWords;
-  topic.tag = tag._id;
-  await topic.save();
-  const response_data = {
-    _id: topic._id,
-    name: topic.name,
-    description: topic.description,
-    securityView: topic.securityView,
-    listWords: topic.listWords,
-    tag: {
-      tag_name: tag.name,
-      tag_image: tag.image,
-    },
-    createdBy: topic.createdBy,
-    createdAt: topic.createdAt,
-  };
-  return res.status(201).send({
-    msg: "Topic updated successfully!",
-    data: response_data,
-  });
+  const { id } = req.params;
+  if (checkListWordsEmpty(listWords) && !req.body.name) {
+    const topic = await Topic.deleteOne({ _id: id });
+    return res.status(200).send({
+      msg: "Topic Draft deleted successfully!",
+      data: topic,
+    });
+  } else {
+    const tag = await Tags.findOne({ value: req.body.tag });
+    if (!tag) {
+      return res.status(400).send({
+        errorCode: "6",
+        message: "Tag not found",
+      });
+    }
+    const topic = await Topic.findById(id);
+
+    topic.name = req.body.name;
+    topic.description = req.body.description;
+    topic.securityView = req.body.securityView;
+    topic.listWords = listWords;
+    topic.tag = tag._id;
+    await topic.save();
+    const response_data = {
+      _id: topic._id,
+      name: topic.name,
+      description: topic.description,
+      securityView: topic.securityView,
+      listWords: topic.listWords,
+      tag: {
+        tag_name: tag.name,
+        tag_image: tag.image,
+      },
+      createdBy: topic.createdBy,
+      createdAt: topic.createdAt,
+    };
+    return res.status(201).send({
+      msg: "Topic updated successfully!",
+      data: response_data,
+    });
+  }
 };
 
 const getAll = async (req, res) => {
@@ -346,4 +369,12 @@ const getAllClient = async (req, res) => {
     data: topics,
   });
 };
-export { addOne, getOne, getAll, updateOne, getAllClient };
+const deleteDraft = async (req, res) => {
+  const { id } = req.params;
+  const topic = await Topic.deleteOne({ _id: id });
+  return res.status(200).send({
+    msg: "Topic Draft deleted successfully!",
+    data: topic,
+  });
+};
+export { addOne, getOne, getAll, updateOne, getAllClient, deleteDraft };

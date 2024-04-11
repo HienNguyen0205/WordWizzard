@@ -5,7 +5,6 @@ const topicController = {};
 
 topicController.addOne = async (req, res, next) => {
   try {
-    
     return await topicService.addOne(req, res);
   } catch (error) {
     next(error);
@@ -14,7 +13,11 @@ topicController.addOne = async (req, res, next) => {
 
 topicController.updateOne = async (req, res, next) => {
   try {
-    return await topicService.updateOne(req, res);
+    if (req.body.name || JSON.parse(req.body.listWords).length !== 0) {
+      return await topicService.updateOne(req, res);
+    } else {
+      return await topicService.deleteDraft(req, res);
+    }
   } catch (error) {
     next(error);
   }

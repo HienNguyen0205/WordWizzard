@@ -1,13 +1,13 @@
-const String homeRoute = "home";
 const String introRoute = "intro";
 const String signInRoute = "signIn";
 const String signUpRoute = "signUp";
 const String otpVerifyRoute = "otpVerify";
 const String forgetPassRoute = "forgetPass";
 const String changePassRoute = "changePass";
-const String bottomNavBarRoute = "bottomNavBar";
 const String addTopicRoute = "addTopic";
 const String settingAddTopicRoute = "settingAddTopic";
 const String settingAccessScopeRoute = "settingAccessScope";
 const String addFolderRoute = "addFolder";
 const String searchRoute = "search";
+const String folderDetailRoute = "folderDetail";
+const String bottomNavRoute = "bottomNav";

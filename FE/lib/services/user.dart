@@ -15,9 +15,11 @@ Future<dynamic> handleGetUserInfo() async {
 
     final resData = jsonDecode(res.body);
     if (res.statusCode == 200) {
-      return {"code": 0, "res": resData};
+      return {"code": 0, "data": resData};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
     }
   } catch (error) {
-    return {'code': 1};
+    return {'code': -1};
   }
 }

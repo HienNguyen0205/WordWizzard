@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wordwizzard/constants/constants.dart';
 
-Future<int> handleLogin(String email, String password) async {
+Future<dynamic> handleLogin(String email, String password) async {
   final url = Uri.parse('http://$ipv4:5001/api/user/login');
 
   try {
@@ -24,7 +24,7 @@ Future<int> handleLogin(String email, String password) async {
       return int.parse(resData['errorCode']);
     }
   } catch (error) {
-    debugPrint('Failed to send data: $error');
+    debugPrint(error.toString());
     return -1;
   }
 }
@@ -48,7 +48,7 @@ Future<dynamic> handleRegister(String name, String email, String password) async
       return {'code': int.parse(resData['errorCode'])};
     }
   } catch (error) {
-    debugPrint('Failed to send data: $error');
+    debugPrint(error.toString());
     return {'code': -1};
   }
 }
@@ -73,7 +73,7 @@ Future<int> handleRegisterOTP(String otp, String userId) async {
       return int.parse(resData['errorCode']);
     }
   } catch (error) {
-    debugPrint('Failed to send data: $error');
+    debugPrint(error.toString());
     return -1;
   }
 }
@@ -96,7 +96,7 @@ Future<int> handleResendOTP(String email) async {
       return int.parse(resData['errorCode']);
     }
   } catch (error) {
-    debugPrint('Failed to send data: $error');
+    debugPrint(error.toString());
     return -1;
   }
 }
@@ -119,7 +119,7 @@ Future<dynamic> handleForgetPass(String email) async {
       return {'code': int.parse(resData['errorCode'])};
     }
   } catch (error) {
-    debugPrint('Failed to send data: $error');
+    debugPrint(error.toString());
     return {'code': -1 };
   }
 }

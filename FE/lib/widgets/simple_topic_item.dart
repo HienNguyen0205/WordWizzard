@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/widgets/avatar.dart';
+import 'package:wordwizzard/widgets/custom_shadow_box.dart';
 
 class SimpleTopicItem extends StatefulWidget {
   final String title;
@@ -27,6 +28,12 @@ class SimpleTopicItemState extends State<SimpleTopicItem> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+          boxShadow: [
+            CustomBoxShadow(
+              color: Theme.of(context).primaryColor.withOpacity(0.5),
+              blurRadius: 4,
+            )
+          ],
           border: Border.all(color: Theme.of(context).primaryColor, width: 2),
           borderRadius: BorderRadius.circular(12)),
       child: Column(
@@ -39,12 +46,7 @@ class SimpleTopicItemState extends State<SimpleTopicItem> {
           ),
           Row(
             children: [
-              CircleAvatar(
-                radius: 14,
-                child: widget.author["avatar"] != null
-                    ? Image.network(widget.author["avatar"])
-                    : SvgPicture.asset("assets/images/avatar/avatar.svg"),
-              ),
+              Avatar(publicId: widget.author["avatar"], radius: 14),
               const SizedBox(width: 12),
               Text(widget.author["name"])
             ],

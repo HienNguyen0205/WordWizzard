@@ -4,139 +4,186 @@ import 'package:lottie/lottie.dart';
 import 'package:wordwizzard/auth/auth.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
-import 'package:wordwizzard/stream/topics_folders_stream.dart';
+import 'package:wordwizzard/services/folder.dart';
+import 'package:wordwizzard/stream/folders_stream.dart';
+import 'package:wordwizzard/stream/topics_stream.dart';
 import 'package:wordwizzard/widgets/folder_item.dart';
-import 'package:wordwizzard/widgets/simple_topic_item.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:wordwizzard/widgets/topic_list_view.dart';
 
 class LibraryScreen extends StatefulWidget {
-  const LibraryScreen({super.key});
+  final int libraryTab;
+  const LibraryScreen({super.key, required this.libraryTab});
 
   @override
   LibraryScreenState createState() => LibraryScreenState();
 }
 
-class LibraryScreenState extends State<LibraryScreen> {
-  List<String> list = <String>['all', 'created', 'learnt'];
-  String sortType = 'all';
-  TopicsFoldersStream stream = TopicsFoldersStream();
+class LibraryScreenState extends State<LibraryScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late ScrollController _scrollFolderController;
+  int currentFolderPage = 1;
+  List<dynamic> folderList = [];
+  bool canLoadFolder = false;
 
   @override
   void initState() {
     super.initState();
-    stream.updateTopicsFoldersData();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.index = widget.libraryTab;
+    _scrollFolderController = ScrollController();
+    _scrollFolderController.addListener(handleLoadFolder);
+    TopicStream().getMyTopicsData();
+    FoldersStream().getFoldersData();
+  }
+
+  @override
+  void dispose() {
+    _scrollFolderController.dispose();
+    super.dispose();
+  }
+
+  void handleLoadFolder() {
+    if (_scrollFolderController.position.pixels ==
+        _scrollFolderController.position.maxScrollExtent) {
+      handleGetAllFolders(currentFolderPage, "", 10).then((val) {
+        if (val["code"] == 0) {
+          if (val["data"] != []) {
+            currentFolderPage += 1;
+            setState(() {
+              canLoadFolder = true;
+              folderList.addAll(val["data"]);
+            });
+          }
+        } else if (val["code"] == -1) {
+          setLogin(false);
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil(signInRoute, (route) => false);
+        } else {
+          debugPrint(val["errorCode"].toString());
+        }
+        setState(() {
+          canLoadFolder = false;
+        });
+      });
+    }
+  }
+
+  void handleAddBtn() {
+    if (_tabController.index == 0) {
+      Navigator.of(context).pushNamed(addTopicRoute);
+    } else if (_tabController.index == 1) {
+      Navigator.of(context).pushNamed(addFolderRoute);
+    }
+  }
+
+  void handleShowFolderDetails(String id){
+    Navigator.of(context).pushNamed(folderDetailRoute, arguments: {
+      "folderId": id
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: _tabController.index,
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(getTranslated(context, "library")),
-          actions: [
-            IconButton(
-                onPressed: () {}, icon: const FaIcon(FontAwesomeIcons.plus))
-          ],
-          centerTitle: true,
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                child: Text(getTranslated(context, "topic"),
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
-              Tab(
-                child: Text(getTranslated(context, "folder"),
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
+          appBar: AppBar(
+            title: Text(getTranslated(context, "library"), style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+            actions: [
+              IconButton(
+                  onPressed: handleAddBtn,
+                  icon: const FaIcon(FontAwesomeIcons.plus)),
             ],
+            centerTitle: true,
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(
+                  child: Text(getTranslated(context, "topic"),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w500)),
+                ),
+                Tab(
+                  child: Text(getTranslated(context, "folder"),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w500)),
+                ),
+              ],
+            ),
           ),
-        ),
-        body: StreamBuilder(
-            stream: stream.topicsFoldersStream,
+          body: StreamBuilder(
+            stream: Rx.combineLatest2(TopicStream().myTopicStream,
+                FoldersStream().foldersStream, (a, b) => [a, b]),
             builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data["code"] == 0) {
-                final topics = snapshot.data?["topics"];
-                final folders = snapshot.data?["folders"];
+              if (snapshot.hasData) {
+                folderList = snapshot.data?[1];
                 return TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _tabController,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(18),
+                    Container(
+                      margin: const EdgeInsets.all(18),
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    labelText: getTranslated(context, "search"),
-                                  ),
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 18),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: getTranslated(context, "search"),
                               ),
-                              PopupMenuButton(
-                                position: PopupMenuPosition.under,
-                                offset: const Offset(0, 16),
-                                icon: const FaIcon(FontAwesomeIcons.filter),
-                                itemBuilder: (context) => list.map((item) {
-                                  return PopupMenuItem(
-                                    value: item,
-                                    child: Text(getTranslated(context, item)),
-                                  );
-                                }).toList(),
-                                onSelected: (val) {
-                                  setState(() {
-                                    sortType = val;
-                                  });
-                                },
-                              ),
-                            ],
+                            ),
                           ),
-                          Expanded(
-                            child: ListView.builder(
-                                itemCount: topics.length,
-                                itemBuilder: (context, index) =>
-                                    SimpleTopicItem(
-                                        title: topics[index]["name"],
-                                        term: topics[index]["words"],
-                                        author: {
-                                          "avatar": topics[index]["createdBy"]
-                                              ["image"],
-                                          "name": topics[index]["createdBy"]
-                                              ["username"]
-                                        },
-                                        isDraft: topics[index]
-                                                ["sercurityView"] ==
-                                            'DRAFT',
-                                        handleTap: () {})),
-                          )
+                          TopicListView(topicList: snapshot.data?[0])
                         ],
                       ),
                     ),
-                    Padding(
-                        padding: const EdgeInsets.all(18),
+                    Container(
+                        margin: const EdgeInsets.only(
+                            top: 18, left: 18, right: 18, bottom: 24),
                         child: ListView.builder(
-                            itemCount: folders.length,
-                            itemBuilder: (context, index) => FolderItem(
-                                title: topics[index]["name"],
-                                topicQuantity: folders[index]["listTopics"],
-                                author: {
-                                  "avatar": topics[index]["createdBy"]["image"],
-                                  "name": topics[index]["createdBy"]["username"]
-                                },
-                                handleTap: () {}))),
+                            controller: _scrollFolderController,
+                            itemCount:
+                                folderList.length + (canLoadFolder ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == folderList.length && canLoadFolder) {
+                                return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    child: Lottie.asset(
+                                        'assets/animation/loading.json',
+                                        height: 80));
+                              } else {
+                                dynamic folder = folderList[index];
+                                return FolderItem(
+                                    title: folder["name"],
+                                    topicQuantity: folder["listTopics"],
+                                    author: {
+                                      "avatar": folder["createdBy"]
+                                          ["image"],
+                                      "name": folder["createdBy"]
+                                          ["username"]
+                                    },
+                                    handleTap: () {
+                                      handleShowFolderDetails(folder["_id"]);
+                                    });
+                              }
+                            }))
                   ],
                 );
-              } else if (snapshot.hasData && snapshot.data["code"] != 0) {
+              } else if (snapshot.hasError) {
                 setLogin(false);
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(signInRoute, (route) => false);
               }
               return Center(
-                child: Lottie.asset('assets/loading/loading.json', height: 80),
+                child: Lottie.asset('assets/animation/loading.json', height: 80),
               );
-            }),
-      ),
+            },
+          )),
     );
   }
 }

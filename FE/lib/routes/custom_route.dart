@@ -4,8 +4,8 @@ import 'package:wordwizzard/screens/add_folder_screen.dart';
 import 'package:wordwizzard/screens/add_topic_screen.dart';
 import 'package:wordwizzard/screens/bottom_nav.dart';
 import 'package:wordwizzard/screens/change_pass_screen.dart';
+import 'package:wordwizzard/screens/folder_detail_screen.dart';
 import 'package:wordwizzard/screens/forget_pass_screen.dart';
-import 'package:wordwizzard/screens/home_screen.dart';
 import 'package:wordwizzard/screens/intro_screen.dart';
 import 'package:wordwizzard/screens/not_found_screen.dart';
 import 'package:wordwizzard/screens/otp_verify_screen.dart';
@@ -22,8 +22,6 @@ class CustomRouter {
     switch (settings.name) {
       case introRoute:
         return MaterialPageRoute(builder: (_) => const IntroScreen());
-      case homeRoute:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
       case signInRoute:
         return MaterialPageRoute(builder: (_) => const SignInScreen());
       case signUpRoute:
@@ -79,17 +77,6 @@ class CustomRouter {
                   begin: const Offset(1.0, 0.0),
                   end: Offset.zero,
                 ).animate(animation),
-                child: child,
-              );
-            });
-      case bottomNavBarRoute:
-        return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const BottomNav(),
-            transitionDuration: const Duration(milliseconds: 300),
-            transitionsBuilder: (_, animation, __, child) {
-              return ScaleTransition(
-                scale: animation,
-                alignment: Alignment.center,
                 child: child,
               );
             });
@@ -159,6 +146,39 @@ class CustomRouter {
                   begin: const Offset(0.0, 1.0),
                   end: Offset.zero,
                 ).animate(animation),
+                child: child,
+              );
+            });
+      case folderDetailRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => FolderDetailScreen(folderId: args?["folderId"]),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+      case bottomNavRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const BottomNav(),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              var begin = 0.0;
+              var end = 1.0;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+              
+              var scaleAnimation = animation.drive(tween);
+
+              return ScaleTransition(
+                scale: scaleAnimation,
                 child: child,
               );
             });

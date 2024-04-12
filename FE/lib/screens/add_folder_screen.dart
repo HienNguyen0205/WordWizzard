@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/folder.dart';
+import 'package:wordwizzard/stream/folders_stream.dart';
 
 class AddFolderScreen extends StatefulWidget {
   const AddFolderScreen({super.key});
@@ -22,12 +23,12 @@ class AddFolderScreenState extends State<AddFolderScreen> {
   }
 
   void handleSave() {
-    if(name.isNotEmpty){
-      handleAddFolder(name, description).then((value) {
-        debugPrint(value['code'].toString());
-        if(value['code'] == 0){
-          handleCancel();
-        }else if(value['code'] == 1){
+    if (name.isNotEmpty) {
+      handleAddFolder(name, description).then((val) {
+        if (val['code'] == 0) {
+          FoldersStream().getFoldersData();
+          Navigator.of(context).pushReplacementNamed(folderDetailRoute, arguments: {"folderId": val['data']['_id']});
+        } else if (val['code'] == -1) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               signInRoute, (Route<dynamic> route) => false);
         }
@@ -46,9 +47,11 @@ class AddFolderScreenState extends State<AddFolderScreen> {
             child: Text(getTranslated(context, "cancel"))),
         leadingWidth: 64,
         actions: [
-          TextButton(
-              onPressed: handleSave,
-              child: Text(getTranslated(context, "save")))
+          canCreate
+              ? TextButton(
+                  onPressed: handleSave,
+                  child: Text(getTranslated(context, "save")))
+              : const SizedBox.shrink()
         ],
       ),
       body: Container(
@@ -66,6 +69,13 @@ class AddFolderScreenState extends State<AddFolderScreen> {
               ),
               onChanged: (value) {
                 name = value;
+                setState(() {
+                  if (name.isNotEmpty) {
+                    canCreate = true;
+                  } else {
+                    canCreate = false;
+                  }
+                });
               },
             ),
             TextField(

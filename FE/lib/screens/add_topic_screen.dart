@@ -1,4 +1,3 @@
-// ignore_for_file: dead_code
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/topic.dart';
+import 'package:wordwizzard/stream/topics_stream.dart';
 import 'package:wordwizzard/widgets/add_topic_secttion.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
@@ -74,7 +74,12 @@ class AddTopicScreenState extends State<AddTopicScreen> {
       handleAddTopic(topic, description, accessScope,
               topicTagItems[tagIndex].tag, topicInputs)
           .then((val) {
-        if (val["code"] == 0) {}
+        if (val["code"] == 0) {
+          if(accessScope == "PUBLIC"){
+            TopicStream().getAllTopicData();
+          }
+          TopicStream().getMyTopicsData();
+        }
       });
     } else if (topic.isNotEmpty || flag) {
       showAdaptiveDialog(
@@ -297,6 +302,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         transform: Matrix4.translationValues(
+                          // ignore: dead_code
                           isSwiped ? -40.0 : 0.0,
                           0.0,
                           0.0,

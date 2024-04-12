@@ -41,7 +41,6 @@
   "home": "Trang chủ",
   "add": "Thêm",
   "library": "Thư viện",
-  "profile": "Hồ sơ",
   "topic": "Chủ đề",
   "folder": "Thư mục",
   "popular": "Phổ biến",
@@ -90,7 +89,11 @@
   "title_not_done_topic": "Lưu Bản Nháp",
   "delete": "Xóa",
   "ranking": "Xếp hạng",
-  "all": "Tất cả",
-  "created": "Đã tạo",
-  "learnt": "Đã học"
+  "empty_folder": "Thư mục trống",
+  "edit_profile": "Chỉnh sửa thông tin cá nhân",
+  "log_out": "Đăng xuất",
+  "account": "Tài khoản",
+  "languages": "Ngôn ngữ",
+  "display": "Hiển thị",
+  "dark_mode": "Chế độ tối"
 }

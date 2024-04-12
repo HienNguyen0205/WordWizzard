@@ -6,24 +6,50 @@ import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/screens/home_screen.dart';
 import 'package:wordwizzard/screens/library_screen.dart';
-import 'package:wordwizzard/screens/profile_screen.dart';
+import 'package:wordwizzard/screens/setting_screen.dart';
 import 'package:wordwizzard/screens/ranking_screen.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
 
+  static void changeScreen(BuildContext context, int index){
+    BottomNavState? state = context.findAncestorStateOfType<BottomNavState>();
+    state?.handleSetSelectedIndex(index);
+  }
+
   @override
   BottomNavState createState() => BottomNavState();
 }
 
-class BottomNavState extends State<BottomNav> {
+class BottomNavState extends State<BottomNav> with TickerProviderStateMixin{
   int selectedIndex = 0;
-  final List<Widget> screens = [
-    const HomeScreen(),
-    const RankingScreen(),
-    const LibraryScreen(),
-    const ProfileScreen()
-  ];
+  late TabController tabController;
+  late List<Widget> screens;
+
+  @override
+  void initState(){
+    super.initState();
+    tabController = TabController(length: 5, vsync: this);
+    screens = [
+      const HomeScreen(),
+      const RankingScreen(),
+      const LibraryScreen(libraryTab: 0),
+      const SettingScreen(),
+    ];
+  }
+
+  void handleSetSelectedIndex(int index) {
+    tabController.index = index > 1 ? index + 1 : index;
+    if(index == 2){
+      setState(() {
+        screens[2] = const LibraryScreen(libraryTab: 1);
+      });
+    }
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).bottomNavigationBarTheme;
@@ -98,55 +124,55 @@ class BottomNavState extends State<BottomNav> {
     }
 
     return Scaffold(
-      body: screens[selectedIndex],
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: theme.backgroundColor,
-        color: theme.unselectedItemColor,
-        activeColor: theme.selectedItemColor,
-        height: 64,
-        style: TabStyle.fixedCircle,
-        items: [
-          TabItem(
-              icon: FaIcon(FontAwesomeIcons.house,
-                  color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.house,
-                  color: theme.selectedItemColor),
-              title: getTranslated(context, "home")),
-          TabItem(
-              icon: FaIcon(FontAwesomeIcons.rankingStar,
-                  color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.rankingStar,
-                  color: theme.selectedItemColor),
-              title: getTranslated(context, "ranking")),
-          const TabItem(
-            icon: Center(
-              child: FaIcon(FontAwesomeIcons.plus),
+        body: screens[selectedIndex],
+        bottomNavigationBar: ConvexAppBar(
+          controller: tabController,
+          backgroundColor: theme.backgroundColor,
+          color: theme.unselectedItemColor,
+          activeColor: theme.selectedItemColor,
+          height: 64,
+          style: TabStyle.fixedCircle,
+          items: [
+            TabItem(
+                icon: FaIcon(FontAwesomeIcons.house,
+                    color: theme.unselectedItemColor),
+                activeIcon: FaIcon(FontAwesomeIcons.house,
+                    color: theme.selectedItemColor),
+                title: getTranslated(context, "home")),
+            TabItem(
+                icon: FaIcon(FontAwesomeIcons.rankingStar,
+                    color: theme.unselectedItemColor),
+                activeIcon: FaIcon(FontAwesomeIcons.rankingStar,
+                    color: theme.selectedItemColor),
+                title: getTranslated(context, "ranking")),
+            const TabItem(
+              icon: Center(
+                child: FaIcon(FontAwesomeIcons.plus, color: Colors.white,),
+              ),
             ),
-            isIconBlend: true,
-          ),
-          TabItem(
-              icon: FaIcon(FontAwesomeIcons.folderOpen,
-                  color: theme.unselectedItemColor),
-              activeIcon: FaIcon(FontAwesomeIcons.folderOpen,
-                  color: theme.selectedItemColor),
-              title: getTranslated(context, "library")),
-          TabItem(
-              icon: FaIcon(FontAwesomeIcons.solidAddressBook,
-                  color: theme.unselectedItemColor),
-              activeIcon:
-                  FaIcon(FontAwesomeIcons.solidAddressBook, color: theme.selectedItemColor),
-              title: getTranslated(context, "profile")),
-        ],
-        onTap: (index) {
-          if (index != 2) {
-            setState(() {
-              selectedIndex = index > 2 ? index - 1 : index;
-            });
-          } else {
-            handleShowBottomSheet();
-          }
-        },
-      ),
-    );
+            TabItem(
+                icon: FaIcon(FontAwesomeIcons.folderOpen,
+                    color: theme.unselectedItemColor),
+                activeIcon: FaIcon(FontAwesomeIcons.folderOpen,
+                    color: theme.selectedItemColor),
+                title: getTranslated(context, "library")),
+            TabItem(
+                icon: FaIcon(FontAwesomeIcons.gear,
+                    color: theme.unselectedItemColor),
+                activeIcon:
+                    FaIcon(FontAwesomeIcons.gear, color: theme.selectedItemColor),
+                title: getTranslated(context, "setting")),
+          ],
+          onTap: (index) {
+            if (index != 2) {
+              setState(() {
+                selectedIndex = index > 2 ? index - 1 : index;
+              });
+            } else {
+              handleShowBottomSheet();
+            }
+          },
+        ),
+      );
   }
 }

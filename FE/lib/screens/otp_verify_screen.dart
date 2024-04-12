@@ -73,8 +73,7 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
     if (resCode == 0) {
       if(action == 'sign_up') {
         setLogin(true);
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
+        Navigator.of(context).pushNamedAndRemoveUntil(bottomNavRoute, (route) => false);
       }else if(action == 'forget_pass'){
         Navigator.of(context).pushNamed(changePassRoute, arguments: {"userId": widget.userId});
       }

@@ -28,7 +28,7 @@ class SignInScreenState extends State<SignInScreen> {
       handleLogin(_email, _password).then((value) {
         if (value == 0) {
           setLogin(true);
-          Navigator.of(context).pushReplacementNamed(bottomNavBarRoute);
+          Navigator.of(context).pushReplacementNamed(bottomNavRoute);
         } else if (value == 2 || value == 3) {
           setState(() {
             _emailErrMess = getTranslated(context, 'login_error');

@@ -19,9 +19,12 @@ Future<dynamic> handleGetAllMyTopics(int? page, String? search, int? limit) asyn
     final resData = jsonDecode(res.body);
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
+    }else {
+      return {"errrorCode": resData["errrorCode"]};
     }
   } catch (error) {
-    return {"code": 1};
+    debugPrint(error.toString());
+    return {"code": -1};
   }
 }
 
@@ -39,9 +42,12 @@ Future<dynamic> handleGetAllTopics(
     final resData = jsonDecode(res.body);
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
     }
   } catch (error) {
-    return {"code": 1};
+    debugPrint(error.toString());
+    return {"code": -1};
   }
 }
 
@@ -68,10 +74,11 @@ Future<dynamic> handleAddTopic(String name, String description, String securityV
       },
     );
     final resData = jsonDecode(res.body);
+    debugPrint(resData.toString());
     if (res.statusCode == 201) {
       return {"code": 0, "data": resData["data"]};
-    }else{
-      return {"code": resData["errorCode"], "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
     }
   } catch (error) {
     debugPrint(error.toString());

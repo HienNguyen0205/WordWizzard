@@ -60,7 +60,7 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
           itemCount: 2,
           itemBuilder: (contex, index) {
             return ListTile(
-              title: Text(getTranslated(context, accessScopeItem[index])),
+              title: Text(getTranslated(context, accessScopeItem[index] == "PUBLIC" ? "everyone" : "only_me")),
               trailing: selectedIndex == index
                   ? const FaIcon(FontAwesomeIcons.check)
                   : null,

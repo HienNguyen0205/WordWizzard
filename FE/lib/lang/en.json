@@ -42,7 +42,6 @@
   "home": "Home",
   "add": "Add",
   "library": "Library",
-  "profile": "Profile",
   "topic": "Topic",
   "folder": "Folder",
   "popular": "Popular",
@@ -91,7 +90,11 @@
   "title_not_done_topic": "Save Draft",
   "delete": "Delete",
   "ranking": "Ranking",
-  "all": "All",
-  "created": "Created",
-  "learnt": "Learnt"
+  "empty_folder": "Empty folder",
+  "edit_profile": "Edit Profile",
+  "log_out": "Log out",
+  "account": "Account",
+  "languages": "Languages",
+  "display": "Display",
+  "dark_mode": "Dark Mode"
 }

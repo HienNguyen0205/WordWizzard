@@ -25,6 +25,7 @@ dependencies:
   introduction_screen: ^3.1.12
   lottie: ^3.1.0
   modal_bottom_sheet: ^3.0.0
+  rxdart: ^0.27.7
   shared_preferences: ^2.2.2
   tab_container: ^2.0.0
 
@@ -51,4 +52,5 @@ flutter:
   - assets/images/intro/studying.svg
   - assets/images/banner/banner.png
   - assets/images/avatar/avatar.svg
-  - assets/loading/loading.json
+  - assets/animation/loading.json
+  - assets/animation/empty_ani.json

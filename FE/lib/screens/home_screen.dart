@@ -3,11 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tab_container/tab_container.dart';
 import 'package:wordwizzard/auth/auth.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
-import 'package:wordwizzard/stream/topics_folders_stream.dart';
+import 'package:wordwizzard/screens/bottom_nav.dart';
+import 'package:wordwizzard/stream/folders_stream.dart';
+import 'package:wordwizzard/stream/topics_stream.dart';
 import 'package:wordwizzard/widgets/folder_item.dart';
 import 'package:wordwizzard/widgets/topic_item.dart';
 
@@ -23,18 +26,28 @@ class HomeScreenState extends State<HomeScreen> {
   int topicIndex = 0;
   int folderIndex = 0;
 
-  TopicsFoldersStream stream = TopicsFoldersStream();
-
   @override
   void initState() {
     super.initState();
-    stream.updateTopicsFoldersData();
+    TopicStream().getAllTopicData();
+    FoldersStream().getFoldersData();
   }
 
   void handleShowAllTopics() {}
 
+  void handleShowAllFolders() {
+    BottomNav.changeScreen(context, 2);
+  }
+
   void handleSearchBtn() {
     Navigator.of(context).pushNamed(searchRoute);
+  }
+
+  void redirectToSignInRoute() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(signInRoute, (route) => false);
+    });
   }
 
   void handleShowNotifications() {
@@ -99,11 +112,12 @@ class HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: StreamBuilder(
-        stream: stream.topicsFoldersStream,
+        stream: Rx.combineLatest2(TopicStream().allTopicStream,
+            FoldersStream().foldersStream, (a, b) => [a, b]),
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data["code"] == 0) {
-            final topics = snapshot.data?["topics"];
-            final folders = snapshot.data?["folders"];
+          if (snapshot.hasData) {
+            final topics = snapshot.data?[0];
+            final folders = snapshot.data?[1];
             return Stack(fit: StackFit.expand, children: [
               Positioned(
                   top: 0,
@@ -186,12 +200,12 @@ class HomeScreenState extends State<HomeScreen> {
                                       child: TopicItem(
                                         title: topics[index]["name"],
                                         termQuantity: topics[index]["words"],
-                                        publicId:
-                                            "ivdnlro588kyrxzhcv5z",
+                                        publicId: topics[index]["tag"]["image"],
                                         author: {
                                           "avatar": topics[index]["createdBy"]
                                               ["image"],
-                                          "name": topics[index]["createdBy"]["username"]
+                                          "name": topics[index]["createdBy"]
+                                              ["username"]
                                         },
                                         handleTap: () {},
                                       ));
@@ -207,13 +221,13 @@ class HomeScreenState extends State<HomeScreen> {
                                         fontSize: 22,
                                         fontWeight: FontWeight.w500)),
                                 TextButton(
-                                    onPressed: handleShowAllTopics,
+                                    onPressed: handleShowAllFolders,
                                     child: Text(
                                         getTranslated(context, "see_more")))
                               ],
                             ),
                             SizedBox(
-                              height: 100.0,
+                              height: 104.0,
                               child: PageView.builder(
                                 controller:
                                     PageController(viewportFraction: 0.675),
@@ -239,10 +253,12 @@ class HomeScreenState extends State<HomeScreen> {
                                           scaleFactor, scaleFactor, 1.0),
                                       child: FolderItem(
                                         title: folders[index]["name"],
-                                        topicQuantity: folders[index]["listTopics"],
+                                        topicQuantity: folders[index]
+                                            ["listTopics"],
                                         author: {
                                           "avatar": null,
-                                          "name": folders[index]["createdBy"]["username"]
+                                          "name": folders[index]["createdBy"]
+                                              ["username"]
                                         },
                                         handleTap: () {},
                                       ));
@@ -269,12 +285,12 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ]);
-          } else if (snapshot.hasData && snapshot.data["code"] != 0) {
+          } else if (snapshot.hasError) {
             setLogin(false);
-            Navigator.of(context).pushNamedAndRemoveUntil(signInRoute, (route) => false);
+            redirectToSignInRoute();
           }
           return Center(
-            child: Lottie.asset('assets/loading/loading.json', height: 80),
+            child: Lottie.asset('assets/animation/loading.json', height: 80),
           );
         },
       ),

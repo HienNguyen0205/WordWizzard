@@ -21,7 +21,7 @@ void main() async {
     initialRoute = introRoute;
   } else {
     if (isLogin) {
-      initialRoute = bottomNavBarRoute;
+      initialRoute = bottomNavRoute;
     } else {
       initialRoute = signInRoute;
     }
@@ -41,9 +41,14 @@ class MyApp extends StatefulWidget {
     state?.setLocale(newLocale);
   }
 
-  static void setTheme(BuildContext context) {
+  static void setTheme(BuildContext context, bool newMode) {
     MyAppState? state = context.findAncestorStateOfType<MyAppState>();
-    state?.handleChangeTheme();
+    state?.handleChangeTheme(newMode);
+  }
+
+  static ThemeMode? getTheme(BuildContext context) {
+    MyAppState? state = context.findAncestorStateOfType<MyAppState>();
+    return state?.getMode();
   }
 
   @override
@@ -70,90 +75,95 @@ class MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  void handleChangeTheme() {
+  ThemeMode getMode() {
+    return mode;
+  }
+
+  void handleChangeTheme(bool newMode) {
     setState(() {
-      mode = mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+      mode = newMode == true ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WordWiizzard',
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.cyanM3,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 7,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 10,
-          blendOnColors: false,
-          useTextTheme: true,
-          useM2StyleDividerInM3: true,
-          alignedDropdown: true,
-          useInputDecoratorThemeInDialogs: true,
-          navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedLabel: false,
-          navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedIcon: false,
-          navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationBarIndicatorOpacity: 1.00,
-          textButtonTextStyle: MaterialStatePropertyAll(
-              TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-          cardElevation: 4,
+        debugShowCheckedModeBanner: false,
+        title: 'WordWiizzard',
+        theme: FlexThemeData.light(
+          scheme: FlexScheme.cyanM3,
+          surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+          blendLevel: 7,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 10,
+            blendOnColors: false,
+            useTextTheme: true,
+            useM2StyleDividerInM3: true,
+            alignedDropdown: true,
+            useInputDecoratorThemeInDialogs: true,
+            navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
+            navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
+            navigationBarMutedUnselectedLabel: false,
+            navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
+            navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
+            navigationBarMutedUnselectedIcon: false,
+            navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
+            navigationBarIndicatorOpacity: 1.00,
+            textButtonTextStyle: MaterialStatePropertyAll(
+                TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            cardElevation: 4,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          swapLegacyOnMaterial3: true,
         ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-      ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.cyanM3,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 13,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          useTextTheme: true,
-          useM2StyleDividerInM3: true,
-          alignedDropdown: true,
-          useInputDecoratorThemeInDialogs: true,
-          navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedLabel: false,
-          navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
-          navigationBarMutedUnselectedIcon: false,
-          navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
-          navigationBarIndicatorOpacity: 1.00,
-          textButtonTextStyle: MaterialStatePropertyAll(
-              TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+        darkTheme: FlexThemeData.dark(
+          scheme: FlexScheme.cyanM3,
+          surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+          blendLevel: 13,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 20,
+            useTextTheme: true,
+            useM2StyleDividerInM3: true,
+            alignedDropdown: true,
+            useInputDecoratorThemeInDialogs: true,
+            navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
+            navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
+            navigationBarMutedUnselectedLabel: false,
+            navigationBarSelectedIconSchemeColor: SchemeColor.onSurface,
+            navigationBarUnselectedIconSchemeColor: SchemeColor.onSurface,
+            navigationBarMutedUnselectedIcon: false,
+            navigationBarIndicatorSchemeColor: SchemeColor.secondaryContainer,
+            navigationBarIndicatorOpacity: 1.00,
+            textButtonTextStyle: MaterialStatePropertyAll(
+                TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          swapLegacyOnMaterial3: true,
         ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-      ),
-      themeMode: mode,
-      locale: _locale,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('vi'),
-      ],
-      localizationsDelegates: const [
-        Localization.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale?.languageCode) {
-            return supportedLocale;
+        themeMode: mode,
+        locale: _locale,
+        supportedLocales: const [
+          Locale('en'),
+          Locale('vi'),
+        ],
+        localizationsDelegates: const [
+          Localization.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        localeResolutionCallback: (locale, supportedLocales) {
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale?.languageCode) {
+              return supportedLocale;
+            }
           }
-        }
-        return supportedLocales.first;
-      },
-      onGenerateRoute: CustomRouter.generatedRoute,
-      initialRoute: widget.route,
-    );
+          return supportedLocales.first;
+        },
+        onGenerateRoute: CustomRouter.generatedRoute,
+        initialRoute: widget.route,
+      );
   }
 }

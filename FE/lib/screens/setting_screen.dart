@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
+import 'package:wordwizzard/auth/auth.dart';
+import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/main.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/stream/user_stream.dart';
+import 'package:wordwizzard/widgets/avatar.dart';
+import 'package:wordwizzard/widgets/setting_section.dart';
+
+class SettingScreen extends StatefulWidget {
+  const SettingScreen({super.key});
+
+  @override
+  SettingScreenState createState() => SettingScreenState();
+}
+
+class SettingScreenState extends State<SettingScreen> {
+  bool darkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    UserStream().getUserData();
+    darkMode = MyApp.getTheme(context) == ThemeMode.light ? false : true;
+  }
+
+  void changeDisplayMode(bool mode) {
+    setState(() {
+      darkMode = mode;
+    });
+    MyApp.setTheme(context, mode);
+  }
+
+  void handleUpdateUserInfo() {}
+
+  void handleLogOut() {
+    setLogin(false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(signInRoute, (route) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(getTranslated(context, "setting"),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+        centerTitle: true,
+      ),
+      body: StreamBuilder(
+        stream: UserStream().userStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            dynamic userData = snapshot.data;
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Avatar(publicId: userData["image"], radius: 36),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        child: Text(userData["username"],
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600)),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: ListView(
+                          children: [
+                            SettingSection(
+                                title: getTranslated(context, "account"),
+                                settingsOptions: [
+                                  ListTile(
+                                    leading: Container(
+                                        alignment: Alignment.center,
+                                        width: 32,
+                                        height: 32,
+                                        child: const FaIcon(
+                                            FontAwesomeIcons.solidAddressBook)),
+                                    trailing: const FaIcon(
+                                        FontAwesomeIcons.angleRight),
+                                    title: Text(
+                                        getTranslated(context, "edit_profile")),
+                                    onTap: () {},
+                                  ),
+                                  const Divider(),
+                                  ListTile(
+                                    leading: Container(
+                                        alignment: Alignment.center,
+                                        width: 32,
+                                        height: 32,
+                                        child: const FaIcon(
+                                            FontAwesomeIcons.language)),
+                                    trailing: const FaIcon(
+                                        FontAwesomeIcons.angleRight),
+                                    title: Text(
+                                        getTranslated(context, "languages")),
+                                    onTap: () {},
+                                  ),
+                                ]),
+                            SettingSection(
+                                title: getTranslated(context, "display"),
+                                settingsOptions: [
+                                  ListTile(
+                                      leading: Container(
+                                          alignment: Alignment.center,
+                                          width: 32,
+                                          height: 32,
+                                          child: const FaIcon(
+                                              FontAwesomeIcons.moon)),
+                                      trailing: Switch(
+                                        onChanged: (val) {
+                                          changeDisplayMode(val);
+                                        },
+                                        value: darkMode,
+                                      ),
+                                      title: Text(
+                                          getTranslated(context, "dark_mode")))
+                                ]),
+                            const SizedBox(height: 18),
+                            Container(
+                              decoration: BoxDecoration(
+                                color:
+                                    Colors.red,
+                                borderRadius: BorderRadius.circular(
+                                    8),
+                              ),
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(backgroundColor: Colors.red, shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                  onPressed: handleLogOut,
+                                  child: Text(
+                                    getTranslated(context, "log_out"),
+                                    style: const TextStyle(fontSize: 18),
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            setLogin(false);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil(signInRoute, (route) => false);
+          }
+          return Center(
+            child: Lottie.asset('assets/animation/loading.json', height: 80),
+          );
+        },
+      ),
+    );
+  }
+}

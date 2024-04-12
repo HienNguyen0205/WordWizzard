@@ -4,9 +4,9 @@ import 'package:cloudinary_url_gen/transformation/delivery/delivery_actions.dart
 import 'package:cloudinary_url_gen/transformation/resize/resize.dart';
 import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/widgets/avatar.dart';
 
 class TopicItem extends StatefulWidget {
   const TopicItem(
@@ -33,7 +33,6 @@ class TopicItemState extends State<TopicItem> {
     return GestureDetector(
       onTap: widget.handleTap,
       child: Card(
-        shadowColor: Colors.transparent,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Stack(
             children: [
@@ -51,7 +50,7 @@ class TopicItemState extends State<TopicItem> {
                     return AspectRatio(
                       aspectRatio: 1.6,
                       child: Center(
-                        child: Lottie.asset('assets/loading/loading.json',
+                        child: Lottie.asset('assets/animation/loading.json',
                             height: 80),
                       ),
                     );
@@ -86,12 +85,7 @@ class TopicItemState extends State<TopicItem> {
                 const SizedBox(height: 12,),
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 14,
-                      child: widget.author["avatar"] != null
-                          ? Image.network(widget.author["avatar"])
-                          : SvgPicture.asset("assets/images/avatar/avatar.svg"),
-                    ),
+                    Avatar(publicId: widget.author["avatar"], radius: 14,),
                     const SizedBox(width: 12),
                     Text(widget.author["name"])
                   ],

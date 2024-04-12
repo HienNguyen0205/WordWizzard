@@ -192,15 +192,15 @@ const getAll = async (req, res) => {
       },
     },
     {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
       $skip: skip,
     },
     {
       $limit: limits,
-    },
-    {
-      $sort: {
-        createdAt: -1,
-      },
     },
   ]);
   return res.status(200).send({
@@ -353,15 +353,15 @@ const getAllClient = async (req, res) => {
       },
     },
     {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
       $skip: skip,
     },
     {
       $limit: limits,
-    },
-    {
-      $sort: {
-        createdAt: -1,
-      },
     },
   ]);
   return res.status(200).send({
@@ -369,12 +369,12 @@ const getAllClient = async (req, res) => {
     data: topics,
   });
 };
-const deleteDraft = async (req, res) => {
-  const { id } = req.params;
-  const topic = await Topic.deleteOne({ _id: id });
-  return res.status(200).send({
-    msg: "Topic Draft deleted successfully!",
-    data: topic,
-  });
-};
-export { addOne, getOne, getAll, updateOne, getAllClient, deleteDraft };
+// const deleteDraft = async (req, res) => {
+//   const { id } = req.params;
+//   const topic = await Topic.deleteOne({ _id: id });
+//   return res.status(200).send({
+//     msg: "Topic Draft deleted successfully!",
+//     data: topic,
+//   });
+// };
+export { addOne, getOne, getAll, updateOne, getAllClient };

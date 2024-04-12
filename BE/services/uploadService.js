@@ -13,7 +13,8 @@ const uploadImage = async (imagePath) => {
               if (error) {
                 reject(error);
               } else {
-                resolve(result.url);
+                console.log(result);
+                resolve(result.public_id);
               }
             })
             .end(resizedImageBuffer);

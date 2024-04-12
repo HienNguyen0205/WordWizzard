@@ -87,6 +87,7 @@ const getAll = async (req, res) => {
           $first: {
             _id: "$user._id",
             username: "$user.username",
+            image: "$user.image",
           },
         },
         createdAt: {
@@ -98,16 +99,17 @@ const getAll = async (req, res) => {
       },
     },
     {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
       $skip: skip,
     },
     {
       $limit: limits,
     },
-    {
-      $sort: {
-        createdAt: -1,
-      },
-    },
+    
   ]);
   return res.status(200).send({
     msg: "Folders fetched successfully!",
@@ -198,6 +200,7 @@ const getOne = async (req, res) => {
           $first: {
             _id: "$user._id",
             username: "$user.username",
+            image: "$user.image",
           },
         },
         createdAt: {
@@ -211,7 +214,7 @@ const getOne = async (req, res) => {
   ]);
   return res.status(200).send({
     msg: "Folder fetched successfully!",
-    data: folder,
+    data: folder[0],
   });
 };
 

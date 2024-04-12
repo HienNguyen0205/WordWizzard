@@ -170,7 +170,6 @@ const getFolders = async (req, res) => {
   });
 };
 
-
 const getTopics = async (req, res) => {
   const { id } = req.params;
   const topics = await Topic.aggregate([
@@ -211,8 +210,8 @@ const getTopics = async (req, res) => {
           },
         },
         userInfo: {
-          $arrayElemAt: ["$userInfo", 0]
-        }
+          $arrayElemAt: ["$userInfo", 0],
+        },
       },
     },
     {
@@ -230,7 +229,7 @@ const getTopics = async (req, res) => {
         createdBy: {
           name: "$userInfo.username",
           image: "$userInfo.image",
-        }
+        },
       },
     },
   ]);

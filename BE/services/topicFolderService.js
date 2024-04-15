@@ -194,14 +194,22 @@ const getTopics = async (req, res) => {
         as: "userInfo",
       },
     },
-    // {
-    //   $unwind: "$userInfo"
-    // },
+    {
+      $lookup: {
+        from: "tags",
+        localField: "tag",
+        foreignField: "_id",
+        as: "tagInfo",
+      },
+    },
     {
       $project: {
         _id: 1,
         name: 1,
         listWords: 1,
+        tag: {
+          $arrayElemAt: ["$tagInfo", 0],
+        },
         topicFolderInfo: {
           $filter: {
             input: "$topicFolderInfo",
@@ -218,7 +226,17 @@ const getTopics = async (req, res) => {
       $project: {
         _id: 1,
         name: 1,
-        listWords: 1,
+        words: {
+          $cond: {
+            if: { $isArray: "$listWords" }, // Kiểm tra xem listWords có phải là một mảng không
+            then: { $size: "$listWords" }, // Nếu là mảng, tính số lượng từ
+            else: 0, // Nếu không phải là mảng, gán 0
+          },
+        },
+        tag: {
+        name: "$tag.name",
+          image: "$tag.image",
+        },
         isChosen: {
           $cond: {
             if: { $eq: [{ $size: "$topicFolderInfo" }, 0] },
@@ -227,7 +245,7 @@ const getTopics = async (req, res) => {
           },
         },
         createdBy: {
-          name: "$userInfo.username",
+          username: "$userInfo.username",
           image: "$userInfo.image",
         },
       },

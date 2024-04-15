@@ -211,6 +211,13 @@ const getAll = async (req, res) => {
 
 const getOne = async (req, res) => {
   const { id } = req.params;
+  const check_topic = await Topic.findById(id);
+  if (!check_topic) {
+    return res.status(404).send({
+      errorCode: "2",
+      message: "Topic not found",
+    });
+  }
   const topic = await Topic.aggregate([
     {
       $match: {
@@ -234,6 +241,12 @@ const getOne = async (req, res) => {
         foreignField: "_id",
         as: "topic_tag",
       },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $unwind: "$topic_tag",
     },
     {
       $group: {
@@ -337,7 +350,6 @@ const getAllClient = async (req, res) => {
         },
         createdBy: {
           $first: {
-            _id: "$user._id",
             username: "$user.username",
             image: "$user.image",
           },

@@ -119,6 +119,13 @@ const getAll = async (req, res) => {
 
 const getOne = async (req, res) => {
   const { id } = req.params;
+  const check_folder = await Folder.findById(id);
+  if (!check_folder) {
+    return res.status(404).send({
+      errorCode: "2",
+      message: "Folder not found",
+    });
+  }
   const folder = await Folder.aggregate([
     {
       $match: {

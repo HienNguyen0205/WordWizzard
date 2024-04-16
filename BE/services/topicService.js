@@ -283,7 +283,7 @@ const getOne = async (req, res) => {
   ]);
   return res.status(200).send({
     msg: "Topic fetched successfully!",
-    data: topic,
+    data: topic[0],
   });
 };
 

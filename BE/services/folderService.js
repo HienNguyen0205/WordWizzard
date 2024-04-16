@@ -163,12 +163,44 @@ const getOne = async (req, res) => {
             },
           },
           {
+            $lookup: {
+              from: "tags",
+              localField: "topicDetails.tag",
+              foreignField: "_id",
+              as: "tagDetails",
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "topicDetails.createdBy",
+              foreignField: "_id",
+              as: "userDetails",
+            }
+          },
+          {
             $unwind: "$topicDetails",
+          },
+          {
+            $unwind: "$tagDetails",
+          },
+          {
+            $unwind: "$userDetails",
           },
           {
             $project: {
               _id: "$topicDetails._id",
               name: "$topicDetails.name",
+              description: "$topicDetails.description",
+              securityView: "$topicDetails.securityView",
+              tag: {
+                name: "$tagDetails.name",
+                image: "$tagDetails.image",
+              },
+              createdBy: {
+                username: "$userDetails.username",
+                image: "$userDetails.image",
+              },
               listWordsSize: { $size: "$topicDetails.listWords" },
             },
           },
@@ -188,7 +220,11 @@ const getOne = async (req, res) => {
             in: {
               topic_id: "$$topic._id",
               name: "$$topic.name",
-              listWords: "$$topic.listWordsSize",
+              description: "$$topic.description",
+              securityView: "$$topic.securityView",
+              tag: "$$topic.tag",
+              createdBy: "$$topic.createdBy",
+              words: "$$topic.listWordsSize",
             },
           },
         },

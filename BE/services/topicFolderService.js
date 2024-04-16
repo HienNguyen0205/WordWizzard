@@ -6,7 +6,7 @@ const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
 const updateTopicsToFolder = async (req, res) => {
   const { id } = req.params;
-  const topicIds = req.body.topicIds;
+  const topicIds = JSON.parse(req.body.topicIds);
 
   const folder = await Folder.findOne({
     _id: id,
@@ -64,7 +64,7 @@ const updateTopicsToFolder = async (req, res) => {
 
 const chooseFoldersToAdd = async (req, res) => {
   const { id } = req.params;
-  const folderIds = req.body.folderIds;
+  const folderIds = JSON.parse(req.body.folderIds);
 
   const topic = await Topic.findOne({
     _id: id,

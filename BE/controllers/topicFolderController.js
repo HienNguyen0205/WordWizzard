@@ -18,7 +18,7 @@ topicFolderController.addOne = async (req, res, next) => {
 };
 topicFolderController.updateTopicsToFolder = async (req, res, next) => {
   try {
-    if (!req.body.topicIds) {
+    if (!JSON.parse(req.body.topicIds)) {
       return res.status(400).send({
         errorCode: "1",
         message: "Topics are required.",
@@ -38,7 +38,7 @@ topicFolderController.updateTopicsToFolder = async (req, res, next) => {
 
 topicFolderController.chooseFoldersToAdd = async (req, res, next) => {
   try {
-    if (!req.body.folderIds) {
+    if (!JSON.parse(req.body.folderIds)) {
       return res.status(400).send({
         errorCode: "1",
         message: "Folders are required.",

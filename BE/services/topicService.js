@@ -176,7 +176,6 @@ const getAll = async (req, res) => {
         },
         createdBy: {
           $first: {
-            _id: "$user._id",
             username: "$user.username",
             image: "$user.image",
           },

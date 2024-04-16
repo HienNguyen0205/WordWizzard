@@ -132,6 +132,7 @@ class BottomNavState extends State<BottomNav> with TickerProviderStateMixin{
           activeColor: theme.selectedItemColor,
           height: 64,
           style: TabStyle.fixedCircle,
+          shadowColor: Theme.of(context).primaryColor,
           items: [
             TabItem(
                 icon: FaIcon(FontAwesomeIcons.house,

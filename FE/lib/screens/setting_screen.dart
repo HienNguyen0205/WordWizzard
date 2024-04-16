@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wordwizzard/auth/auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/main.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
+import 'package:wordwizzard/providers/theme_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/stream/user_stream.dart';
 import 'package:wordwizzard/widgets/avatar.dart';
@@ -17,26 +18,25 @@ class SettingScreen extends StatefulWidget {
 }
 
 class SettingScreenState extends State<SettingScreen> {
-  bool darkMode = false;
 
   @override
   void initState() {
     super.initState();
     UserStream().getUserData();
-    darkMode = MyApp.getTheme(context) == ThemeMode.light ? false : true;
-  }
-
-  void changeDisplayMode(bool mode) {
-    setState(() {
-      darkMode = mode;
-    });
-    MyApp.setTheme(context, mode);
   }
 
   void handleUpdateUserInfo() {}
 
+  void hanleChangeLanguage() {
+    Navigator.of(context).pushNamed(changeLanguageRoute);
+  }
+
+  void handleChangeThemeMode() {
+    context.read<ThemeProvider>().changeThemeMode();
+  }
+
   void handleLogOut() {
-    setLogin(false);
+    context.read<AuthProvider>().logOut();
     Navigator.of(context)
         .pushNamedAndRemoveUntil(signInRoute, (route) => false);
   }
@@ -89,7 +89,7 @@ class SettingScreenState extends State<SettingScreen> {
                                         getTranslated(context, "edit_profile")),
                                     onTap: () {},
                                   ),
-                                  const Divider(),
+                                  const Divider(height: 0, indent: 0, thickness: 2),
                                   ListTile(
                                     leading: Container(
                                         alignment: Alignment.center,
@@ -101,7 +101,7 @@ class SettingScreenState extends State<SettingScreen> {
                                         FontAwesomeIcons.angleRight),
                                     title: Text(
                                         getTranslated(context, "languages")),
-                                    onTap: () {},
+                                    onTap: hanleChangeLanguage,
                                   ),
                                 ]),
                             SettingSection(
@@ -116,9 +116,9 @@ class SettingScreenState extends State<SettingScreen> {
                                               FontAwesomeIcons.moon)),
                                       trailing: Switch(
                                         onChanged: (val) {
-                                          changeDisplayMode(val);
+                                          handleChangeThemeMode();
                                         },
-                                        value: darkMode,
+                                        value: context.watch<ThemeProvider>().mode == ThemeMode.dark ? true : false,
                                       ),
                                       title: Text(
                                           getTranslated(context, "dark_mode")))
@@ -148,7 +148,7 @@ class SettingScreenState extends State<SettingScreen> {
               ),
             );
           } else if (snapshot.hasError) {
-            setLogin(false);
+            context.read<AuthProvider>().logOut();
             Navigator.of(context)
                 .pushNamedAndRemoveUntil(signInRoute, (route) => false);
           }

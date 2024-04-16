@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:wordwizzard/auth/auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
 
@@ -72,7 +73,7 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
     debugPrint(resCode.toString());
     if (resCode == 0) {
       if(action == 'sign_up') {
-        setLogin(true);
+        context.read<AuthProvider>().signIn();
         Navigator.of(context).pushNamedAndRemoveUntil(bottomNavRoute, (route) => false);
       }else if(action == 'forget_pass'){
         Navigator.of(context).pushNamed(changePassRoute, arguments: {"userId": widget.userId});
@@ -122,7 +123,7 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
             }
           },
         ),
-        title: Text(getTranslated(context, 'verify_email')),
+        title: Text(getTranslated(context, 'verify_email'), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
       ),
       body: SingleChildScrollView(
         child: Container(

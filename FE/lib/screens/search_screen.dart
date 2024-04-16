@@ -37,7 +37,7 @@ class SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, "search")),
+        title: Text(getTranslated(context, "search"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
         centerTitle: true,
         leading: IconButton(
             onPressed: handleBack,
@@ -82,7 +82,7 @@ class SearchScreenState extends State<SearchScreen> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                children: [
+                children: const [
                 ],
               ),
             )

@@ -45,7 +45,7 @@ class ForgetPassScreenState extends State<ForgetPassScreen> {
             }
           },
         ),
-        title: Text(getTranslated(context, "forgot_pass")),
+        title: Text(getTranslated(context, "forgot_pass"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

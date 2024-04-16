@@ -11,3 +11,5 @@ const String addFolderRoute = "addFolder";
 const String searchRoute = "search";
 const String folderDetailRoute = "folderDetail";
 const String bottomNavRoute = "bottomNav";
+const String addTopicToFolderRoute = "addTopicToFolder";
+const String changeLanguageRoute = "changeLanguage";

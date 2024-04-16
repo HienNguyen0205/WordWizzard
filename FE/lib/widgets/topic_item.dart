@@ -83,12 +83,14 @@ class TopicItemState extends State<TopicItem> {
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 12,),
-                Row(
-                  children: [
-                    Avatar(publicId: widget.author["avatar"], radius: 14,),
-                    const SizedBox(width: 12),
-                    Text(widget.author["name"])
-                  ],
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Avatar(publicId: widget.author["avatar"], radius: 14,),
+                      const VerticalDivider(),
+                      Text(widget.author["name"])
+                    ],
+                  ),
                 )
               ],
             ),

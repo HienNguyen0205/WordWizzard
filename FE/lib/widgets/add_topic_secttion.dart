@@ -78,6 +78,7 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
             TextFormField(
               controller: _controller2,
               decoration: InputDecoration(
+                fillColor: Colors.transparent,
                 border: const UnderlineInputBorder(),
                 focusedBorder: const UnderlineInputBorder(),
                 enabledBorder: const UnderlineInputBorder(),

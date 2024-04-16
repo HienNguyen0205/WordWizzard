@@ -95,5 +95,10 @@
   "account": "Tài khoản",
   "languages": "Ngôn ngữ",
   "display": "Hiển thị",
-  "dark_mode": "Chế độ tối"
+  "dark_mode": "Chế độ tối",
+  "add_topic": "Thêm chủ đề",
+  "en": "Tiếng anh",
+  "vi": "Tiếng Việt",
+  "not_any_topic": "Bạn chưa có chủ đề nào",
+  "not_any_folder": "Bạn chưa có thư mục nào"
 }

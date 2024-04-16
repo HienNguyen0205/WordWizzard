@@ -41,7 +41,7 @@ class AddFolderScreenState extends State<AddFolderScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(getTranslated(context, "new_folder")),
+        title: Text(getTranslated(context, "new_folder"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
         leading: TextButton(
             onPressed: handleCancel,
             child: Text(getTranslated(context, "cancel"))),

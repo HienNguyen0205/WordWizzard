@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/screens/add_folder_screen.dart';
 import 'package:wordwizzard/screens/add_topic_screen.dart';
+import 'package:wordwizzard/screens/add_topic_to_folder_screen.dart';
 import 'package:wordwizzard/screens/bottom_nav.dart';
+import 'package:wordwizzard/screens/change_language_screen.dart';
 import 'package:wordwizzard/screens/change_pass_screen.dart';
 import 'package:wordwizzard/screens/folder_detail_screen.dart';
 import 'package:wordwizzard/screens/forget_pass_screen.dart';
@@ -95,9 +97,7 @@ class CustomRouter {
             });
       case settingAddTopicRoute:
         return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => SettingAddTopicScreen(
-                accessScope: args?["accessScope"],
-                setAccessScope: args?["setAccessScope"]),
+            pageBuilder: (_, __, ___) => const SettingAddTopicScreen(),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
@@ -110,9 +110,7 @@ class CustomRouter {
             });
       case settingAccessScopeRoute:
         return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => SettingAccessScope(
-                accessScope: args?["accessScope"],
-                setAccessScope: args?["setAccessScope"]),
+            pageBuilder: (_, __, ___) => const SettingAccessScope(),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
@@ -167,7 +165,7 @@ class CustomRouter {
             pageBuilder: (_, __, ___) => const BottomNav(),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
-              var begin = 0.0;
+              var begin = 0.7;
               var end = 1.0;
               var curve = Curves.ease;
 
@@ -179,6 +177,33 @@ class CustomRouter {
 
               return ScaleTransition(
                 scale: scaleAnimation,
+                child: child,
+              );
+            });
+      case addTopicToFolderRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => AddTopicToFolderScreen(folderId: args?["folderId"]),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 1.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+            case changeLanguageRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                const ChangeLanguageScreen(),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
                 child: child,
               );
             });

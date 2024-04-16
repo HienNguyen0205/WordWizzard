@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/providers/access_scope_provider.dart';
 
 class SettingAccessScope extends StatefulWidget {
   const SettingAccessScope(
-      {super.key, required this.accessScope, required this.setAccessScope});
-  final String accessScope;
-  final void Function(String scope) setAccessScope;
+      {super.key});
 
   @override
   SettingAccessScopeState createState() => SettingAccessScopeState();
 }
 
 class SettingAccessScopeState extends State<SettingAccessScope> {
-  late List<String> accessScopeItem;
+  List<String> accessScopeItem = ['PRIVATE', 'PUBLIC'];
   late int selectedIndex;
 
   @override
-  void initState() {
-    super.initState();
-    accessScopeItem = ['PRIVATE', 'PUBLIC'];
-    selectedIndex = accessScopeItem.indexOf(widget.accessScope);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    String accessScope = context.watch<AccessScopeProvider>().accessScope;
+    selectedIndex = accessScopeItem.indexOf(accessScope);
   }
 
   void handleBack() {
@@ -36,7 +36,7 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
   }
 
   void handleDone() {
-    widget.setAccessScope(accessScopeItem[selectedIndex]);
+    context.read<AccessScopeProvider>().setAccessScope(accessScopeItem[selectedIndex]);
     handleBack();
   }
 
@@ -44,7 +44,7 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, "who_can_see")),
+        title: Text(getTranslated(context, "who_can_see"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
         centerTitle: true,
         leading: IconButton(
             onPressed: handleBack,
@@ -52,11 +52,10 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
         actions: [
           TextButton(
               onPressed: handleDone,
-              child: Text(getTranslated(context, "done"),
-                  style: Theme.of(context).textTheme.titleLarge))
+              child: Text(getTranslated(context, "done")))
         ],
       ),
-      body: ListView.builder(
+      body: ListView.separated(
           itemCount: 2,
           itemBuilder: (contex, index) {
             return ListTile(
@@ -68,7 +67,11 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
                 handleSelectAccessScope(index);
               },
             );
-          }),
+          },
+          separatorBuilder: (context, index) {
+            return const Divider();
+          },
+          ),
     );
   }
 }

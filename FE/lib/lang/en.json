@@ -96,5 +96,10 @@
   "account": "Account",
   "languages": "Languages",
   "display": "Display",
-  "dark_mode": "Dark Mode"
+  "dark_mode": "Dark Mode",
+  "add_topic": "Add Topic",
+  "en": "English",
+  "vi": "Vietnamese",
+  "not_any_topic": "You don't have any topics",
+  "not_any_folder": "You don't have any folders"
 }

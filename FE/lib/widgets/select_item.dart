@@ -18,8 +18,8 @@ class SelectItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-              width: 120, alignment: Alignment.center, child: FaIcon(icon)),
-          Text(getTranslated(context, title)),
+              width: 120, alignment: Alignment.center, child: FaIcon(icon, color: selected ? Colors.white : Colors.black)),
+          Text(getTranslated(context, title), style: TextStyle(color: selected ? Colors.white : Colors.black)),
         ],
       ),
     );

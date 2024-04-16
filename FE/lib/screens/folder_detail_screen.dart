@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wordwizzard/auth/auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
-import 'package:wordwizzard/services/folder.dart';
+import 'package:wordwizzard/stream/folders_stream.dart';
 import 'package:wordwizzard/widgets/avatar.dart';
 import 'package:wordwizzard/widgets/topic_list_view.dart';
 
@@ -20,6 +21,7 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
   @override
   void initState() {
     super.initState();
+    FoldersStream().getFolderDetailsData(widget.folderId);
   }
 
   void handleBack() {
@@ -28,7 +30,9 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
     }
   }
 
-  void handleAddTopicToFolder() {}
+  void handleAddTopicToFolder() {
+    Navigator.of(context).pushNamed(addTopicToFolderRoute, arguments: {"folderId": widget.folderId});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +52,10 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: handleGetFolderDetails(widget.folderId),
+      body: StreamBuilder(
+        stream: FoldersStream().folderDetailsStream,
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data["code"] == 0) {
+          if (snapshot.hasData) {
             dynamic data = snapshot.data;
             return Container(
               margin: const EdgeInsets.only(
@@ -61,36 +65,44 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
                 children: [
                   Text(data["name"],
                       style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.w600)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          "${data["listTopics"].length} ${getTranslated(context, "topic")}"),
-                      Row(
-                        children: [
-                          Avatar(publicId: data[""], radius: 14),
-                          const SizedBox(width: 8),
-                          Text(data["createdBy"]["username"])
-                        ],
-                      )
-                    ],
+                          fontSize: 24, fontWeight: FontWeight.w500)),
+                  IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                            "${data["listTopics"].length} ${getTranslated(context, "topic")}"),
+                        const VerticalDivider(),
+                        Avatar(publicId: data["createdBy"]["image"], radius: 14),
+                        const SizedBox(width: 8),
+                        Text(data["createdBy"]["username"])
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 32),
-                  data["listTopics"].length != 0 ? TopicListView(topicList: data["listTopics"])
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset("assets/animation/empty_ani.json"),
-                      const SizedBox(height: 18),
-                      Text(getTranslated(context, "empty_folder"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                    ],
-                  )
+                  data["listTopics"].length != 0
+                      ? TopicListView(topicList: data["listTopics"], classifyByWeek: false, canSelected: false)
+                      : SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Lottie.asset("assets/animation/empty_ani.json",
+                                  width: 180, height: 180),
+                              Text(
+                                getTranslated(context, "empty_folder"),
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        )
                 ],
               ),
             );
-          } else if (snapshot.hasData && snapshot.data["code"] == -1) {
-            setLogin(false);
+          } else if (snapshot.hasData) {
+            context.read<AuthProvider>().logOut();
             Navigator.of(context)
                 .pushNamedAndRemoveUntil(signInRoute, (route) => false);
           }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:wordwizzard/services/user.dart';
 
 class UserStream {

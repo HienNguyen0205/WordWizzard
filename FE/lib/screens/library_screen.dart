@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wordwizzard/auth/auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/folder.dart';
 import 'package:wordwizzard/stream/folders_stream.dart';
 import 'package:wordwizzard/stream/topics_stream.dart';
+import 'package:wordwizzard/widgets/empty_notification.dart';
 import 'package:wordwizzard/widgets/folder_item.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wordwizzard/widgets/topic_list_view.dart';
@@ -57,7 +59,7 @@ class LibraryScreenState extends State<LibraryScreen>
             });
           }
         } else if (val["code"] == -1) {
-          setLogin(false);
+          context.read<AuthProvider>().logOut();
           Navigator.of(context)
               .pushNamedAndRemoveUntil(signInRoute, (route) => false);
         } else {
@@ -78,10 +80,9 @@ class LibraryScreenState extends State<LibraryScreen>
     }
   }
 
-  void handleShowFolderDetails(String id){
-    Navigator.of(context).pushNamed(folderDetailRoute, arguments: {
-      "folderId": id
-    });
+  void handleShowFolderDetails(String id) {
+    Navigator.of(context)
+        .pushNamed(folderDetailRoute, arguments: {"folderId": id});
   }
 
   @override
@@ -91,7 +92,8 @@ class LibraryScreenState extends State<LibraryScreen>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-            title: Text(getTranslated(context, "library"), style:
+            title: Text(getTranslated(context, "library"),
+                style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
             actions: [
               IconButton(
@@ -126,25 +128,32 @@ class LibraryScreenState extends State<LibraryScreen>
                   controller: _tabController,
                   children: [
                     Container(
-                      margin: const EdgeInsets.all(18),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 18),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: getTranslated(context, "search"),
-                              ),
-                            ),
-                          ),
-                          TopicListView(topicList: snapshot.data?[0])
-                        ],
-                      ),
+                      margin: const EdgeInsets.only(
+                            top: 18, left: 18, right: 18, bottom: 24),
+                      child: snapshot.data?[0].isNotEmpty
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 18),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      labelText:
+                                          getTranslated(context, "search"),
+                                    ),
+                                  ),
+                                ),
+                                TopicListView(
+                                    topicList: snapshot.data?[0],
+                                    classifyByWeek: true,
+                                    canSelected: false)
+                              ],
+                            )
+                          : const EmptyNotification(message: "not_any_topic")
                     ),
                     Container(
                         margin: const EdgeInsets.only(
                             top: 18, left: 18, right: 18, bottom: 24),
-                        child: ListView.builder(
+                        child: folderList.isNotEmpty ? ListView.builder(
                             controller: _scrollFolderController,
                             itemCount:
                                 folderList.length + (canLoadFolder ? 1 : 0),
@@ -162,25 +171,25 @@ class LibraryScreenState extends State<LibraryScreen>
                                     title: folder["name"],
                                     topicQuantity: folder["listTopics"],
                                     author: {
-                                      "avatar": folder["createdBy"]
-                                          ["image"],
-                                      "name": folder["createdBy"]
-                                          ["username"]
+                                      "avatar": folder["createdBy"]["image"],
+                                      "name": folder["createdBy"]["username"]
                                     },
                                     handleTap: () {
                                       handleShowFolderDetails(folder["_id"]);
                                     });
                               }
-                            }))
+                            }) : const EmptyNotification(message: "not_any_folder")
+                    )
                   ],
                 );
               } else if (snapshot.hasError) {
-                setLogin(false);
+                context.read<AuthProvider>().logOut();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(signInRoute, (route) => false);
               }
               return Center(
-                child: Lottie.asset('assets/animation/loading.json', height: 80),
+                child:
+                    Lottie.asset('assets/animation/loading.json', height: 80),
               );
             },
           )),

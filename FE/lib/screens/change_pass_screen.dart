@@ -52,7 +52,7 @@ class ChangePassScreenState extends State<ChangePassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, "create_new_pass")),
+        title: Text(getTranslated(context, "create_new_pass"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
         leading: IconButton(
           icon: const FaIcon(FontAwesomeIcons.arrowLeft),
           onPressed: () {

@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tab_container/tab_container.dart';
-import 'package:wordwizzard/auth/auth.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/screens/bottom_nav.dart';
 import 'package:wordwizzard/stream/folders_stream.dart';
@@ -32,6 +33,8 @@ class HomeScreenState extends State<HomeScreen> {
     TopicStream().getAllTopicData();
     FoldersStream().getFoldersData();
   }
+
+  
 
   void handleShowAllTopics() {}
 
@@ -116,8 +119,8 @@ class HomeScreenState extends State<HomeScreen> {
             FoldersStream().foldersStream, (a, b) => [a, b]),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final topics = snapshot.data?[0];
-            final folders = snapshot.data?[1];
+            List<dynamic> topics = snapshot.data?[0];
+            List<dynamic> folders = snapshot.data?[1];
             return Stack(fit: StackFit.expand, children: [
               Positioned(
                   top: 0,
@@ -139,18 +142,12 @@ class HomeScreenState extends State<HomeScreen> {
                 child: TabContainer(
                   tabEdge: TabEdge.top,
                   color: Theme.of(context).colorScheme.background,
-                  isStringTabs: false,
+                  selectedTextStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 18, fontWeight: FontWeight.w500),
+                  unselectedTextStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white, fontSize: 18,
+                          fontWeight: FontWeight.w500),
                   tabs: [
-                    Text(getTranslated(context, "topic"),
-                        style: TextStyle(
-                            color: index == 0 ? Colors.black : Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500)),
-                    Text(getTranslated(context, 'popular'),
-                        style: TextStyle(
-                            color: index == 1 ? Colors.black : Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500))
+                    Text(getTranslated(context, "topic")),
+                    Text(getTranslated(context, 'popular'))
                   ],
                   children: [
                     SingleChildScrollView(
@@ -213,80 +210,75 @@ class HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            folders.isNotEmpty ? Column(
                               children: [
-                                Text(getTranslated(context, "my_folder"),
-                                    style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w500)),
-                                TextButton(
-                                    onPressed: handleShowAllFolders,
-                                    child: Text(
-                                        getTranslated(context, "see_more")))
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(getTranslated(context, "my_folder"),
+                                        style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w500)),
+                                    TextButton(
+                                        onPressed: handleShowAllFolders,
+                                        child: Text(
+                                            getTranslated(context, "see_more")))
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 104.0,
+                                  child: PageView.builder(
+                                    controller:
+                                        PageController(viewportFraction: 0.675),
+                                    itemCount: folders.length,
+                                    onPageChanged: (int page) {
+                                      setState(() {
+                                        folderIndex = page;
+                                      });
+                                    },
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      double scaleFactor = 1.0;
+                                      if (index == folderIndex) {
+                                        scaleFactor = 1.0;
+                                      } else {
+                                        scaleFactor = 0.7;
+                                      }
+                                      return AnimatedContainer(
+                                          transformAlignment: Alignment.center,
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          curve: Curves.easeInOut,
+                                          transform: Matrix4.diagonal3Values(
+                                              scaleFactor, scaleFactor, 1.0),
+                                          child: FolderItem(
+                                            title: folders[index]["name"],
+                                            topicQuantity: folders[index]
+                                                ["listTopics"],
+                                            author: {
+                                              "avatar": null,
+                                              "name": folders[index]
+                                                  ["createdBy"]["username"]
+                                            },
+                                            handleTap: () {},
+                                          ));
+                                    },
+                                  ),
+                                ),
                               ],
-                            ),
-                            SizedBox(
-                              height: 104.0,
-                              child: PageView.builder(
-                                controller:
-                                    PageController(viewportFraction: 0.675),
-                                itemCount: folders.length,
-                                onPageChanged: (int page) {
-                                  setState(() {
-                                    folderIndex = page;
-                                  });
-                                },
-                                itemBuilder: (BuildContext context, int index) {
-                                  double scaleFactor = 1.0;
-                                  if (index == folderIndex) {
-                                    scaleFactor = 1.0;
-                                  } else {
-                                    scaleFactor = 0.7;
-                                  }
-                                  return AnimatedContainer(
-                                      transformAlignment: Alignment.center,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut,
-                                      transform: Matrix4.diagonal3Values(
-                                          scaleFactor, scaleFactor, 1.0),
-                                      child: FolderItem(
-                                        title: folders[index]["name"],
-                                        topicQuantity: folders[index]
-                                            ["listTopics"],
-                                        author: {
-                                          "avatar": null,
-                                          "name": folders[index]["createdBy"]
-                                              ["username"]
-                                        },
-                                        handleTap: () {},
-                                      ));
-                                },
-                              ),
-                            ),
+                            ) : const SizedBox.shrink()
                           ],
                         ),
                       ),
                     ),
                     Container()
                   ],
-                  onEnd: () {
-                    setState(() {
-                      topicIndex = 0;
-                      folderIndex = 0;
-                      if (index == 0) {
-                        index = 1;
-                      } else {
-                        index = 0;
-                      }
-                    });
-                  },
                 ),
               ),
             ]);
           } else if (snapshot.hasError) {
-            setLogin(false);
+            context.read<AuthProvider>().logOut();
             redirectToSignInRoute();
           }
           return Center(
@@ -297,14 +289,3 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-// void changeLanguage() async {
-//   Locale currentLocale = await getLocale();
-//   Locale locale;
-//   if(currentLocale.languageCode == 'vi'){
-//     locale = await setLocale('en');
-//   }else{
-//     locale = await setLocale('vi');
-//   }
-//   MyApp.setLocale(context, locale);
-// }

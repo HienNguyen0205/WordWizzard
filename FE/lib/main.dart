@@ -2,21 +2,26 @@ import 'package:cloudinary_flutter/cloudinary_context.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/localization/localization.dart';
+import 'package:wordwizzard/providers/access_scope_provider.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
+import 'package:wordwizzard/providers/id_container_provider.dart';
+import 'package:wordwizzard/providers/locale_provider.dart';
+import 'package:wordwizzard/providers/theme_provider.dart';
 import 'package:wordwizzard/routes/custom_route.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  String initialRoute;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
   bool isLogin = prefs.getBool('isLogin') ?? false;
-  CloudinaryContext.cloudinary =
-      Cloudinary.fromCloudName(cloudName: "dtrtjisrv");
-  String initialRoute;
   if (isFirstLaunch) {
     initialRoute = introRoute;
   } else {
@@ -26,71 +31,94 @@ void main() async {
       initialRoute = signInRoute;
     }
   }
+  // ignore: deprecated_member_use
+  CloudinaryContext.cloudinary =
+      Cloudinary.fromCloudName(cloudName: "dtrtjisrv");
   runApp(
-    MyApp(route: initialRoute),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LocaleProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AccessScopeProvider(),
+      ),
+      Provider(create: (_) => IdContainerProvider()),
+    ], child: MyApp(initRoute: initialRoute)),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.route});
-
-  final String route;
-
-  static void setLocale(BuildContext context, Locale newLocale) {
-    MyAppState? state = context.findAncestorStateOfType<MyAppState>();
-    state?.setLocale(newLocale);
-  }
-
-  static void setTheme(BuildContext context, bool newMode) {
-    MyAppState? state = context.findAncestorStateOfType<MyAppState>();
-    state?.handleChangeTheme(newMode);
-  }
-
-  static ThemeMode? getTheme(BuildContext context) {
-    MyAppState? state = context.findAncestorStateOfType<MyAppState>();
-    return state?.getMode();
-  }
+  final String initRoute;
+  const MyApp({super.key, required this.initRoute});
 
   @override
   MyAppState createState() => MyAppState();
 }
 
+// GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MyAppState extends State<MyApp> {
-  ThemeMode mode = ThemeMode.light;
-  Locale _locale = locale(vietnamese);
+  
+  // late FToast fToast;
 
-  setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fToast = FToast();
+  //   fToast.init(context);
+  // }
 
-  @override
-  void didChangeDependencies() {
-    getLocale().then((locale) {
-      setState(() {
-        _locale = locale;
-      });
-    });
-    super.didChangeDependencies();
-  }
+  // showToast() {
+  //   Widget toast = Container(
+  //     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(25.0),
+  //       color: Colors.greenAccent,
+  //     ),
+  //     child: const Row(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         Icon(Icons.check),
+  //         SizedBox(
+  //           width: 12.0,
+  //         ),
+  //         Text("This is a Custom Toast"),
+  //       ],
+  //     ),
+  //   );
 
-  ThemeMode getMode() {
-    return mode;
-  }
+  //   fToast.showToast(
+  //     child: toast,
+  //     gravity: ToastGravity.BOTTOM,
+  //     toastDuration: const Duration(seconds: 2),
+  //   );
 
-  void handleChangeTheme(bool newMode) {
-    setState(() {
-      mode = newMode == true ? ThemeMode.dark : ThemeMode.light;
-    });
-  }
+  //   // Custom Toast Position
+  //   fToast.showToast(
+  //       child: toast,
+  //       toastDuration: const Duration(seconds: 2),
+  //       positionedToastBuilder: (context, child) {
+  //         return Positioned(
+  //           top: 16.0,
+  //           left: 16.0,
+  //           child: child,
+  //         );
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'WordWiizzard',
-        theme: FlexThemeData.light(
+      // navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'WordWiizzard',
+      theme: FlexThemeData.light(
           scheme: FlexScheme.cyanM3,
           surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
           blendLevel: 7,
@@ -112,12 +140,13 @@ class MyAppState extends State<MyApp> {
             textButtonTextStyle: MaterialStatePropertyAll(
                 TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
             cardElevation: 4,
+            bottomNavigationBarElevation: 12,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           swapLegacyOnMaterial3: true,
-        ),
-        darkTheme: FlexThemeData.dark(
+          fontFamily: GoogleFonts.plusJakartaSans().fontFamily),
+      darkTheme: FlexThemeData.dark(
           scheme: FlexScheme.cyanM3,
           surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
           blendLevel: 13,
@@ -137,33 +166,36 @@ class MyAppState extends State<MyApp> {
             navigationBarIndicatorOpacity: 1.00,
             textButtonTextStyle: MaterialStatePropertyAll(
                 TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            cardElevation: 4,
+            bottomNavigationBarElevation: 12,
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
           swapLegacyOnMaterial3: true,
-        ),
-        themeMode: mode,
-        locale: _locale,
-        supportedLocales: const [
-          Locale('en'),
-          Locale('vi'),
-        ],
-        localizationsDelegates: const [
-          Localization.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale?.languageCode) {
-              return supportedLocale;
-            }
+          fontFamily: GoogleFonts.plusJakartaSans().fontFamily),
+      themeMode: context.watch<ThemeProvider>().mode,
+      locale: context.watch<LocaleProvider>().localeVal,
+      supportedLocales: const [
+        Locale('en'),
+        Locale('vi'),
+      ],
+      localizationsDelegates: const [
+        Localization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
           }
-          return supportedLocales.first;
-        },
-        onGenerateRoute: CustomRouter.generatedRoute,
-        initialRoute: widget.route,
-      );
+        }
+        return supportedLocales.first;
+      },
+      onGenerateRoute: CustomRouter.generatedRoute,
+      initialRoute: widget.initRoute,
+      // builder: FToastBuilder(),
+    );
   }
 }

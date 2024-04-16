@@ -29,7 +29,7 @@ class FolderItemState extends State<FolderItem> {
           side: BorderSide(
               width: 1,
               color: Colors
-                  .grey[300]!), // Thiết lập độ rộng và màu sắc của đường viền
+                  .grey[300]!),
           borderRadius: BorderRadius.circular(8), // Thiết lập độ cong của góc
         ),
         child: Padding(
@@ -46,14 +46,16 @@ class FolderItemState extends State<FolderItem> {
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  Text("${widget.topicQuantity} topics"),
-                  const VerticalDivider(thickness: 2, color: Colors.black),
-                  Avatar(publicId: widget.author["avatar"], radius: 14),
-                  const SizedBox(width: 8),
-                  Text(widget.author["name"])
-                ],
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Text("${widget.topicQuantity} topics"),
+                    const VerticalDivider(),
+                    Avatar(publicId: widget.author["avatar"], radius: 14),
+                    const SizedBox(width: 8),
+                    Text(widget.author["name"])
+                  ],
+                ),
               )
             ],
           ),

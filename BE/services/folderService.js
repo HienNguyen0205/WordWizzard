@@ -218,7 +218,7 @@ const getOne = async (req, res) => {
             input: "$listTopicsInfo",
             as: "topic",
             in: {
-              topic_id: "$$topic._id",
+              _id: "$$topic._id",
               name: "$$topic.name",
               description: "$$topic.description",
               securityView: "$$topic.securityView",

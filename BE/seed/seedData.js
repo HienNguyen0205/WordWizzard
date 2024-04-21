@@ -2,102 +2,102 @@ export const listTags = [
     {
         name: "Travel",
         value: "tag_1",
-        image: "",
+        image: "Travel-ezgif.com-webp-to-png-converter_kj6hbe",
     },
     {
         name: "Vegetables",
         value: "tag_2",
-        image: "",
+        image: "Vegetables-ezgif.com-webp-to-png-converter_hnfcwh",
     },
     {
         name: "Fruits",
         value: "tag_3",
-        image: "",
+        image: "Fruits_zgerml",
     },
     {
         name: "Technology",
         value: "tag_4",
-        image: "",
+        image: "Technology-ezgif.com-webp-to-png-converter_smejsv",
     },
     {
         name: "Sports",
         value: "tag_5",
-        image: "",
+        image: "Sports-ezgif.com-webp-to-png-converter_qplzwc",
     },
     {
         name: "Music",
         value: "tag_6",
-        image: "",
+        image: "Music-ezgif.com-webp-to-png-converter_msxu4w",
     },
     {
         name: "Art and Culture",
         value: "tag_7",
-        image: "",
+        image: "Art_and_Culture_jzogs4v",
     },
     {
         name: "Education",
         value: "tag_8",
-        image: "",
+        image: "Education_ptgddv",
     },
     {
         name: "Health and Wellness",
         value: "tag_9",
-        image: "",
+        image: "Health_and_Wellness_qp7ma1",
     },
     {
         name: "Environment",
         value: "tag_10",
-        image: "",
+        image: "Environment_ylzrlo",
     },
     {
         name: "Cooking and Cuisine",
         value: "tag_11",
-        image: "",
+        image: "Cooking_and_Cuisine_xa6etu",
     },
     {
         name: "History",
         value: "tag_12",
-        image: "",
+        image: "History_ozzbem",
     },
     {
         name: "Science",
         value: "tag_13",
-        image: "",
+        image: "Science-ezgif.com-webp-to-png-converter_mtzejm",
     },
     {
         name: "Movies and Entertainment",
         value: "tag_14",
-        image: "",
+        image: "MoviesandEntertainment-ezgif.com-webp-to-png-converter_ca9qqz",
     },
     {
         name: "Fashion",
         value: "tag_15",
-        image: "",
+        image: "Fashion_yool02",
     },
     {
         name: "Economics and Business",
         value: "tag_16",
-        image: "",
+        image: "Economics_and_Business_apfnyh",
     },
     {
         name: "Politics",
         value: "tag_17",
-        image: "",
+        image: "Politics-ezgif.com-webp-to-png-converter_r2wt97",
     },
     {
         name: "Literature",
         value: "tag_18",
-        image: "",
+        image: "Literature-ezgif.com-webp-to-png-converter_szpfvx",
     },
     {
         name: "Animals and Wildlife",
         value: "tag_19",
-        image: "https://res.cloudinary.com/dtrtjisrv/image/upload/v1712495215/Animals_and_Wildlife_cc3lwr.webp",
+        image: "Animals_and_Wildlife_fak9tp",
     },
     {
         name: "Other",
         value: "tag_20",
-        image: "",
+        image: "Others-ezgif.com-webp-to-png-converter_cmvahb",
     }
 ];
    

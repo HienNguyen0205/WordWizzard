@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import folderController from "../controllers/folderController.js";
 import authentication from "../middleware/auth.js";
+import flashCardController from "../controllers/flashCardController.js";
 const router = express.Router();
 
 // create folder
@@ -11,18 +12,10 @@ router.post("/api/folder/update/:id", authentication, folderController.updateOne
 router.get("/api/folder/detail/:id", authentication, folderController.getOne);
 // get all folder
 router.get("/api/folder/all", authentication, folderController.getAll);
-
-
-// // change password
-// router.post("/api/user/change-password", authentication, userController.changePassword);
-// // me
-// router.get("/api/user/me", authentication, userController.me);
-// // create OTP
-// router.post("/api/user/otp", userController.createOTP);
-// // verify OTP
-// router.post("/api/user/verify-otp/:id", userController.verifyOTP);
-// // reset password
-// router.post("/api/user/reset-password/:id", userController.resetPassword);
-// // renew otp
-// router.post("/api/user/renew-otp", userController.renewOTP);
+// // join flash card
+// router.post(
+//     "/api/flashcard/join/:topic_id",
+//     authentication,
+//     flashCardController.joinFlashCard
+//   );
 export default router;

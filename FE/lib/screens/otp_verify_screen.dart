@@ -70,7 +70,6 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 
   void handleResResult(int resCode, String action) {
-    debugPrint(resCode.toString());
     if (resCode == 0) {
       if(action == 'sign_up') {
         context.read<AuthProvider>().signIn();

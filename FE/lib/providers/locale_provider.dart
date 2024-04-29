@@ -8,6 +8,7 @@ class LocaleProvider with ChangeNotifier {
   LocaleProvider() {
     SharedPreferences.getInstance().then((val) {
       localeVal = val.getString("locale") == "vi" ? locale(vietnamese) : locale(english);
+      notifyListeners();
     });
   }
 

@@ -9,6 +9,7 @@ import 'package:wordwizzard/providers/id_container_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/folder.dart';
 import 'package:wordwizzard/stream/folders_stream.dart';
+import 'package:wordwizzard/widgets/custom_toast.dart';
 import 'package:wordwizzard/widgets/topic_list_view.dart';
 
 class AddTopicToFolderScreen extends StatefulWidget {
@@ -20,6 +21,15 @@ class AddTopicToFolderScreen extends StatefulWidget {
 }
 
 class AddTopicToFolderScreenState extends State<AddTopicToFolderScreen> {
+
+  late FToast toast;
+
+  @override
+  void initState() {
+    super.initState();
+    toast = FToast();
+    toast.init(context);
+  }
 
   void handleBack() {
     if (Navigator.canPop(context)) {
@@ -33,7 +43,11 @@ class AddTopicToFolderScreenState extends State<AddTopicToFolderScreen> {
       if(val == 0){
         context.read<IdContainerProvider>().resetList();
         FoldersStream().getFolderDetailsData(widget.folderId);
-        Fluttertoast.showToast(msg: "test");
+        FoldersStream().getFoldersData();
+        toast.showToast(
+          child: const CustomToast(text: "edit_folder_success"),
+          gravity: ToastGravity.BOTTOM
+        );
         handleBack();
       }else{
         debugPrint("Error with code $val");

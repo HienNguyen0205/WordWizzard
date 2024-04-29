@@ -96,8 +96,59 @@ Future<dynamic> handleAddTopic(String name, String description, String securityV
       },
     );
     final resData = jsonDecode(res.body);
-    debugPrint(resData.toString());
     if (res.statusCode == 201) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleGetFolderToAdd(String id) async {
+  final url = Uri.parse('http://$ipv4:5001/api/topic/get-folders/$id');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.get(
+      url,
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleAddTopicsToFolder(String id, List<String> folderList) async {
+  final url = Uri.parse('http://$ipv4:5001/api/topic/choose-folders/$id');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(
+      url,
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+      body: {
+        'folderIds': jsonEncode(folderList)
+      }
+    );
+    final resData = jsonDecode(res.body);
+    debugPrint(resData.toString());
+    if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
     } else {
       return {"errrorCode": resData["errrorCode"]};

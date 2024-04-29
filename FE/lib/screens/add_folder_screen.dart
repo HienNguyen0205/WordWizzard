@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/folder.dart';
 import 'package:wordwizzard/stream/folders_stream.dart';
+import 'package:wordwizzard/widgets/custom_toast.dart';
 
 class AddFolderScreen extends StatefulWidget {
   const AddFolderScreen({super.key});
@@ -15,6 +17,14 @@ class AddFolderScreenState extends State<AddFolderScreen> {
   bool canCreate = false;
   String name = "";
   String description = "";
+  late FToast toast;
+
+  @override
+  void initState() {
+    super.initState();
+    toast = FToast();
+    toast.init(context);
+  }
 
   void handleCancel() {
     if (Navigator.canPop(context)) {
@@ -27,7 +37,11 @@ class AddFolderScreenState extends State<AddFolderScreen> {
       handleAddFolder(name, description).then((val) {
         if (val['code'] == 0) {
           FoldersStream().getFoldersData();
-          Navigator.of(context).pushReplacementNamed(folderDetailRoute, arguments: {"folderId": val['data']['_id']});
+          toast.showToast(
+              child: const CustomToast(text: "add_success"),
+              gravity: ToastGravity.BOTTOM);
+          Navigator.of(context).pushReplacementNamed(folderDetailRoute,
+              arguments: {"folderId": val['data']['_id']});
         } else if (val['code'] == -1) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               signInRoute, (Route<dynamic> route) => false);
@@ -41,7 +55,10 @@ class AddFolderScreenState extends State<AddFolderScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(getTranslated(context, "new_folder"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+        title: Text(
+          getTranslated(context, "new_folder"),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+        ),
         leading: TextButton(
             onPressed: handleCancel,
             child: Text(getTranslated(context, "cancel"))),

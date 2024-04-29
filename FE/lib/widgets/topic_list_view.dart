@@ -84,6 +84,10 @@ class TopicListViewState extends State<TopicListView> {
     }
   }
 
+  void handleTopicDetail(int index) {
+    Navigator.of(context).pushNamed(topicDetailRoute, arguments: {"topicId": topicList[index]["_id"]});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -128,7 +132,11 @@ class TopicListViewState extends State<TopicListView> {
                       isSelected: topicList[index]["isChosen"] ?? false,
                       canSelected: widget.canSelected,
                       handleTap: () {
-                        handleChooseTopic(index);
+                        if (widget.canSelected) {
+                          handleChooseTopic(index);
+                        } else {
+                          handleTopicDetail(index);
+                        }
                       })
                 ],
               );
@@ -144,7 +152,11 @@ class TopicListViewState extends State<TopicListView> {
                 isSelected: topicList[index]["isChosen"] ?? false,
                 canSelected: widget.canSelected,
                 handleTap: () {
-                  handleChooseTopic(index);
+                  if(widget.canSelected){
+                    handleChooseTopic(index);
+                  }else{
+                    handleTopicDetail(index);
+                  }
                 });
           }
         },

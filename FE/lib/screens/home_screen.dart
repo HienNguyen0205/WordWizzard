@@ -34,8 +34,6 @@ class HomeScreenState extends State<HomeScreen> {
     FoldersStream().getFoldersData();
   }
 
-  
-
   void handleShowAllTopics() {}
 
   void handleShowAllFolders() {
@@ -90,6 +88,15 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           );
         });
+  }
+
+  void handleTapTopicItem(String id) {
+    Navigator.of(context).pushNamed(topicDetailRoute, arguments: {"topicId": id});
+  }
+
+  void handleTapFolderItem(String id) {
+    Navigator.of(context)
+        .pushNamed(folderDetailRoute, arguments: {"folderId": id});
   }
 
   @override
@@ -204,7 +211,9 @@ class HomeScreenState extends State<HomeScreen> {
                                           "name": topics[index]["createdBy"]
                                               ["username"]
                                         },
-                                        handleTap: () {},
+                                        handleTap: () {
+                                          handleTapTopicItem(topics[index]["_id"]);
+                                        },
                                       ));
                                 },
                               ),
@@ -261,7 +270,9 @@ class HomeScreenState extends State<HomeScreen> {
                                               "name": folders[index]
                                                   ["createdBy"]["username"]
                                             },
-                                            handleTap: () {},
+                                            handleTap: () {
+                                              handleTapFolderItem(folders[index]["_id"]);
+                                            },
                                           ));
                                     },
                                   ),

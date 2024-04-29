@@ -129,6 +129,9 @@ class SignInScreenState extends State<SignInScreen> {
                         onSaved: (value) {
                           _password = value!;
                         },
+                        onFieldSubmitted: (value) {
+                          _submitForm();
+                        },
                       ),
                       Container(
                         padding: const EdgeInsets.only(top: 12, bottom: 24),

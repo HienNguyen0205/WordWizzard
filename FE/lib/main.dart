@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wordwizzard/localization/localization.dart';
 import 'package:wordwizzard/providers/access_scope_provider.dart';
 import 'package:wordwizzard/providers/auth_provider.dart';
+import 'package:wordwizzard/providers/flashcard_setting_provider.dart';
 import 'package:wordwizzard/providers/id_container_provider.dart';
 import 'package:wordwizzard/providers/locale_provider.dart';
 import 'package:wordwizzard/providers/theme_provider.dart';
@@ -48,6 +49,9 @@ void main() async {
       ChangeNotifierProvider(
         create: (_) => AccessScopeProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (_) => FlashcardSettingProvider(),
+      ),
       Provider(create: (_) => IdContainerProvider()),
     ], child: MyApp(initRoute: initialRoute)),
   );
@@ -61,61 +65,14 @@ class MyApp extends StatefulWidget {
   MyAppState createState() => MyAppState();
 }
 
-// GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyAppState extends State<MyApp> {
-  
-  // late FToast fToast;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fToast = FToast();
-  //   fToast.init(context);
-  // }
-
-  // showToast() {
-  //   Widget toast = Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(25.0),
-  //       color: Colors.greenAccent,
-  //     ),
-  //     child: const Row(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         Icon(Icons.check),
-  //         SizedBox(
-  //           width: 12.0,
-  //         ),
-  //         Text("This is a Custom Toast"),
-  //       ],
-  //     ),
-  //   );
-
-  //   fToast.showToast(
-  //     child: toast,
-  //     gravity: ToastGravity.BOTTOM,
-  //     toastDuration: const Duration(seconds: 2),
-  //   );
-
-  //   // Custom Toast Position
-  //   fToast.showToast(
-  //       child: toast,
-  //       toastDuration: const Duration(seconds: 2),
-  //       positionedToastBuilder: (context, child) {
-  //         return Positioned(
-  //           top: 16.0,
-  //           left: 16.0,
-  //           child: child,
-  //         );
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // navigatorKey: navigatorKey,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'WordWiizzard',
       theme: FlexThemeData.light(
@@ -129,6 +86,7 @@ class MyAppState extends State<MyApp> {
             useM2StyleDividerInM3: true,
             alignedDropdown: true,
             useInputDecoratorThemeInDialogs: true,
+            bottomSheetElevation: 20,
             navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
             navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
             navigationBarMutedUnselectedLabel: false,
@@ -156,6 +114,7 @@ class MyAppState extends State<MyApp> {
             useM2StyleDividerInM3: true,
             alignedDropdown: true,
             useInputDecoratorThemeInDialogs: true,
+            bottomSheetElevation: 20,
             navigationBarSelectedLabelSchemeColor: SchemeColor.onSurface,
             navigationBarUnselectedLabelSchemeColor: SchemeColor.onSurface,
             navigationBarMutedUnselectedLabel: false,
@@ -195,7 +154,7 @@ class MyAppState extends State<MyApp> {
       },
       onGenerateRoute: CustomRouter.generatedRoute,
       initialRoute: widget.initRoute,
-      // builder: FToastBuilder(),
+      builder: FToastBuilder(),
     );
   }
 }

@@ -19,6 +19,7 @@ Future<dynamic> handleLogin(String email, String password) async {
     if (res.statusCode == 200) {
       const storage = FlutterSecureStorage();
       storage.write(key: 'token', value: resData['token']);
+
       return 0;
     }else{
       return int.parse(resData['errorCode']);

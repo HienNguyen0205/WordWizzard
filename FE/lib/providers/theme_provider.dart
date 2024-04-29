@@ -7,6 +7,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeProvider() {
     SharedPreferences.getInstance().then((prefs) {
       mode = (prefs.getString("themeMode") ?? "light") == "dark" ? ThemeMode.dark : ThemeMode.light;
+      notifyListeners();
     });
   }
 

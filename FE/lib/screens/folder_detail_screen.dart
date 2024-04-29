@@ -57,6 +57,7 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             dynamic data = snapshot.data;
+            debugPrint(data["listTopics"].toString());
             return Container(
               margin: const EdgeInsets.only(
                   top: 18, right: 18, bottom: 24, left: 18),

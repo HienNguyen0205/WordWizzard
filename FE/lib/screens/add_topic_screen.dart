@@ -1,6 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/stream/topics_stream.dart';
 import 'package:wordwizzard/widgets/add_topic_secttion.dart';
+import 'package:wordwizzard/widgets/custom_toast.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
 class AddTopicScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
   String description = '';
   int tagIndex = 0;
   late List<dynamic> topicInputs;
+  late FToast toast;
 
   @override
   void initState() {
@@ -33,12 +36,8 @@ class AddTopicScreenState extends State<AddTopicScreen> {
       {"term": "", "definition": ""},
       {"term": "", "definition": ""},
     ];
-  }
-
-  @override
-  void dispose(){
-    super.dispose();
-    context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
+    toast = FToast();
+    toast.init(context);
   }
 
   Widget adaptiveAction(
@@ -67,15 +66,20 @@ class AddTopicScreenState extends State<AddTopicScreen> {
       }
     }
     if (topic.isNotEmpty && topicInputs.length >= 2 && flag) {
-      String accessScope = context.watch<AccessScopeProvider>().accessScope;
+      String accessScope = context.read<AccessScopeProvider>().accessScope;
       handleAddTopic(topic, description, accessScope,
               topicTagItems[tagIndex].tag, topicInputs)
           .then((val) {
         if (val["code"] == 0) {
-          if(accessScope == "PUBLIC"){
+          if (accessScope == "PUBLIC") {
             TopicStream().getAllTopicData();
           }
           TopicStream().getMyTopicsData();
+          toast.showToast(
+              child: const CustomToast(text: "add_success"),
+              gravity: ToastGravity.BOTTOM);
+          context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
+          Navigator.of(context).pushReplacementNamed(topicDetailRoute, arguments: {"topicId": val["data"]["_id"]});
         }
       });
     } else if (topic.isNotEmpty || flag) {
@@ -83,7 +87,11 @@ class AddTopicScreenState extends State<AddTopicScreen> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text(getTranslated(context, "title_not_done_topic"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+              title: Text(
+                getTranslated(context, "title_not_done_topic"),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+              ),
               content: Text(getTranslated(context, "content_not_done_topic")),
               actions: [
                 adaptiveAction(
@@ -95,18 +103,18 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                 adaptiveAction(
                     context: context,
                     onPressed: () {
-                      handleAddTopic(topic, description, "DRAFT", topicTagItems[tagIndex].tag, topicInputs).then((val) {
+                      handleAddTopic(topic, description, "DRAFT",
+                              topicTagItems[tagIndex].tag, topicInputs)
+                          .then((val) {
                         debugPrint(val["code"].toString());
-                        if (val["code"] == 0) {
-                          
-                        }
+                        if (val["code"] == 0) {}
                       });
                     },
                     child: Text(getTranslated(context, "save"))),
               ],
             );
           });
-    }else{
+    } else {
       Navigator.of(context).pop();
     }
   }
@@ -204,125 +212,126 @@ class AddTopicScreenState extends State<AddTopicScreen> {
       ),
       bottomNavigationBar: ConvexButton.fab(
         backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
-        color: theme.bottomNavigationBarTheme.unselectedIconTheme!.color as Color,
+        color:
+            theme.bottomNavigationBarTheme.unselectedIconTheme!.color as Color,
         icon: Icons.add,
         onTap: addTopicInput,
       ),
       body: SingleChildScrollView(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  labelText: getTranslated(context, "topic"),
-                  border: const UnderlineInputBorder(),
-                  enabledBorder: const UnderlineInputBorder(),
-                  focusedBorder:
-                      const UnderlineInputBorder(), // Customize the color as needed
-                ),
-                onChanged: (value) {
-                  if(value.length <= 30){
-                    topic = value;
-                  }
-                },
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                fillColor: Colors.transparent,
+                labelText: getTranslated(context, "topic"),
+                border: const UnderlineInputBorder(),
+                enabledBorder: const UnderlineInputBorder(),
+                focusedBorder:
+                    const UnderlineInputBorder(), // Customize the color as needed
               ),
-              TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  labelText: getTranslated(context, "description"),
-                  border: const UnderlineInputBorder(),
-                  enabledBorder: const UnderlineInputBorder(),
-                  focusedBorder:
-                      const UnderlineInputBorder(), // Customize the color as needed
-                ),
-                onChanged: (value) {
-                  description = value;
-                },
+              onChanged: (value) {
+                if (value.length <= 30) {
+                  topic = value;
+                }
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(
+                fillColor: Colors.transparent,
+                labelText: getTranslated(context, "description"),
+                border: const UnderlineInputBorder(),
+                enabledBorder: const UnderlineInputBorder(),
+                focusedBorder:
+                    const UnderlineInputBorder(), // Customize the color as needed
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Row(
-                  children: [
-                    FilledButton.icon(
-                        onPressed: handleUploadTopic,
-                        icon: const FaIcon(
-                          FontAwesomeIcons.arrowUpFromBracket,
-                          size: 18,
-                        ),
-                        label: Text(getTranslated(context, "upload_topic"))),
-                    const Spacer(),
-                    FilledButton.icon(
-                        onPressed: handleShowTagSelection,
-                        icon: const FaIcon(FontAwesomeIcons.tags, size: 18),
-                        label: Text(getTranslated(context, "add_tag")))
-                  ],
-                ),
+              onChanged: (value) {
+                description = value;
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                children: [
+                  FilledButton.icon(
+                      onPressed: handleUploadTopic,
+                      icon: const FaIcon(
+                        FontAwesomeIcons.arrowUpFromBracket,
+                        size: 18,
+                      ),
+                      label: Text(getTranslated(context, "upload_topic"))),
+                  const Spacer(),
+                  FilledButton.icon(
+                      onPressed: handleShowTagSelection,
+                      icon: const FaIcon(FontAwesomeIcons.tags, size: 18),
+                      label: Text(getTranslated(context, "add_tag")))
+                ],
               ),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: topicInputs.length,
-                padding: const EdgeInsets.only(bottom: 40),
-                itemBuilder: (context, index) {
-                  bool isSwiped = false;
-                  double dragStartX = 0.0;
-                  return GestureDetector(
-                    onHorizontalDragStart: (details) {
-                      dragStartX = details.globalPosition.dx;
-                    },
-                    onHorizontalDragUpdate: (details) {
-                      final dx = details.globalPosition.dx;
-                      final delta = dx - dragStartX;
-                      if (delta < -32) {
-                        setState(() {
-                          isSwiped = true;
-                        });
-                      } else {
-                        setState(() {
-                          isSwiped = false;
-                        });
-                      }
-                    },
-                    onHorizontalDragEnd: (details) {
+            ),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: topicInputs.length,
+              padding: const EdgeInsets.only(bottom: 40),
+              itemBuilder: (context, index) {
+                bool isSwiped = false;
+                double dragStartX = 0.0;
+                return GestureDetector(
+                  onHorizontalDragStart: (details) {
+                    dragStartX = details.globalPosition.dx;
+                  },
+                  onHorizontalDragUpdate: (details) {
+                    final dx = details.globalPosition.dx;
+                    final delta = dx - dragStartX;
+                    if (delta < -32) {
+                      setState(() {
+                        isSwiped = true;
+                      });
+                    } else {
                       setState(() {
                         isSwiped = false;
                       });
-                    },
-                    child: Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          removeTopicInput(index);
-                        },
-                        background: Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.all(Radius.circular(8))),
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: const FaIcon(FontAwesomeIcons.trashCan,
-                              size: 32, color: Colors.white),
+                    }
+                  },
+                  onHorizontalDragEnd: (details) {
+                    setState(() {
+                      isSwiped = false;
+                    });
+                  },
+                  child: Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        removeTopicInput(index);
+                      },
+                      background: Container(
+                        decoration: const BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: const FaIcon(FontAwesomeIcons.trashCan,
+                            size: 32, color: Colors.white),
+                      ),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        transform: Matrix4.translationValues(
+                          // ignore: dead_code
+                          isSwiped ? -40.0 : 0.0,
+                          0.0,
+                          0.0,
                         ),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          transform: Matrix4.translationValues(
-                            // ignore: dead_code
-                            isSwiped ? -40.0 : 0.0,
-                            0.0,
-                            0.0,
-                          ),
-                          child: AddTopicSecttion(
-                              index: index,
-                              termVal: topicInputs[index],
-                              handleChange: updateTopic),
-                        )),
-                  );
-                },
-              )
-            ],
-          ),
+                        child: AddTopicSecttion(
+                            index: index,
+                            termVal: topicInputs[index],
+                            handleChange: updateTopic),
+                      )),
+                );
+              },
+            )
+          ],
         ),
-      );
+      ),
+    );
   }
 }

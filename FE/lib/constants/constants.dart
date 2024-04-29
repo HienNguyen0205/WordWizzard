@@ -34,7 +34,7 @@ final List<String> iconList = [
   'assets/icon/google.svg',
 ];
 
-const String ipv4 = '192.168.1.104';
+const String ipv4 = '192.168.1.103';
 
 class ListItem {
   final String title;
@@ -83,3 +83,10 @@ final List<ListItem> topicTagItems = [
   ListItem(
       title: "Animals and Wildlife", icon: FontAwesomeIcons.paw, tag: 'tag_19'),
 ];
+
+const double volume = 0.5;
+const double pitch = 1.0;
+const double rate = 0.5;
+
+List<String> answerLabel = ['A', 'B', 'C', 'D'];
+List<Color> answerLabelColor = [const Color(0xffEB5353), const Color(0xffFFC55A), const Color(0xff36AE7C), const Color(0xff187498)];

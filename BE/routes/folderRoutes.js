@@ -1,7 +1,7 @@
 import express, { response } from "express";
 import folderController from "../controllers/folderController.js";
 import authentication from "../middleware/auth.js";
-import flashCardController from "../controllers/flashCardController.js";
+import flashCardController from "../controllers/userTopicController.js";
 const router = express.Router();
 
 // create folder

@@ -1,6 +1,5 @@
 import express from "express";
 import router from "./routes/index.js";
-import swaggerDocs from "./swagger.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -36,5 +35,4 @@ mongoose
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
-  swaggerDocs(app, port);
 });

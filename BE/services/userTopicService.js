@@ -70,7 +70,6 @@ const joinTopic = async (req, res) => {
         },
       },
     },
-    
   ]);
 
   const user_topic = await UserTopic.findOne({
@@ -79,10 +78,10 @@ const joinTopic = async (req, res) => {
   });
 
   if (user_topic) {
-    topic[0].listWords = topic[0].listWords.map(word => {
+    topic[0].listWords = topic[0].listWords.map((word) => {
       return {
         ...word,
-        is_mark: user_topic?.words_mark?.includes(word._id)
+        is_mark: user_topic?.words_mark?.includes(word._id),
       };
     });
     return res.status(200).send({
@@ -94,7 +93,14 @@ const joinTopic = async (req, res) => {
       user_id,
       topic_id: topicId,
     });
+
     await new_user_topic.save();
+    topic[0].listWords = topic[0].listWords.map((word) => {
+      return {
+        ...word,
+        is_mark: false,
+      };
+    });
     return res.status(200).send({
       message: "Join flash card successfully.",
       data: topic[0],
@@ -104,7 +110,7 @@ const joinTopic = async (req, res) => {
 
 const saveTopic = async (req, res) => {
   const { topic_id } = req.params;
-  const { words_mark, words_studying, words_learned  } = req.body;
+  const { words_mark, words_studying, words_learned } = req.body;
   const { _id: user_id } = req.user;
   const topicId = ObjectId(topic_id);
 
@@ -136,20 +142,23 @@ const saveTopic = async (req, res) => {
 };
 
 const joinFlashCard = async (req, res) => {
-  const { topic_id }  = req.params;
+  const { topic_id } = req.params;
   const { is_mark, is_shuffle } = req.query;
   const { _id: user_id } = req.user;
   const topicId = ObjectId(topic_id);
   const topic = await Topic.findById(topicId);
-  
+
   const user_topic = await UserTopic.findOne({
     user_id,
     topic_id: topicId,
   });
-  let current_index = user_topic.words_studying.length + user_topic.words_learned.length + 1;
+  let current_index =
+    user_topic.words_studying.length + user_topic.words_learned.length + 1;
   let list_words = topic.listWords.slice(current_index - 1);
   if (is_mark == 1) {
-    list_words = list_words.filter(word => user_topic.words_mark.includes(word._id));
+    list_words = list_words.filter((word) =>
+      user_topic.words_mark.includes(word._id)
+    );
   }
   if (is_shuffle == 1) {
     list_words = list_words.sort(() => Math.random() - 0.5);
@@ -158,13 +167,14 @@ const joinFlashCard = async (req, res) => {
     list_words: list_words,
     count_studying: user_topic.words_studying.length,
     count_learned: user_topic.words_learned.length,
-    current_index: user_topic.words_studying.length + user_topic.words_learned.length + 1,
+    current_index:
+      user_topic.words_studying.length + user_topic.words_learned.length + 1,
   };
   return res.status(200).send({
     message: "Join flash card successfully.",
     data: response_data,
   });
-}
+};
 
 const resetFlashCard = async (req, res) => {
   const { topic_id } = req.params;
@@ -180,6 +190,6 @@ const resetFlashCard = async (req, res) => {
   return res.status(200).send({
     message: "Reset flash card successfully.",
   });
-}
+};
 
 export { joinTopic, saveTopic, joinFlashCard, resetFlashCard };

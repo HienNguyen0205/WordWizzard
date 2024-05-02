@@ -65,20 +65,41 @@ const addOne = async (req, res) => {
 };
 
 const updateOne = async (req, res) => {
-  const listWords = JSON.parse(req.body.listWords).map((word) => {
+  const listWordsFromBody = req.body.listWords.map((word) => {
     return {
-      general: word.general,
-      meaning: word.meaning,
+      _id: word?._id,
+      general: word?.general,
+      meaning: word?.meaning,
     };
   });
+
   const { id } = req.params;
-  if (checkListWordsEmpty(listWords) && !req.body.name) {
+
+  if (checkListWordsEmpty(listWordsFromBody) && !req.body.name) {
     const topic = await Topic.deleteOne({ _id: id });
     return res.status(200).send({
       msg: "Topic Draft deleted successfully!",
       data: topic,
     });
   } else {
+    const topic = await Topic.findById(id);
+    const oldListWords = topic.listWords;
+    
+    const newWords = listWordsFromBody.filter((word) => {
+      return oldListWords.every((oldWord) => oldWord._id !== word._id);
+    });
+
+    const updatedListWords = oldListWords.filter((oldWord) => {
+      return listWordsFromBody.some((newWord) => newWord._id === oldWord._id);
+    });
+
+    updatedListWords.push(...newWords);
+
+    topic.name = req.body.name;
+    topic.description = req.body.description;
+    topic.securityView = req.body.securityView;
+    topic.listWords = updatedListWords;
+
     const tag = await Tags.findOne({ value: req.body.tag });
     if (!tag) {
       return res.status(400).send({
@@ -86,14 +107,9 @@ const updateOne = async (req, res) => {
         message: "Tag not found",
       });
     }
-    const topic = await Topic.findById(id);
-
-    topic.name = req.body.name;
-    topic.description = req.body.description;
-    topic.securityView = req.body.securityView;
-    topic.listWords = listWords;
     topic.tag = tag._id;
     await topic.save();
+
     const response_data = {
       _id: topic._id,
       name: topic.name,
@@ -107,11 +123,14 @@ const updateOne = async (req, res) => {
       createdBy: topic.createdBy,
       createdAt: topic.createdAt,
     };
-    return res.status(201).send({
+
+    return res.status(200).send({
       msg: "Topic updated successfully!",
       data: response_data,
     });
   }
+    console.log("🚀 ~ updateOne ~ updatedListWords:", updatedListWords)
+    console.log("🚀 ~ updateOne ~ updatedListWords:", updatedListWords)
 };
 
 const getAll = async (req, res) => {

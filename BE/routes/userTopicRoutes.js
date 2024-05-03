@@ -18,16 +18,16 @@ router.post(
 );
 
 // join flash card
-router.get(
-  "/api/userTopic/joinFlashCard/:topic_id",
-  authentication,
-  userTopicController.joinFlashCard
-);
+// router.get(
+//   "/api/userTopic/joinFlashCard/:topic_id",
+//   authentication,
+//   userTopicController.joinFlashCard
+// );
 
 // reset flash card
-router.post(
-  "/api/userTopic/resetFlashCard/:topic_id",
-  authentication,
-  userTopicController.resetFlashCard
-);
+// router.post(
+//   "/api/userTopic/resetFlashCard/:topic_id",
+//   authentication,
+//   userTopicController.resetFlashCard
+// );
 export default router;

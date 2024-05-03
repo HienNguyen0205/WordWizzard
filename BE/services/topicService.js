@@ -65,7 +65,7 @@ const addOne = async (req, res) => {
 };
 
 const updateOne = async (req, res) => {
-  const listWordsFromBody = req.body.listWords.map((word) => {
+  const listWordsFromBody = JSON.parse(req.body.listWords).map((word) => {
     return {
       _id: word?._id,
       general: word?.general,

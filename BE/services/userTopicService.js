@@ -110,7 +110,8 @@ const joinTopic = async (req, res) => {
 
 const saveTopic = async (req, res) => {
   const { topic_id } = req.params;
-  const { words_mark } = JSON.stringify(req.body);
+  const words_mark = JSON.parse(req.body.words_mark);
+  console.log("🚀 ~ saveTopic ~ words_mark:", words_mark)
   const { _id: user_id } = req.user;
   const topicId = ObjectId(topic_id);
 

@@ -15,14 +15,6 @@ const userTopicSchema = new mongoose.Schema({
     type: [mongoose.Types.ObjectId],
     default: [],
   },
-  words_studying: {
-    type: [mongoose.Types.ObjectId],
-    default: [],
-  },
-  words_learned: {
-    type: [mongoose.Types.ObjectId],
-    default: [],
-  },
   user_scores: {
     type: Number,
     default: 0,

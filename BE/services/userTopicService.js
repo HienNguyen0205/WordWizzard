@@ -85,7 +85,7 @@ const joinTopic = async (req, res) => {
       };
     });
     return res.status(200).send({
-      message: "Join flash card successfully.",
+      message: "Join quiz successfully.",
       data: topic[0],
     });
   } else {
@@ -102,7 +102,7 @@ const joinTopic = async (req, res) => {
       };
     });
     return res.status(200).send({
-      message: "Join flash card successfully.",
+      message: "Join quiz successfully.",
       data: topic[0],
     });
   }
@@ -110,7 +110,7 @@ const joinTopic = async (req, res) => {
 
 const saveTopic = async (req, res) => {
   const { topic_id } = req.params;
-  const { words_mark, words_studying, words_learned } = req.body;
+  const { words_mark } = JSON.stringify(req.body);
   const { _id: user_id } = req.user;
   const topicId = ObjectId(topic_id);
 
@@ -128,68 +128,60 @@ const saveTopic = async (req, res) => {
     user_topic.words_mark = words_mark;
     await user_topic.save();
   }
-  if (words_studying) {
-    user_topic.words_studying = words_studying;
-    await user_topic.save();
-  }
-  if (words_learned) {
-    user_topic.words_learned = words_learned;
-    await user_topic.save();
-  }
   return res.status(200).send({
     message: "Save word marks successfully.",
   });
 };
 
-const joinFlashCard = async (req, res) => {
-  const { topic_id } = req.params;
-  const { is_mark, is_shuffle } = req.query;
-  const { _id: user_id } = req.user;
-  const topicId = ObjectId(topic_id);
-  const topic = await Topic.findById(topicId);
+// const joinFlashCard = async (req, res) => {
+//   const { topic_id } = req.params;
+//   const { is_mark, is_shuffle } = req.query;
+//   const { _id: user_id } = req.user;
+//   const topicId = ObjectId(topic_id);
+//   const topic = await Topic.findById(topicId);
 
-  const user_topic = await UserTopic.findOne({
-    user_id,
-    topic_id: topicId,
-  });
-  let current_index =
-    user_topic.words_studying.length + user_topic.words_learned.length + 1;
-  let list_words = topic.listWords.slice(current_index - 1);
-  if (is_mark == 1) {
-    list_words = list_words.filter((word) =>
-      user_topic.words_mark.includes(word._id)
-    );
-  }
-  if (is_shuffle == 1) {
-    list_words = list_words.sort(() => Math.random() - 0.5);
-  }
-  const response_data = {
-    list_words: list_words,
-    count_studying: user_topic.words_studying.length,
-    count_learned: user_topic.words_learned.length,
-    current_index:
-      user_topic.words_studying.length + user_topic.words_learned.length + 1,
-  };
-  return res.status(200).send({
-    message: "Join flash card successfully.",
-    data: response_data,
-  });
-};
+//   const user_topic = await UserTopic.findOne({
+//     user_id,
+//     topic_id: topicId,
+//   });
+//   let current_index =
+//     user_topic.words_studying.length + user_topic.words_learned.length + 1;
+//   let list_words = topic.listWords.slice(current_index - 1);
+//   if (is_mark == 1) {
+//     list_words = list_words.filter((word) =>
+//       user_topic.words_mark.includes(word._id)
+//     );
+//   }
+//   if (is_shuffle == 1) {
+//     list_words = list_words.sort(() => Math.random() - 0.5);
+//   }
+//   const response_data = {
+//     list_words: list_words,
+//     count_studying: user_topic.words_studying.length,
+//     count_learned: user_topic.words_learned.length,
+//     current_index:
+//       user_topic.words_studying.length + user_topic.words_learned.length + 1,
+//   };
+//   return res.status(200).send({
+//     message: "Join flash card successfully.",
+//     data: response_data,
+//   });
+// };
 
-const resetFlashCard = async (req, res) => {
-  const { topic_id } = req.params;
-  const { _id: user_id } = req.user;
-  const topicId = ObjectId(topic_id);
-  const user_topic = await UserTopic.findOne({
-    user_id,
-    topic_id: topicId,
-  });
-  user_topic.words_studying = [];
-  user_topic.words_learned = [];
-  await user_topic.save();
-  return res.status(200).send({
-    message: "Reset flash card successfully.",
-  });
-};
+// const resetFlashCard = async (req, res) => {
+//   const { topic_id } = req.params;
+//   const { _id: user_id } = req.user;
+//   const topicId = ObjectId(topic_id);
+//   const user_topic = await UserTopic.findOne({
+//     user_id,
+//     topic_id: topicId,
+//   });
+//   user_topic.words_studying = [];
+//   user_topic.words_learned = [];
+//   await user_topic.save();
+//   return res.status(200).send({
+//     message: "Reset flash card successfully.",
+//   });
+// };
 
-export { joinTopic, saveTopic, joinFlashCard, resetFlashCard };
+export { joinTopic, saveTopic };

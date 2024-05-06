@@ -5,17 +5,18 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/utils/shake_widget_state.dart';
+import 'package:wordwizzard/widgets/shake_widget.dart';
 import 'package:wordwizzard/widgets/test_result_item.dart';
 
-class MultipleChoiceTestScreen extends StatefulWidget {
+class WordFillingTestScreen extends StatefulWidget {
   final List<dynamic> listWord;
   final int questionQuantity;
   final bool isInstantShowAnswer;
   final bool isAnswerWithTerm;
   final bool isAnswerWithDef;
-  const MultipleChoiceTestScreen(
+  const WordFillingTestScreen(
       {super.key,
       required this.listWord,
       required this.questionQuantity,
@@ -24,11 +25,10 @@ class MultipleChoiceTestScreen extends StatefulWidget {
       required this.isAnswerWithDef});
 
   @override
-  MultipleChoiceTestScreenState createState() =>
-      MultipleChoiceTestScreenState();
+  WordFillingTestScreenState createState() => WordFillingTestScreenState();
 }
 
-class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
+class WordFillingTestScreenState extends State<WordFillingTestScreen> {
   late int questionQuantity;
   late List<dynamic> listWord;
   int currStep = 0;
@@ -37,54 +37,26 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
   late bool isAnswerWithTerm;
   late bool isAnswerWithDef;
   String question = "";
-  late int answerCount;
-  List<dynamic> answer = [];
-  bool showResult = false;
-  int selectAnsIndex = -1;
+  String answer = "";
+  String userAnswer = "";
   int touchedIndex = -1;
   int rightAns = 0;
   int wrongAns = 0;
   List<dynamic> testHistory = [];
+  TextEditingController controller = TextEditingController();
+  final shakeKey = GlobalKey<ShakeWidgetState>();
+  Color? questionColor;
 
   @override
   void initState() {
     super.initState();
     listWord = widget.listWord;
     listWord.shuffle();
-    answerCount = listWord.length > 4 ? 4 : listWord.length;
     questionQuantity = widget.questionQuantity;
     titleProgress = "$currStep/$questionQuantity";
     isAnswerWithTerm = widget.isAnswerWithTerm;
     isAnswerWithDef = widget.isAnswerWithDef;
     pickQuestion();
-  }
-
-  void handleClose() {
-    if (Navigator.canPop(context)) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  List<dynamic> getSuffleAnswer(String type) {
-    List<dynamic> ans = [];
-    List<int> ansIndex = [];
-    for (int i = 0; i < answerCount; i++) {
-      if (i == 0) {
-        ans.add({"title": listWord[currStep][type], "isRightAns": true});
-        ansIndex.add(currStep);
-      } else {
-        while (true) {
-          int index = Random().nextInt(listWord.length);
-          if (!ansIndex.contains(index)) {
-            ans.add({"title": listWord[index][type], "isRightAns": false});
-            ansIndex.add(index);
-            break;
-          }
-        }
-      }
-    }
-    ans.shuffle();
-    return ans;
   }
 
   void pickQuestion() {
@@ -99,63 +71,11 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
     }
     setState(() {
       updateProgress();
-      question = listWord[currStep][type == "general" ? "meaning" : "general"];
-      answer = getSuffleAnswer(type);
+      if(currStep < questionQuantity){
+        question = listWord[currStep][type == "general" ? "meaning" : "general"];
+        answer = listWord[currStep][type];
+      }
     });
-  }
-
-  void handleAnswer(int index) {
-    setState(() {
-      selectAnsIndex = index;
-      showResult = widget.isInstantShowAnswer == true;
-    });
-    if(answer[selectAnsIndex]["isRightAns"]){
-      testHistory.add({
-        "isRight": true,
-        "question": question,
-        "answer": {
-          "ans": {
-            "labelColor": answerLabelColor[index],
-            "label": answerLabel[index],
-            "content": answer[index]["title"]
-          },
-          "choose": null
-        }
-      });
-      rightAns++;
-    }else{
-      dynamic rightAnsIndex = answer.indexWhere((item) => item["isRightAns"]);
-      testHistory.add({
-        "isRight": false,
-        "question": question,
-        "answer": {
-          "ans": {
-            "labelColor": answerLabelColor[rightAnsIndex],
-            "label": answerLabel[rightAnsIndex],
-            "content": answer[rightAnsIndex]["title"]
-          },
-          "choose": {
-            "labelColor": answerLabelColor[index],
-            "label": answerLabel[index],
-            "content": answer[index]["title"]
-          },
-        }
-      });
-      wrongAns++;
-    }
-    debugPrint(testHistory.toString());
-    if(widget.isInstantShowAnswer){
-      Timer(const Duration(seconds: 2), () {
-        currStep++;
-        showResult = false;
-        pickQuestion();
-        updateProgress();
-      });
-    }else{
-      currStep++;
-      pickQuestion();
-      updateProgress();
-    }
   }
 
   void updateProgress() {
@@ -194,6 +114,76 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
     });
   }
 
+  void updateNewQuestion() {
+    currStep++;
+    pickQuestion();
+  }
+
+  void resetQuestionColor() {
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        questionColor = null;
+      });
+      updateNewQuestion();
+      controller.clear();
+    });
+  }
+
+  void handleTestHis(bool isRight, String? ans){
+    if(isRight){
+      testHistory.add({
+        "isRight": true,
+        "question": question,
+        "answer": {"ans": answer, "choose": null}
+      });
+    }else{
+      testHistory.add({
+        "isRight": false,
+        "question": question,
+        "answer": {"ans": answer, "choose": ans}
+      });
+    }
+  }
+
+  void handleAnswer() {
+    String trimAns = userAnswer.trim();
+    if (trimAns == "") {
+      handleTestHis(false, trimAns);
+      updateNewQuestion();
+      wrongAns++;
+    } else if (trimAns == answer.trim().toLowerCase()) {
+      handleTestHis(true, null);
+      if (widget.isInstantShowAnswer) {
+        setState(() {
+          questionColor = Colors.green;
+        });
+        resetQuestionColor();
+      } else {
+        updateNewQuestion();
+      }
+      rightAns++;
+    } else {
+      handleTestHis(false, trimAns);
+      if (widget.isInstantShowAnswer) {
+        setState(() {
+          questionColor = Colors.red;
+        });
+        resetQuestionColor();
+        shakeKey.currentState?.shake();
+      } else {
+        updateNewQuestion();
+      }
+      wrongAns++;
+    }
+    debugPrint(wrongAns.toString());
+  }
+
+  void handleClose() {
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,11 +192,13 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
         centerTitle: true,
         leading: IconButton(
-            onPressed: handleClose, icon: const FaIcon(FontAwesomeIcons.xmark)),
+          onPressed: handleClose,
+          icon: const FaIcon(FontAwesomeIcons.xmark),
+        ),
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(6),
             child: TweenAnimationBuilder(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(seconds: 1),
               curve: Curves.easeInOut,
               tween: Tween<double>(
                 begin: 0,
@@ -218,64 +210,59 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
             )),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(12),
         child: currStep < questionQuantity
             ? Column(
                 children: [
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
-                      child: Text(question,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w500)),
+                      child: ShakeWidget(
+                        key: shakeKey,
+                        shakeCount: 3,
+                        shakeOffset: 10,
+                        shakeDuration: const Duration(milliseconds: 500),
+                        child: Text(question,
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                                color: questionColor)),
+                      ),
                     ),
                   ),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: answerCount,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: !showResult
-                              ? () {
-                                  handleAnswer(index);
-                                }
-                              : null,
-                          child: Card(
-                              shape: (widget.isInstantShowAnswer &&
-                                          showResult &&
-                                          answer[index]["isRightAns"]) ||
-                                      (widget.isInstantShowAnswer &&
-                                          showResult &&
-                                          selectAnsIndex == index)
-                                  ? RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: answer[index]["isRightAns"]
-                                              ? Colors.green
-                                              : Colors.red,
-                                          width: 2),
-                                      borderRadius: BorderRadius.circular(12))
-                                  : null,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 18),
-                                    decoration: BoxDecoration(
-                                      color: answerLabelColor[index],
-                                    ),
-                                    width: 60,
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    child: Text(answerLabel[index],
-                                        style: const TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w600)),
-                                  ),
-                                  Text(answer[index]["title"],
-                                      style: const TextStyle(fontSize: 18))
-                                ],
-                              )),
-                        );
-                      })
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          autofocus: true,
+                          controller: controller,
+                          decoration: const InputDecoration(
+                            fillColor: Colors.transparent,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              userAnswer = val.toLowerCase();
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 60,
+                        height: 60,
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          onPressed: handleAnswer,
+                          icon: FaIcon(
+                              userAnswer == ""
+                                  ? FontAwesomeIcons.circleXmark
+                                  : FontAwesomeIcons.circleUp,
+                              color:
+                                  userAnswer == "" ? Colors.red : Colors.blue,
+                              size: 32),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               )
             : SingleChildScrollView(
@@ -412,19 +399,25 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: handleClose,
-                        child: Text(getTranslated(context, "exit"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                        child: Text(getTranslated(context, "exit"),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500)),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 18),
-                      child: Text(getTranslated(context, "your_answer"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                      child: Text(getTranslated(context, "your_answer"),
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w500)),
                     ),
                     ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: questionQuantity,
-                      itemBuilder: (context, index) => TestResultItem(isRight: testHistory[index]["isRight"], question: testHistory[index]["question"], answer: testHistory[index]["answer"])
-                    )
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: questionQuantity,
+                        itemBuilder: (context, index) => TestResultItem(
+                            isRight: testHistory[index]["isRight"],
+                            question: testHistory[index]["question"],
+                            answer: testHistory[index]["answer"]))
                   ],
                 ),
               ),

@@ -1,4 +1,3 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,28 +15,67 @@ import 'package:wordwizzard/widgets/custom_toast.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
 class AddTopicScreen extends StatefulWidget {
-  const AddTopicScreen({super.key});
+  final Map<String,dynamic>? topicDetails;
+  const AddTopicScreen({super.key, this.topicDetails});
 
   @override
   AddTopicScreenState createState() => AddTopicScreenState();
 }
 
 class AddTopicScreenState extends State<AddTopicScreen> {
-  String topic = '';
-  String description = '';
   int tagIndex = 0;
+  FocusNode desFocusNode = FocusNode();
+  int focusIndex = 0;
+  late TextEditingController titleController;
+  late TextEditingController desController;
   late List<dynamic> topicInputs;
   late FToast toast;
+  late Map<String,dynamic>? topicDetails;
 
   @override
   void initState() {
     super.initState();
-    topicInputs = [
+    topicDetails = widget.topicDetails;
+    List<dynamic>? newList;
+    if(topicDetails?["listWords"] != null){
+      newList = topicDetails?["listWords"].map((item) {
+        return {"term": item["general"], "definition": item["meaning"]};
+      }).toList();
+    }
+    topicInputs = newList ?? [
       {"term": "", "definition": ""},
       {"term": "", "definition": ""},
     ];
+    titleController = TextEditingController(text: topicDetails?["name"] ?? "");
+    desController = TextEditingController(text: topicDetails?["description"] ?? "");
     toast = FToast();
     toast.init(context);
+  }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    if (topicDetails != null) {
+      Future.delayed(Duration.zero, () {
+        context
+            .read<AccessScopeProvider>()
+            .setAccessScope(topicDetails?["securityView"]);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    desController.dispose();
+    desFocusNode.dispose();
+    super.dispose();
+  }
+
+  void setFocusIndex(int index) {
+    setState(() {
+      focusIndex = index;
+    });
   }
 
   Widget adaptiveAction(
@@ -59,15 +97,17 @@ class AddTopicScreenState extends State<AddTopicScreen> {
 
   void handleDone() {
     bool flag = true;
+    String title = titleController.text;
+    String des = desController.text;
     for (var ele in topicInputs) {
-      if (ele["term"] == '' || ele["definition"] == '') {
+      if (ele["term"] == '' || ele["definition"] == '' || ele["term"] == null || ele["definition"] == null) {
         flag = false;
         break;
       }
     }
-    if (topic.isNotEmpty && topicInputs.length >= 2 && flag) {
+    if (title.isNotEmpty && topicInputs.length >= 2 && flag) {
       String accessScope = context.read<AccessScopeProvider>().accessScope;
-      handleAddTopic(topic, description, accessScope,
+      handleAddTopic(title, des, accessScope,
               topicTagItems[tagIndex].tag, topicInputs)
           .then((val) {
         if (val["code"] == 0) {
@@ -79,10 +119,11 @@ class AddTopicScreenState extends State<AddTopicScreen> {
               child: const CustomToast(text: "add_success"),
               gravity: ToastGravity.BOTTOM);
           context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
-          Navigator.of(context).pushReplacementNamed(topicDetailRoute, arguments: {"topicId": val["data"]["_id"]});
+          Navigator.of(context).pushReplacementNamed(topicDetailRoute,
+              arguments: {"topicId": val["data"]["_id"]});
         }
       });
-    } else if (topic.isNotEmpty || flag) {
+    } else if (title.isNotEmpty || flag) {
       showAdaptiveDialog(
           context: context,
           builder: (context) {
@@ -103,7 +144,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                 adaptiveAction(
                     context: context,
                     onPressed: () {
-                      handleAddTopic(topic, description, "DRAFT",
+                      handleAddTopic(title, des, "DRAFT",
                               topicTagItems[tagIndex].tag, topicInputs)
                           .then((val) {
                         debugPrint(val["code"].toString());
@@ -122,6 +163,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
   void handleUploadTopic() {}
 
   void handleShowTagSelection() {
+    handleHideKeyboard();
     showMaterialModalBottomSheet(
         expand: false,
         context: context,
@@ -152,8 +194,10 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                     controller:
                         FixedExtentScrollController(initialItem: tagIndex),
                     onSelectedItemChanged: (val) {
-                      setSheetState(() {
-                        tagIndex = val;
+                      setState(() {
+                        setSheetState(() {
+                          tagIndex = val;
+                        });
                       });
                     },
                   ),
@@ -167,6 +211,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
   void addTopicInput() {
     setState(() {
       topicInputs.add({"term": "", "definition": ""});
+      focusIndex = (topicInputs.length - 1) * 2;
     });
   }
 
@@ -186,13 +231,29 @@ class AddTopicScreenState extends State<AddTopicScreen> {
   }
 
   void handlleSetting() {
+    handleHideKeyboard();
     Navigator.of(context).pushNamed(settingAddTopicRoute);
+  }
+
+  void handleNextFocus() {
+    setState(() {
+      if (focusIndex < (topicInputs.length * 2) - 1) {
+        focusIndex++;
+      } else {
+        addTopicInput();
+      }
+    });
+  }
+
+  void handleHideKeyboard() {
+    setState(() {
+      focusIndex = -1;
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -200,7 +261,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
           icon: const FaIcon(FontAwesomeIcons.gear),
           onPressed: handlleSetting,
         ),
-        title: Text(getTranslated(context, "create_topic")),
+        title: Text(getTranslated(context, topicDetails == null ? "create_topic" : "edit_topic")),
         centerTitle: true,
         actions: [
           TextButton(
@@ -210,19 +271,71 @@ class AddTopicScreenState extends State<AddTopicScreen> {
               ))
         ],
       ),
-      bottomNavigationBar: ConvexButton.fab(
-        backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
-        color:
-            theme.bottomNavigationBarTheme.unselectedIconTheme!.color as Color,
-        icon: Icons.add,
-        onTap: addTopicInput,
-      ),
+      bottomNavigationBar: Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+              height: 60,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  border: const Border(top: BorderSide(color: Colors.grey))),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    children: [
+                      Positioned(
+                          top: constraints.maxHeight / 2 - 20,
+                          left: 18,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 40,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: handleNextFocus,
+                                  icon: const FaIcon(
+                                      FontAwesomeIcons.chevronDown),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                    "${(focusIndex / 2).floor() + 1}/${topicInputs.length}")
+                              ],
+                            ),
+                          )),
+                      Positioned(
+                        top: constraints.maxHeight / 2 - 24,
+                        left: constraints.maxWidth / 2 - 24,
+                        child: Container(
+                          height: 48,
+                          width: 48,
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: addTopicInput,
+                            icon: const FaIcon(
+                              FontAwesomeIcons.circlePlus,
+                              size: 32,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
             TextField(
+              controller: titleController,
+              maxLength: 30,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
+                icon: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: FaIcon(topicTagItems[tagIndex].icon)),
                 fillColor: Colors.transparent,
                 labelText: getTranslated(context, "topic"),
                 border: const UnderlineInputBorder(),
@@ -230,14 +343,20 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                 focusedBorder:
                     const UnderlineInputBorder(), // Customize the color as needed
               ),
-              onChanged: (value) {
-                if (value.length <= 30) {
-                  topic = value;
-                }
+              onEditingComplete: () {
+                desFocusNode.requestFocus();
               },
             ),
             TextField(
+              controller: desController,
+              focusNode: desFocusNode,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
+                icon: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: const FaIcon(FontAwesomeIcons.comment)),
                 fillColor: Colors.transparent,
                 labelText: getTranslated(context, "description"),
                 border: const UnderlineInputBorder(),
@@ -245,8 +364,9 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                 focusedBorder:
                     const UnderlineInputBorder(), // Customize the color as needed
               ),
-              onChanged: (value) {
-                description = value;
+              onEditingComplete: () {
+                desFocusNode.unfocus();
+                setFocusIndex(0);
               },
             ),
             Padding(
@@ -323,12 +443,14 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                         ),
                         child: AddTopicSecttion(
                             index: index,
+                            focusIndex: focusIndex,
+                            handleFocusChange: setFocusIndex,
                             termVal: topicInputs[index],
                             handleChange: updateTopic),
                       )),
                 );
               },
-            )
+            ),
           ],
         ),
       ),

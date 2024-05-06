@@ -3,9 +3,11 @@ import 'package:wordwizzard/localization/language_constant.dart';
 
 class AddTopicSecttion extends StatefulWidget {
   final int index;
+  final int focusIndex;
+  final void Function(int index) handleFocusChange;
   final dynamic termVal;
   final void Function(int index, String? term, String? definition) handleChange;
-  const AddTopicSecttion({super.key, required this.index, required this.termVal,required this.handleChange});
+  const AddTopicSecttion({super.key, required this.index, required this.focusIndex, required this.handleFocusChange ,required this.termVal,required this.handleChange});
 
   @override
   AddTopicSecttionState createState() => AddTopicSecttionState();
@@ -13,7 +15,8 @@ class AddTopicSecttion extends StatefulWidget {
 
 class AddTopicSecttionState extends State<AddTopicSecttion> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusTerm = FocusNode();
+  final FocusNode _focusDef = FocusNode();
   late TextEditingController _controller1;
   late TextEditingController _controller2;
 
@@ -22,18 +25,21 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
     super.initState();
     _controller1 = TextEditingController(text: widget.termVal["term"]);
     _controller2 = TextEditingController(text: widget.termVal["definition"]);
-    if(widget.index > 1){
-      _focusNode.requestFocus();
+    if(widget.index * 2 == widget.focusIndex){
+      _focusTerm.requestFocus();
+    }
+    if(widget.index * 2 + 1 == widget.focusIndex){
+      _focusDef.requestFocus();
     }
   }
 
-  @override
-  void didUpdateWidget(AddTopicSecttion oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    debugPrint(widget.termVal.toString());
-    _controller1.text = widget.termVal["term"];
-    _controller2.text = widget.termVal["definition"];
-  }
+  // @override
+  // void didUpdateWidget(AddTopicSecttion oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   debugPrint(widget.termVal.toString());
+  //   _controller1.text = widget.termVal["term"];
+  //   _controller2.text = widget.termVal["definition"];
+  // }
 
   @override
   void dispose() {
@@ -53,7 +59,7 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
           children: [
             TextFormField(
               controller: _controller1,
-              focusNode: _focusNode,
+              focusNode: _focusTerm,
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
                 labelText: getTranslated(context, "term"),
@@ -72,10 +78,14 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
               onChanged: (val) {
                 widget.handleChange(widget.index, val, null);
                 _formKey.currentState?.validate();
-              } ,
+              },
+              onTap: () {
+                widget.handleFocusChange(widget.index * 2);
+              },
             ),
             const SizedBox(height: 12),
             TextFormField(
+              focusNode: _focusDef,
               controller: _controller2,
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
@@ -95,6 +105,9 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
               onChanged: (val) {
                 widget.handleChange(widget.index, null, val);
                 _formKey.currentState?.validate();
+              },
+              onTap: () {
+                widget.handleFocusChange(widget.index * 2 + 1);
               },
             ),
           ],

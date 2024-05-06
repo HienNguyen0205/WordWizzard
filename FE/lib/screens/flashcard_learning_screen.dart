@@ -16,9 +16,8 @@ import 'package:wordwizzard/widgets/flashcard.dart';
 
 class FlashcardLearningScreen extends StatefulWidget {
   final List<dynamic> listWords;
-  final int? currIndex;
   const FlashcardLearningScreen(
-      {super.key, required this.listWords, this.currIndex});
+      {super.key, required this.listWords});
 
   @override
   FlashcardLearningScreenState createState() => FlashcardLearningScreenState();
@@ -36,7 +35,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
   Offset cardOffset = Offset.zero;
   ValueNotifier<int> dragStatusNotifier = ValueNotifier<int>(0);
   ValueNotifier<double> rotateNotifier = ValueNotifier<double>(0.0);
-  late int currIndex;
+  int currIndex = 0;
   List<int> undoHistory = [];
   double linearProgressValue = 0;
   bool isPlaying = false;
@@ -50,8 +49,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
   void initState() {
     super.initState();
     listWords = widget.listWords;
-    markWords = listWords.where((item) => item["isMark"] == true).toList();
-    currIndex = widget.currIndex ?? 0;
+    markWords = listWords.where((item) => item["is_mark"] == true).toList();
   }
 
   @override
@@ -277,6 +275,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
                         )),
                     LayoutBuilder(
                       builder: (context, constraints) {
+                        bool canLearnMark = listWords.any((item) => item["is_mark"]);
                         return ToggleSwitch(
                           minWidth: constraints.maxWidth / 2,
                           initialLabelIndex: context
@@ -295,7 +294,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
                               context
                                   .read<FlashcardSettingProvider>()
                                   .changeLearnContentSetting("learn_all");
-                            } else {
+                            } else if(canLearnMark){
                               context
                                   .read<FlashcardSettingProvider>()
                                   .changeLearnContentSetting("learn_star");
@@ -316,6 +315,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(displayList.toString());
     bool isAutoPronun = context.watch<FlashcardSettingProvider>().autoPronun;
     String frontContentType = context.watch<FlashcardSettingProvider>().frontContent;
     String frontContent = frontContentType == "term" ? "general" : "meaning";
@@ -575,7 +575,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
                                       ),
                                       sectionsSpace: 0,
                                       centerSpaceRadius: 54,
-                                      startDegreeOffset: 90,
+                                      startDegreeOffset: -90,
                                       sections: showingSections(),
                                     ),
                                     swapAnimationDuration:

@@ -12,7 +12,7 @@ class FlashcardSettingProvider with ChangeNotifier {
       suffleCard = val.getBool("suffleCard") ?? false;
       autoPronun = val.getBool("autoPronun") ?? false;
       frontContent = val.getString("frontContent") ?? "term";
-      learnContent = val.getString("learnContent") ?? "learn_all";
+      learnContent = "learn_all";
       notifyListeners();
     });
   }

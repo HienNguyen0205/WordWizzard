@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/providers/auth_provider.dart';
+import 'package:wordwizzard/providers/flashcard_setting_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/utils/tts_controller.dart';
@@ -22,13 +23,16 @@ class TopicDetailsScreen extends StatefulWidget {
 
 class TopicDetailsScreenState extends State<TopicDetailsScreen> {
   int sliderIndex = 0;
-  int wordDisplayType = 0;
-  List<dynamic> markWords = [];
+  List<dynamic> words = [];
   TtsController ttsController = TtsController();
   String userId = "";
+  Map<String,dynamic> data = {};
 
   void handleBack() {
     if (Navigator.canPop(context)) {
+      List<String> markList =
+          getMarkWords().map((item) => item["_id"] as String).toList();
+      handleSaveTopic(widget.topicId, markList);
       Navigator.pop(context);
     }
   }
@@ -59,12 +63,16 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
     );
   }
 
-  void handleLearnFlashcard(List<dynamic> list, int? index) {
+  void handleLearnFlashcard(List<dynamic> list) {
     Navigator.of(context)
         .pushNamed(flashcardRoute, arguments: {"listWords": list});
   }
 
-  Widget _buildFlashCard(dynamic word) {
+  Widget _buildFlashCard(int index) {
+    if (context.watch<FlashcardSettingProvider>().learnContent ==
+            "learn_star" && !words[index]["is_mark"]) {
+      return const SizedBox.shrink();
+    }
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
@@ -75,14 +83,14 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(word["general"],
+                Text(words[index]["general"],
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w500)),
                 Row(
                   children: [
                     IconButton(
                         onPressed: () {
-                          ttsController.speak(word["general"]);
+                          ttsController.speak(words[index]["general"]);
                         },
                         icon: const FaIcon(
                           FontAwesomeIcons.volumeHigh,
@@ -90,19 +98,21 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                         )),
                     IconButton(
                         onPressed: () {
-                          word["isMark"] = !word["isMark"];
+                          setState(() {
+                            words[index]["is_mark"] = !words[index]["is_mark"];
+                          });
                         },
                         icon: FaIcon(
                           FontAwesomeIcons.solidStar,
                           size: 18,
-                          color: word["isMark"] == true ? Colors.yellow : null,
+                          color: words[index]["is_mark"] ? Colors.yellow : null,
                         )),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Text(word["meaning"],
+            Text(words[index]["meaning"],
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
           ],
@@ -124,7 +134,11 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
             ? ListTile(
                 title: Text(getTranslated(context, "edit")),
                 leading: const FaIcon(FontAwesomeIcons.pencil),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(addTopicRoute,
+                      arguments: {"topicDetails": data});
+                },
               )
             : null,
         ListTile(
@@ -173,7 +187,17 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
   }
 
   void handleLearnQuiz(List<dynamic> listWord) {
-    Navigator.of(context).pushNamed(multipleChoiceSettingRoute, arguments: {"listWord": listWord});
+    Navigator.of(context).pushNamed(testingSettingRoute,
+        arguments: {"listWord": listWord, "testType": "multipleChoice"});
+  }
+
+  void handleLearnFilling(List<dynamic> listWord) {
+    Navigator.of(context).pushNamed(testingSettingRoute,
+        arguments: {"listWord": listWord, "testType": "filling"});
+  }
+
+  List<dynamic> getMarkWords() {
+    return words.where((item) => item["is_mark"]).toList();
   }
 
   @override
@@ -191,14 +215,14 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
           ],
         ),
         body: FutureBuilder(
-          future: handleTopicDetails(widget.topicId),
+          future: handleJoinTopicDetails(widget.topicId),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data?["code"] == 0) {
-              dynamic data = snapshot.data["data"];
+              data = snapshot.data?["data"];
               userId = data["createdBy"]["_id"];
-              List<dynamic> words = snapshot.data["data"]["listWords"];
-              markWords =
-                  words.where((word) => word['isMark'] == true).toList();
+              if (words.isEmpty) {
+                words = data["listWords"];
+              }
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(18),
@@ -264,15 +288,17 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                           )),
                       _buildActionButton(
                           FontAwesomeIcons.noteSticky, "flashcard", () {
-                        handleLearnFlashcard(words, 0);
+                        handleLearnFlashcard(words);
+                      }),
+                      _buildActionButton(FontAwesomeIcons.listCheck, "quiz",
+                          () {
+                        handleLearnQuiz(words);
                       }),
                       _buildActionButton(
-                          FontAwesomeIcons.listCheck, "quiz", () {
-                            handleLearnQuiz(words);
-                          }),
-                      _buildActionButton(FontAwesomeIcons.penToSquare,
-                          "typing_practice", () {}),
-                      markWords.isNotEmpty
+                          FontAwesomeIcons.penToSquare, "typing_practice", () {
+                        handleLearnFilling(words);
+                      }),
+                      words.any((item) => item["is_mark"])
                           ? LayoutBuilder(
                               builder: (context, constraints) {
                                 return Padding(
@@ -280,14 +306,28 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                                       const EdgeInsets.symmetric(vertical: 12),
                                   child: ToggleSwitch(
                                     minWidth: constraints.maxWidth / 2,
-                                    initialLabelIndex: wordDisplayType,
+                                    initialLabelIndex: context
+                                                .watch<
+                                                    FlashcardSettingProvider>()
+                                                .learnContent ==
+                                            "learn_all"
+                                        ? 0
+                                        : 1,
                                     totalSwitches: 2,
                                     labels: [
                                       getTranslated(context, "learn_all"),
                                       getTranslated(context, "learn_star")
                                     ],
                                     onToggle: (index) {
-                                      wordDisplayType = index!;
+                                      String type;
+                                      if (index == 0) {
+                                        type = "learn_all";
+                                      } else {
+                                        type = "learn_star";
+                                      }
+                                      context
+                                          .read<FlashcardSettingProvider>()
+                                          .changeLearnContentSetting(type);
                                     },
                                   ),
                                 );
@@ -304,16 +344,10 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                       ),
                       ListView.builder(
                           shrinkWrap: true,
-                          itemCount: wordDisplayType == 0
-                              ? words.length
-                              : markWords.length,
-                          itemBuilder: (context, index) {
-                            if (wordDisplayType == 0) {
-                              return _buildFlashCard(words[index]);
-                            } else {
-                              return _buildFlashCard(markWords[index]);
-                            }
-                          }),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: words.length,
+                          itemBuilder: (context, index) =>
+                              _buildFlashCard(index)),
                     ],
                   ),
                 ),

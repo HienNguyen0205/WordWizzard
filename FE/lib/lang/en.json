@@ -135,5 +135,7 @@
   "answer": "Answer",
   "you_choose": "You choose",
   "your_answer": "Your answer",
-  "exit": "Exit"
+  "exit": "Exit",
+  "edit_topic": "Edit topic",
+  "delete_folder": "Delete folder"
 }

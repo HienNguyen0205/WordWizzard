@@ -35,9 +35,10 @@ class TestResultItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 6),
               child: Text("${getTranslated(context, "answer")}:",
-                  style: const TextStyle(fontSize: 18)),
+                  style: const TextStyle(fontSize: 18, color: Colors.green)),
             ),
-            Card(
+            answer["ans"].runtimeType != String ? Card(
+                shadowColor: Colors.transparent,
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.green, width: 2),
                     borderRadius: BorderRadius.circular(12)),
@@ -58,20 +59,22 @@ class TestResultItem extends StatelessWidget {
                     Text(answer["ans"]["content"],
                         style: const TextStyle(fontSize: 18))
                   ],
-                )),
+                )) : Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(answer["ans"],
+                        style: const TextStyle(fontSize: 18))),
             answer["choose"] != null ? Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 6),
-              child: Text("${getTranslated(context, "you_choose")}:",
-                  style: const TextStyle(fontSize: 18)),
+              child: Text("${getTranslated(context, "your_answer")}:",
+                  style: const TextStyle(fontSize: 18, color: Colors.red)),
             ) : const SizedBox.shrink(),
-            answer["choose"] != null
+            answer["choose"] != null && answer["choose"].runtimeType != String
                 ? Card(
+                    shadowColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(color: Colors.red, width: 2),
                         borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
-                        Container(
+                        answer["choose"].runtimeType != String ? Container(
                           margin: const EdgeInsets.only(right: 18),
                           decoration: BoxDecoration(
                             color: answer["choose"]["labelColor"],
@@ -82,12 +85,15 @@ class TestResultItem extends StatelessWidget {
                           child: Text(answer["choose"]["label"],
                               style: const TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w600)),
-                        ),
+                        ) : const SizedBox.shrink(),
                         Text(answer["choose"]["content"],
                             style: const TextStyle(fontSize: 18))
                       ],
                     ))
-                : const SizedBox.shrink(),
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(answer["choose"] ?? "",
+                        style: const TextStyle(fontSize: 18))),
           ],
         ),
       ),

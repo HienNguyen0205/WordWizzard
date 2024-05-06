@@ -26,6 +26,27 @@ Future<dynamic> handleTopicDetails(String topicId) async {
   }
 }
 
+Future<dynamic> handleJoinTopicDetails(String topicId) async {
+  final url = Uri.parse('http://$ipv4:5001/api/userTopic/join/$topicId');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
 Future<dynamic> handleGetAllMyTopics(int? page, String? search, int? limit) async {
   final url = Uri.parse('http://$ipv4:5001/api/topic/all?search=$search&page=$page&limit=$limit');
   const storage = FlutterSecureStorage();
@@ -73,7 +94,7 @@ Future<dynamic> handleGetAllTopics(
   }
 }
 
-Future<dynamic> handleAddTopic(String name, String description, String securityView, String tag, List listWords) async {
+Future<dynamic> handleAddTopic(String name, String description, String securityView, String tag, List<dynamic> listWords) async {
   final url = Uri.parse('http://$ipv4:5001/api/topic/add');
   const storage = FlutterSecureStorage();
   List words = listWords.map((val) {
@@ -147,7 +168,52 @@ Future<dynamic> handleAddTopicsToFolder(String id, List<String> folderList) asyn
       }
     );
     final resData = jsonDecode(res.body);
-    debugPrint(resData.toString());
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleSaveTopic(String id, List<String> idList) async {
+  final url = Uri.parse('http://$ipv4:5001/api/userTopic/save/$id');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(url, headers: {
+      "Authorization": "Bearer $token",
+    }, body: {
+      'words_mark': jsonEncode(idList),
+    });
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleUpdateTopic(String id, List<String> listWords) async {
+  final url = Uri.parse('http://$ipv4:5001/api/topic/update/$id');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(url, headers: {
+      "Authorization": "Bearer $token",
+    }, body: {
+      'listWords': jsonEncode(listWords),
+    });
+    final resData = jsonDecode(res.body);
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
     } else {

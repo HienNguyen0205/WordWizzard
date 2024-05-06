@@ -5,15 +5,16 @@ import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
-class MultipleChoiceSetting extends StatefulWidget {
+class TestSetting extends StatefulWidget {
   final List<dynamic> listWord;
-  const MultipleChoiceSetting({super.key, required this.listWord});
+  final String testType;
+  const TestSetting({super.key, required this.listWord, required this.testType});
 
   @override
-  MultipleChoiceSettingState createState() => MultipleChoiceSettingState();
+  TestSettingState createState() => TestSettingState();
 }
 
-class MultipleChoiceSettingState extends State<MultipleChoiceSetting> {
+class TestSettingState extends State<TestSetting> {
   late List<dynamic> listWord;
   List<int> quantityList = [];
   int questionQuantity = 2;
@@ -128,13 +129,23 @@ class MultipleChoiceSettingState extends State<MultipleChoiceSetting> {
   }
 
   void handleTakeATest() {
-    Navigator.of(context).pushReplacementNamed(multipleChoiceTestRoute, arguments: {
-      "listWord": listWord,
-      "questionQuantity": questionQuantity,
-      "isInstantShowAnswer": isShowAnswerInstantly,
-      "isAnswerWithTerm": isAnswerWithTerm,
-      "isAnswerWithDef": isAnswerWithDef,
-    });
+    if(widget.testType == "multipleChoice"){
+      Navigator.of(context).pushReplacementNamed(multipleChoiceTestRoute, arguments: {
+        "listWord": listWord,
+        "questionQuantity": questionQuantity,
+        "isInstantShowAnswer": isShowAnswerInstantly,
+        "isAnswerWithTerm": isAnswerWithTerm,
+        "isAnswerWithDef": isAnswerWithDef,
+      });
+    }else{
+      Navigator.of(context).pushReplacementNamed(wordFillingTestRoute, arguments: {
+        "listWord": listWord,
+        "questionQuantity": questionQuantity,
+        "isInstantShowAnswer": isShowAnswerInstantly,
+        "isAnswerWithTerm": isAnswerWithTerm,
+        "isAnswerWithDef": isAnswerWithDef,
+      });
+    }
   }
 
   @override

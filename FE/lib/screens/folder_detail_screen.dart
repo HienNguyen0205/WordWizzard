@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/providers/auth_provider.dart';
@@ -34,6 +35,33 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
     Navigator.of(context).pushNamed(addTopicToFolderRoute, arguments: {"folderId": widget.folderId});
   }
 
+  void handleShowSetting() {
+    List<Widget> settingList = [
+      ListTile(
+        title: Text(getTranslated(context, "delete_folder")),
+        leading: const FaIcon(FontAwesomeIcons.trashCan),
+        onTap: () {},
+      ),
+    ];
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder:(context) {
+        return Material(
+          child: SafeArea(
+            top: false,
+            child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return settingList[index];
+                },
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: settingList.length),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +75,7 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
             icon: const FaIcon(FontAwesomeIcons.plus),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: handleShowSetting,
             icon: const FaIcon(FontAwesomeIcons.ellipsis),
           ),
         ],

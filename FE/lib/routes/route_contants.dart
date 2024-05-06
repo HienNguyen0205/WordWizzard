@@ -16,5 +16,6 @@ const String changeLanguageRoute = "changeLanguage";
 const String topicDetailRoute = "topicDetail";
 const String flashcardRoute = "flashcard";
 const String chooseFolderToAddTopicRoute = "chooseFolderToAddTopic";
-const String multipleChoiceSettingRoute = "multipleChoiceSetting";
+const String testingSettingRoute = "tesingSetting";
 const String multipleChoiceTestRoute = "multipleChoiceTest";
+const String wordFillingTestRoute = "wordFillingTest";

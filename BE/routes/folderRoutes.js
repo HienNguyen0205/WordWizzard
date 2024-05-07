@@ -12,10 +12,6 @@ router.post("/api/folder/update/:id", authentication, folderController.updateOne
 router.get("/api/folder/detail/:id", authentication, folderController.getOne);
 // get all folder
 router.get("/api/folder/all", authentication, folderController.getAll);
-// // join flash card
-// router.post(
-//     "/api/flashcard/join/:topic_id",
-//     authentication,
-//     flashCardController.joinFlashCard
-//   );
+// delete folder
+router.delete("/api/folder/delete/:id", authentication, folderController.deleteOne);
 export default router;

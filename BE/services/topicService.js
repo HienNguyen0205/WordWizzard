@@ -129,8 +129,6 @@ const updateOne = async (req, res) => {
       data: response_data,
     });
   }
-    console.log("🚀 ~ updateOne ~ updatedListWords:", updatedListWords)
-    console.log("🚀 ~ updateOne ~ updatedListWords:", updatedListWords)
 };
 
 const getAll = async (req, res) => {
@@ -189,6 +187,7 @@ const getAll = async (req, res) => {
         },
         tag: {
           $first: {
+            _id: "$topic_tag._id",
             name: "$topic_tag.name",
             image: "$topic_tag.image",
           },
@@ -240,7 +239,6 @@ const getOne = async (req, res) => {
     {
       $match: {
         _id: ObjectId(id),
-        // createdBy: ObjectId(req.user._id),
         isDeleted: false,
       },
     },
@@ -280,6 +278,7 @@ const getOne = async (req, res) => {
         },
         tag: {
           $first: {
+            _id: "$topic_tag._id",
             name: "$topic_tag.name",
             image: "$topic_tag.image",
           },
@@ -362,6 +361,7 @@ const getAllClient = async (req, res) => {
         },
         tag: {
           $first: {
+            _id: "$topic_tag._id",
             name: "$topic_tag.name",
             image: "$topic_tag.image",
           },
@@ -399,12 +399,19 @@ const getAllClient = async (req, res) => {
     data: topics,
   });
 };
-// const deleteDraft = async (req, res) => {
-//   const { id } = req.params;
-//   const topic = await Topic.deleteOne({ _id: id });
-//   return res.status(200).send({
-//     msg: "Topic Draft deleted successfully!",
-//     data: topic,
-//   });
-// };
-export { addOne, getOne, getAll, updateOne, getAllClient };
+
+const deleteOne = async (req, res) => {
+  const { id } = req.params;
+  const topic = await Topic.findById({ _id: id });
+  if (!topic) {
+    return res.status(404).send({
+      msg: "Topic not found!",
+    });
+  }
+  topic.isDeleted = true;
+  return res.status(200).send({
+    msg: "Topic Draft deleted successfully!",
+  });
+};
+
+export { addOne, getOne, getAll, updateOne, getAllClient, deleteOne };

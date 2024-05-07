@@ -282,18 +282,19 @@ const updateOne = async (req, res) => {
     data: folder,
   });
 };
-// const deleteOne = async (req, res) => {
-//   const { id } = req.params;
-//   const folder = await Folder().findById(id);
-//   if (!folder) {
-//     return res.status(404).send({
-//       msg: "Folder not found!",
-//     });
-//   }
-//   folder.isDeleted = true;
-//   await folder.save();
-//   return res.status(200).send({
-//     msg: "Folder deleted successfully!",
-//   });
-// };
-export { addOne, getAll, getOne, updateOne };
+
+const deleteOne = async (req, res) => {
+  const { id } = req.params;
+  const folder = await Folder().findById(id);
+  if (!folder) {
+    return res.status(404).send({
+      msg: "Folder not found!",
+    });
+  }
+  folder.isDeleted = true;
+  await folder.save();
+  return res.status(200).send({
+    msg: "Folder deleted successfully!",
+  });
+};
+export { addOne, getAll, getOne, updateOne, deleteOne };

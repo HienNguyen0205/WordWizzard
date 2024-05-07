@@ -51,4 +51,19 @@ topicController.getAllClient = async (req, res, next) => {
     next(error);
   }
 };
+
+topicController.deleteOne = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return res.status(400).send({
+        errorCode: "1",
+        message: "Id is required.",
+      });
+    }
+    return await topicService.deleteOne(req, res);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default topicController;

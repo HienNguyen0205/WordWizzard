@@ -109,7 +109,6 @@ const getAll = async (req, res) => {
     {
       $limit: limits,
     },
-    
   ]);
   return res.status(200).send({
     msg: "Folders fetched successfully!",
@@ -168,7 +167,7 @@ const getOne = async (req, res) => {
               localField: "topicDetails.tag",
               foreignField: "_id",
               as: "tagDetails",
-            }
+            },
           },
           {
             $lookup: {
@@ -176,7 +175,7 @@ const getOne = async (req, res) => {
               localField: "topicDetails.createdBy",
               foreignField: "_id",
               as: "userDetails",
-            }
+            },
           },
           {
             $unwind: "$topicDetails",
@@ -269,7 +268,7 @@ const updateOne = async (req, res) => {
       msg: "Folder not found!",
     });
   }
-  if(!req.body.name){
+  if (!req.body.name) {
     return res.status(400).send({
       msg: "Name is required!",
     });
@@ -285,7 +284,7 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
   const { id } = req.params;
-  const folder = await Folder().findById(id);
+  const folder = await Folder.findById({ _id: id });
   if (!folder) {
     return res.status(404).send({
       msg: "Folder not found!",

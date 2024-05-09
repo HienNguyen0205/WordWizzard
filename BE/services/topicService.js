@@ -409,8 +409,9 @@ const deleteOne = async (req, res) => {
     });
   }
   topic.isDeleted = true;
+  await topic.save();
   return res.status(200).send({
-    msg: "Topic Draft deleted successfully!",
+    msg: "Topic deleted successfully!",
   });
 };
 

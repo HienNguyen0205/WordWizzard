@@ -3,8 +3,8 @@ import router from "./routes/index.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import Tags from "./seed/seed.js";
-import { listTags } from "./seed/seedData.js";
+import { Tags, Ranks } from "./seed/seed.js";
+import { listTags, listRanks } from "./seed/seedData.js";
 const app = express();
 
 dotenv.config();
@@ -25,9 +25,13 @@ app.use(
 mongoose
   .connect(dbUrl)
   .then(async () => {
+    const rankCount = await Ranks.countDocuments();
     const tagsCount = await Tags.countDocuments();
     if (tagsCount === 0) {
       await Tags.insertMany(listTags);
+    }
+    if (rankCount === 0) {
+      await Ranks.insertMany(listRanks);
     }
     console.log("MongoDB connected and seed successfully");
   })

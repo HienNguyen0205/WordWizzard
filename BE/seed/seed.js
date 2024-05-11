@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 const dbUrl = process.env.DB_URL;
 
-
 const tagsSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,4 +20,20 @@ const tagsSchema = new mongoose.Schema({
 
 const Tags = new mongoose.model("Tags", tagsSchema);
 
-export default Tags
+const ranksSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    trim: true,
+  },
+  value: {
+    type: Number,
+    trim: true,
+  },
+  image: {
+    type: String,
+    trim: true,
+  },
+});
+
+const Ranks = new mongoose.model("Ranks", ranksSchema);
+export { Tags, Ranks };

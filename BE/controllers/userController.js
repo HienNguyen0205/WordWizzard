@@ -157,16 +157,8 @@ userController.updateProfile = async (req, res, next) => {
 // Me
 userController.me = async (req, res, next) => {
   try {
-    const user = await UserSchema.findById(req.user._id).select(
-      "id email username fullname phone image"
-    );
-    if (!user) {
-      return res.status(404).send({
-        errorCode: "1",
-        message: "User not found",
-      });
-    }
-    return res.send(user);
+    const user_id = req.user._id;
+    return await userService.get_user(user_id, res)
   } catch (error) {
     next(error);
   }

@@ -162,6 +162,11 @@ const getOne = async (req, res) => {
             },
           },
           {
+            $match: {
+              "topicDetails.isDeleted": false,
+            },
+          },
+          {
             $lookup: {
               from: "tags",
               localField: "topicDetails.tag",

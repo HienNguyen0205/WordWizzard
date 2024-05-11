@@ -17,17 +17,10 @@ router.post(
   userTopicController.saveTopic
 );
 
-// join flash card
-// router.get(
-//   "/api/userTopic/joinFlashCard/:topic_id",
-//   authentication,
-//   userTopicController.joinFlashCard
-// );
-
-// reset flash card
-// router.post(
-//   "/api/userTopic/resetFlashCard/:topic_id",
-//   authentication,
-//   userTopicController.resetFlashCard
-// );
+// claim topic quiz
+router.post(
+  "/api/userTopic/finish/:topic_id",
+  authentication,
+  userTopicController.finishTopicQuiz
+)
 export default router;

@@ -4,7 +4,8 @@ import OTPSchema from "../models/OTPSchema.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-import {uploadImage} from "./uploadService.js";
+import { uploadImage } from "./uploadService.js";
+import Constants from "../utils/constants.js";
 import { ObjectId } from "mongodb";
 dotenv.config();
 
@@ -931,7 +932,7 @@ const handle_change_password = async (
       message: "Current password is not correct",
     });
   }
-  if(currentPassword === newPassword){
+  if (currentPassword === newPassword) {
     return res.status(400).send({
       errorCode: "3",
       message: "New password is the same as the current password",
@@ -993,7 +994,13 @@ const handle_reset_password = async (userId, password, res) => {
   });
 };
 
-const handle_update_profile = async (userId, fullname, phone, imagePath, res) => {
+const handle_update_profile = async (
+  userId,
+  fullname,
+  phone,
+  imagePath,
+  res
+) => {
   const user = await UserSchema.findById(userId);
   if (!user) {
     return res.status(404).send({
@@ -1001,7 +1008,7 @@ const handle_update_profile = async (userId, fullname, phone, imagePath, res) =>
       message: "User not found",
     });
   }
-  if(imagePath){
+  if (imagePath) {
     const uploadImageFile = await uploadImage(imagePath);
     user.image = uploadImageFile;
   }
@@ -1014,12 +1021,12 @@ const handle_update_profile = async (userId, fullname, phone, imagePath, res) =>
     message: "Profile updated successfully",
     data: user,
   });
-}
+};
 const get_user = async (userId, res) => {
   const user = await UserSchema.findById(userId).select(
     "id email username fullname phone image level points"
   );
-  
+
   if (!user) {
     return res.status(404).send({
       errorCode: "1",
@@ -1029,10 +1036,13 @@ const get_user = async (userId, res) => {
   return res.send({
     message: "Success",
     data: user,
-  });;
-}
+  });
+};
+
 const update_points_user = async (userId, points) => {
   const user = await UserSchema.findById(userId);
+  const constants = new Constants();
+
   if (!user) {
     return res.status(404).send({
       errorCode: "1",
@@ -1040,12 +1050,12 @@ const update_points_user = async (userId, points) => {
     });
   }
   user.points = user.points + points;
+  const user_level = constants.getUserLevel(user.points);
+  user.level = user_level;
   await user.save();
   return user;
-}
-const is_level_up = async (userId, userPoints) => {
+};
 
-}
 export {
   handle_register,
   handle_login,
@@ -1069,5 +1079,5 @@ export {
   generateHtmlReset,
   handle_update_profile,
   get_user,
-  update_points_user
+  update_points_user,
 };

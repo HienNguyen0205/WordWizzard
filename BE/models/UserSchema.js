@@ -39,6 +39,16 @@ const userSchema = new mongoose.Schema({
     required: false,
     default: null,
   },
+  level: {
+    type: Number,
+    default: 1,
+    required: false,
+  },
+  points: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

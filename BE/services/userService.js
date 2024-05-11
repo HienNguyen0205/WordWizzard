@@ -1015,7 +1015,37 @@ const handle_update_profile = async (userId, fullname, phone, imagePath, res) =>
     data: user,
   });
 }
+const get_user = async (userId, res) => {
+  const user = await UserSchema.findById(userId).select(
+    "id email username fullname phone image level points"
+  );
+  
+  if (!user) {
+    return res.status(404).send({
+      errorCode: "1",
+      message: "User not found",
+    });
+  }
+  return res.send({
+    message: "Success",
+    data: user,
+  });;
+}
+const update_points_user = async (userId, points) => {
+  const user = await UserSchema.findById(userId);
+  if (!user) {
+    return res.status(404).send({
+      errorCode: "1",
+      message: "User not found",
+    });
+  }
+  user.points = user.points + points;
+  await user.save();
+  return user;
+}
+const is_level_up = async (userId, userPoints) => {
 
+}
 export {
   handle_register,
   handle_login,
@@ -1038,4 +1068,6 @@ export {
   generateHtmlRenew,
   generateHtmlReset,
   handle_update_profile,
+  get_user,
+  update_points_user
 };

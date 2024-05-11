@@ -101,3 +101,41 @@ export const listTags = [
     }
 ];
    
+
+export const listRanks = [
+    {
+        name: "Bronze",
+        value: 1,
+        image: "Beginner-1",
+    },
+    {
+        name: "Silver",
+        value: 3,
+        image: "Intermediate-1",
+    },
+    {
+        name: "Gold",
+        value: 5,
+        image: "Advanced-1",
+    },
+    {
+        name: "Platinum",
+        value: 7,
+        image: "Expert-1",
+    },
+    {
+        name: "Diamond",
+        value: 10,
+        image: "Master-1",
+    },
+    {
+        name: "Master",
+        value: 15,
+        image: "Master-1",
+    },
+    {
+        name: "Challenger",
+        value: 20,
+        image: "Challenger-1",
+    }
+];

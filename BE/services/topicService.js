@@ -1,6 +1,6 @@
 import Topic from "../models/TopicSchema.js";
 import mongoose from "mongoose";
-import Tags from "../seed/seed.js";
+import { Tags } from "../seed/seed.js";
 import topicController from "../controllers/topicController.js";
 const ObjectId = (id) => new mongoose.Types.ObjectId(id);
 
@@ -84,7 +84,7 @@ const updateOne = async (req, res) => {
   } else {
     const topic = await Topic.findById(id);
     const oldListWords = topic.listWords;
-    
+
     const newWords = listWordsFromBody.filter((word) => {
       return oldListWords.every((oldWord) => oldWord._id !== word._id);
     });

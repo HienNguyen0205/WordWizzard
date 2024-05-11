@@ -56,11 +56,45 @@ const getAll = async (req, res) => {
     {
       $lookup: {
         from: "topics_folders",
-        localField: "_id",
-        foreignField: "folderId",
+        let: { folderId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$folderId", "$$folderId"],
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "topics",
+              localField: "topicId",
+              foreignField: "_id",
+              as: "topicDetails",
+            },
+          },
+          {
+            $match: {
+              "topicDetails.isDeleted": false,
+            },
+          },
+        ],
         as: "listTopics",
       },
     },
+    // {
+    //   $lookup: {
+    //     from: "topics",
+    //     localField: "listTopics.topicId",
+    //     foreignField: "_id",
+    //     as: "topics_detail",
+    //   },
+    // },
+    // {
+    //   $match: {
+    //     "topics_detail.isDeleted": false,
+    //   },
+    // },
     {
       $lookup: {
         from: "users",

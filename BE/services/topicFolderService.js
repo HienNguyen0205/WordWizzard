@@ -22,7 +22,6 @@ const updateTopicsToFolder = async (req, res) => {
   const topics = await Topic.find({
     _id: { $in: topicIds },
     isDeleted: false,
-    // createdBy: req.user._id,
   });
   if (topics.length !== topicIds.length) {
     return res.status(404).send({
@@ -71,7 +70,6 @@ const chooseFoldersToAdd = async (req, res) => {
     _id: id,
     isDeleted: false,
     securityView: "PUBLIC",
-    // createdBy: req.user._id,
   });
   if (!topic) {
     return res.status(404).send({

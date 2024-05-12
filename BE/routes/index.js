@@ -13,5 +13,5 @@ router.use(userRouter);
 router.use(folderRouter);
 router.use(topicRouter);
 router.use(topicFolderTopicRouter);
-router.use(userTopicRouter)
+router.use(userTopicRouter);
 export default router;

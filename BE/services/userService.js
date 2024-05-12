@@ -4,7 +4,9 @@ import OTPSchema from "../models/OTPSchema.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-import {uploadImage} from "./uploadService.js";
+import { uploadImage } from "./uploadService.js";
+import Constants from "../utils/constants.js";
+import { Ranks } from "../seed/seed.js";
 import { ObjectId } from "mongodb";
 dotenv.config();
 
@@ -931,7 +933,7 @@ const handle_change_password = async (
       message: "Current password is not correct",
     });
   }
-  if(currentPassword === newPassword){
+  if (currentPassword === newPassword) {
     return res.status(400).send({
       errorCode: "3",
       message: "New password is the same as the current password",
@@ -993,7 +995,13 @@ const handle_reset_password = async (userId, password, res) => {
   });
 };
 
-const handle_update_profile = async (userId, fullname, phone, imagePath, res) => {
+const handle_update_profile = async (
+  userId,
+  fullname,
+  phone,
+  imagePath,
+  res
+) => {
   const user = await UserSchema.findById(userId);
   if (!user) {
     return res.status(404).send({
@@ -1001,7 +1009,7 @@ const handle_update_profile = async (userId, fullname, phone, imagePath, res) =>
       message: "User not found",
     });
   }
-  if(imagePath){
+  if (imagePath) {
     const uploadImageFile = await uploadImage(imagePath);
     user.image = uploadImageFile;
   }
@@ -1014,25 +1022,47 @@ const handle_update_profile = async (userId, fullname, phone, imagePath, res) =>
     message: "Profile updated successfully",
     data: user,
   });
-}
+};
 const get_user = async (userId, res) => {
   const user = await UserSchema.findById(userId).select(
     "id email username fullname phone image level points"
   );
-  
+
   if (!user) {
     return res.status(404).send({
       errorCode: "1",
       message: "User not found",
     });
   }
+  const user_rank = await get_user_rank(user.level);
+  const response_data = {
+    id: user._id,
+    email: user.email,
+    username: user.username,
+    fullname: user.fullname,
+    phone: user.phone,
+    image: user.image,
+    level: user.level,
+    points: user.points,
+    rank: user_rank,
+  };
   return res.send({
     message: "Success",
-    data: user,
-  });;
-}
+    data: response_data,
+  });
+};
+const get_user_rank = async (level) => {
+  const rank = await Ranks.findOne({ value: { $lte: level } })
+    .select("name image")
+    .sort({ value: -1 })
+    .limit(1);
+  return rank;
+};
+
 const update_points_user = async (userId, points) => {
   const user = await UserSchema.findById(userId);
+  const constants = new Constants();
+
   if (!user) {
     return res.status(404).send({
       errorCode: "1",
@@ -1040,12 +1070,12 @@ const update_points_user = async (userId, points) => {
     });
   }
   user.points = user.points + points;
+  const user_level = constants.getUserLevel(user.points);
+  user.level = user_level;
   await user.save();
   return user;
-}
-const is_level_up = async (userId, userPoints) => {
+};
 
-}
 export {
   handle_register,
   handle_login,
@@ -1069,5 +1099,5 @@ export {
   generateHtmlReset,
   handle_update_profile,
   get_user,
-  update_points_user
+  update_points_user,
 };

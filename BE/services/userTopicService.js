@@ -54,6 +54,7 @@ const joinTopic = async (req, res) => {
           $first: {
             _id: "$topic_tag._id",
             name: "$topic_tag.name",
+            value: "$topic_tag.value",
             image: "$topic_tag.image",
           },
         },

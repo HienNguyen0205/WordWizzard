@@ -1076,6 +1076,30 @@ const update_points_user = async (userId, points) => {
   return user;
 };
 
+const get_list_leaderboard = async (res) => {
+  const { search, page, limit } = req.query;
+  let queryObject = {};
+  if (search) {
+    queryObject.$or = [{ name: { $regex: `${search}`, $options: "i" } }];
+  }
+  const pages = Number(page);
+  const limits = Number(limit);
+  const skip = (pages - 1) * limits;
+
+  const users = await UserSchema.find(queryObject)
+    .sort({ points: -1 })
+    .skip(skip)
+    .limit(limits);
+
+  for (let i = 0; i < users.length; i++) {
+    const user_rank = await get_user_rank(users[i].level);
+    users[i].rank = user_rank;
+  }
+  return res.send({
+    message: "Success",
+    data: users,
+  });
+};
 export {
   handle_register,
   handle_login,
@@ -1100,4 +1124,5 @@ export {
   handle_update_profile,
   get_user,
   update_points_user,
+  get_list_leaderboard,
 };

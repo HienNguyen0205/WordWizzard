@@ -23,4 +23,11 @@ router.post(
   authentication,
   userTopicController.finishTopicQuiz
 )
+
+// get list topics popular by user
+router.get(
+  "/api/userTopic/popular",
+  authentication,
+  userTopicController.getPopularTopics
+)
 export default router;

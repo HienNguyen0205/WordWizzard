@@ -161,4 +161,91 @@ const finishTopicQuiz = async (req, res) => {
   });
 };
 
-export { joinTopic, saveTopic, finishTopicQuiz };
+const getPopularTopics = async (req, res) => {
+  const { search, page, limit } = req.query;
+  let queryObject = {};
+  if (search) {
+    queryObject.$or = [{ name: { $regex: `${search}`, $options: "i" } }];
+  }
+  const pages = Number(page);
+  const limits = Number(limit);
+  const skip = (pages - 1) * limits;
+
+  const topics = await UserTopic.aggregate([
+    {
+      $lookup: {
+        from: "topics",
+        localField: "topic_id",
+        foreignField: "_id",
+        as: "topic",
+      },
+    },
+    { $unwind: "$topic" },
+    {
+      $match: {
+        "topic.isDeleted": false,
+        "topic.securityView": "PUBLIC",
+        ...queryObject,
+      },
+    },
+    {
+      $group: {
+        _id: "$topic_id",
+        name: { $first: "$topic.name" },
+        description: { $first: "$topic.description" },
+        securityView: { $first: "$topic.securityView" },
+        tag: { $first: "$topic.tag" },
+        createdBy: { $first: "$topic.createdBy" },
+        createdAt: { $first: "$topic.createdAt" },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { count: -1 } },
+    { $skip: skip },
+    { $limit: limits },
+    {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $lookup: {
+        from: "tags",
+        localField: "tag",
+        foreignField: "_id",
+        as: "topic_tag",
+      },
+    },
+    { $unwind: "$user" },
+    { $unwind: "$topic_tag" },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        description: 1,
+        securityView: 1,
+        tag: {
+          _id: "$topic_tag._id",
+          name: "$topic_tag.name",
+          value: "$topic_tag.value",
+          image: "$topic_tag.image",
+        },
+        createdBy: {
+          _id: "$user._id",
+          username: "$user.username",
+          image: "$user.image",
+        },
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  return res.status(200).send({
+    message: "Get popular topics successfully.",
+    data: topics,
+  });
+};
+export { joinTopic, saveTopic, finishTopicQuiz, getPopularTopics };

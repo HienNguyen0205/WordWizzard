@@ -43,33 +43,12 @@ userTopicController.finishTopicQuiz = async (req, res, next) => {
     next(error);
   }
 }
-// userTopicController.joinFlashCard = async (req, res, next) => {
-//   try {
-//     if (!req.params.topic_id) {
-//       return res.status(400).send({
-//         errorCode: "1",
-//         message: "Topic id is required.",
-//       });
-//     }
 
-//     return await userTopicService.joinFlashCard(req, res);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// userTopicController.resetFlashCard = async (req, res, next) => {
-//   try {
-//     if (!req.params.topic_id) {
-//       return res.status(400).send({
-//         errorCode: "1",
-//         message: "Topic id is required.",
-//       });
-//     }
-
-//     return await userTopicService.resetFlashCard(req, res);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+userTopicController.getPopularTopics = async (req, res, next) => {
+  try {
+    return await userTopicService.getPopularTopics(req, res);
+  } catch (error) {
+    next(error);
+  }
+}
 export default userTopicController;

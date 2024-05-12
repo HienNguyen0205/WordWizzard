@@ -1,54 +1,54 @@
-// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wordwizzard/auth/auth_provider.dart';
-import 'package:wordwizzard/constants/constants.dart';
+// import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/widgets/icon_btn.dart';
+import 'package:wordwizzard/providers/auth_provider.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/services/auth.dart';
+import 'package:wordwizzard/utils/verify.dart';
+// import 'package:wordwizzard/widgets/icon_btn.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  SignInScreenState createState() => SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+  String _emailErrMess = '';
+  String _passErrMess = '';
 
   void _submitForm() {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       form.save();
-      authProvider.logIn(_email, _password).then(
-        (val) => {
-          if (val){
-            debugPrint("SUCCESS")
-          }else{
-            debugPrint("FAILED")
-          }
+      handleLogin(_email, _password).then((value) {
+        if (value == 0) {
+          context.read<AuthProvider>().signIn();
+          Navigator.of(context).pushNamedAndRemoveUntil(bottomNavRoute, (route) => false);
+        } else if (value == 2 || value == 3) {
+          setState(() {
+            _emailErrMess = getTranslated(context, 'login_error');
+            _passErrMess = getTranslated(context, 'login_error');
+          });
+        } else {
+          debugPrint('signIn Error with code: $value');
         }
-      );
+      });
     }
   }
 
-  bool isEmailValid(String email) {
-    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
+  void handleForgetPass() {
+    Navigator.of(context).pushNamed(forgetPassRoute);
   }
 
-  bool isPasswordValid(String password) {
-    final RegExp passwordRegex =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-    return passwordRegex.hasMatch(password);
+  void handleSignUpRoute() {
+    Navigator.of(context).pushNamed(signUpRoute);
   }
-
-  void handleForgetPass() {}
-
-  void handleSignUpRoute() {}
 
   @override
   Widget build(BuildContext context) {
@@ -72,22 +72,27 @@ class _SignInScreenState extends State<SignInScreen> {
                       TextFormField(
                         autofocus: true,
                         decoration: InputDecoration(
-                          labelText: getTranslated(context, "email"),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
+                            labelText: getTranslated(context, "email"),
+                            errorText:
+                                _emailErrMess != '' ? _emailErrMess : null),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return getTranslated(
-                                context, "empty_email_err_mess");
+                            setState(() {
+                              _emailErrMess = getTranslated(
+                                  context, "require_input");
+                            });
                           } else if (!isEmailValid(value)) {
-                            return getTranslated(
-                                context, "invalid_email_err_mess");
+                            setState(() {
+                              _emailErrMess = getTranslated(
+                                  context, "invalid_email_err_mess");
+                            });
                           } else {
-                            return null;
+                            setState(() {
+                              _emailErrMess = '';
+                            });
                           }
+                          return null;
                         },
                         onSaved: (value) {
                           _email = value!;
@@ -99,25 +104,33 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: InputDecoration(
-                          labelText: getTranslated(context, "password"),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
+                            labelText: getTranslated(context, "password"),
+                            errorText:
+                                _passErrMess != '' ? _passErrMess : null),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return getTranslated(
-                                context, "empty_password_err_mess");
+                            setState(() {
+                              _passErrMess = getTranslated(
+                                  context, 'empty_password_err_mess');
+                            });
                           } else if (!isPasswordValid(value)) {
-                            return getTranslated(
-                                context, "invalid_password_err_mess");
+                            setState(() {
+                              _passErrMess = getTranslated(
+                                  context, 'invalid_password_err_mess');
+                            });
                           } else {
-                            return null;
+                            setState(() {
+                              _passErrMess = '';
+                            });
                           }
+                          return null;
                         },
                         onSaved: (value) {
                           _password = value!;
+                        },
+                        onFieldSubmitted: (value) {
+                          _submitForm();
                         },
                       ),
                       Container(
@@ -127,32 +140,34 @@ class _SignInScreenState extends State<SignInScreen> {
                           onTap: handleForgetPass,
                           child: Text(
                             getTranslated(context, 'forget_pass'),
-                            style: const TextStyle(color: Colors.blue),
+                            style: const TextStyle(color: Colors.blue, fontSize: 16),
                           ),
                         ),
                       ),
-                      ElevatedButton(
+                      FilledButton(
                         onPressed: _submitForm,
                         child: Text(
                           getTranslated(context, "sign_in"),
-                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: iconList
-                              .map((item) => IconBtn(imgUrl: item))
-                              .toList(),
-                        ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 24),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: iconList
+                      //         .map((item) => IconBtn(imgUrl: item))
+                      //         .toList(),
+                      //   ),
+                      // ),
+                      const SizedBox(
+                        height: 24,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(getTranslated(context, 'new_user'),
                               style: const TextStyle(
-                                color: Colors.black,
+                                fontSize: 16,
                               )),
                           const SizedBox(
                             width: 4,
@@ -162,6 +177,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: Text(getTranslated(context, 'sign_up'),
                                 style: const TextStyle(
                                   color: Colors.blue,
+                                  fontSize: 16,
                                 )),
                           )
                         ],

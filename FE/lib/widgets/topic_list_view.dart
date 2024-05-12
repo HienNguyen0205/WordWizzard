@@ -100,6 +100,7 @@ class TopicListViewState extends State<TopicListView> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<IdContainerProvider>().resetList();
     return Expanded(
         child: Container(
       margin: const EdgeInsets.only(bottom: 18),

@@ -69,12 +69,13 @@ const chooseFoldersToAdd = async (req, res) => {
   const topic = await Topic.findOne({
     _id: id,
     isDeleted: false,
-    createdBy: req.user._id,
+    securityView: "PUBLIC",
+    // createdBy: req.user._id,
   });
   if (!topic) {
     return res.status(404).send({
       errorCode: "2",
-      msg: "Folder not found!",
+      msg: "Topic not found!",
     });
   }
   const folders = await Folder.find({

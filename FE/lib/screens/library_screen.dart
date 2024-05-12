@@ -26,6 +26,7 @@ class LibraryScreenState extends State<LibraryScreen>
   late TabController _tabController;
   late ScrollController _scrollFolderController;
   int currentFolderPage = 1;
+  List<dynamic> topicList = [];
   List<dynamic> folderList = [];
   bool canLoadFolder = false;
 
@@ -122,6 +123,7 @@ class LibraryScreenState extends State<LibraryScreen>
                 FoldersStream().foldersStream, (a, b) => [a, b]),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                topicList = snapshot.data?[0];
                 folderList = snapshot.data?[1];
                 return TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
@@ -143,7 +145,7 @@ class LibraryScreenState extends State<LibraryScreen>
                                   ),
                                 ),
                                 TopicListView(
-                                    topicList: snapshot.data?[0],
+                                    topicList: topicList,
                                     classifyByWeek: true,
                                     canSelected: false)
                               ],

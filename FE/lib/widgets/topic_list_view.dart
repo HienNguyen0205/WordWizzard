@@ -37,6 +37,16 @@ class TopicListViewState extends State<TopicListView> {
   }
 
   @override
+  void didUpdateWidget(TopicListView oldWidget){
+    if (oldWidget.topicList != widget.topicList) {
+      setState(() {
+        topicList = widget.topicList;
+      });
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     _scrollTopicController.dispose();
     super.dispose();

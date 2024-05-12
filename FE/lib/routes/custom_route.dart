@@ -129,7 +129,7 @@ class CustomRouter {
             });
       case addFolderRoute:
         return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const AddFolderScreen(),
+            pageBuilder: (_, __, ___) => AddFolderScreen(folderId: args?["folderId"], name: args?["name"], description: args?["description"]),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(

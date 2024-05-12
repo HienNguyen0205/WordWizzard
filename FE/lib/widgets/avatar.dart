@@ -17,13 +17,32 @@ class Avatar extends StatefulWidget {
 }
 
 class AvatarState extends State<Avatar> {
+
+  late String? publicId;
+
+  @override
+  void initState() {
+    publicId = widget.publicId;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(Avatar oldWidget){
+    if(oldWidget.publicId != widget.publicId){
+      setState(() {
+        publicId = widget.publicId;
+      });
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
         radius: widget.radius,
-        child: widget.publicId != null
+        child: publicId != null
             ? CldImageWidget(
-                publicId: widget.publicId as String,
+                publicId: publicId as String,
                 transformation: Transformation()
                   ..delivery(Delivery.format(Format.auto))
                   ..delivery(Delivery.quality(Quality.auto()))

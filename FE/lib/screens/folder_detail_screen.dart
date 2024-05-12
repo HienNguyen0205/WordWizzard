@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -6,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/services/folder.dart';
 import 'package:wordwizzard/stream/folders_stream.dart';
 import 'package:wordwizzard/widgets/avatar.dart';
+import 'package:wordwizzard/widgets/custom_toast.dart';
 import 'package:wordwizzard/widgets/topic_list_view.dart';
 
 class FolderDetailScreen extends StatefulWidget {
@@ -19,28 +22,60 @@ class FolderDetailScreen extends StatefulWidget {
 }
 
 class FolderDetailScreenState extends State<FolderDetailScreen> {
+  late FToast toast;
+  String name = "";
+  String description = "";
+
   @override
   void initState() {
     super.initState();
     FoldersStream().getFolderDetailsData(widget.folderId);
+    toast = FToast();
+    toast.init(context);
   }
-
   void handleBack() {
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
     }
   }
-
   void handleAddTopicToFolder() {
     Navigator.of(context).pushNamed(addTopicToFolderRoute, arguments: {"folderId": widget.folderId});
+  }
+
+  void handleDeleteFolderBtn() {
+    handleDeleteFolder(widget.folderId).then((val) {
+      if(val['code'] == 0){
+        Future<void> refreshFolder() async {
+          FoldersStream().getFoldersData();
+        }
+        refreshFolder().then((_) {
+          toast.showToast(
+              child: const CustomToast(text: "delete_success"),
+              gravity: ToastGravity.BOTTOM);
+          int count = 0;
+          Navigator.popUntil(context, (route) {
+            return count++ == 2 || route.isFirst;
+          });
+        });
+      }
+    });
+  }
+
+  handleEditFolderBtn() {
+    Navigator.of(context).pushNamed(addFolderRoute, arguments: {"folderId": widget.folderId, "name": name, "description": description});
   }
 
   void handleShowSetting() {
     List<Widget> settingList = [
       ListTile(
+        title: Text(getTranslated(context, "edit_folder")),
+        leading: const FaIcon(FontAwesomeIcons.pencil),
+        onTap: handleEditFolderBtn,
+      ),
+      ListTile(
         title: Text(getTranslated(context, "delete_folder")),
         leading: const FaIcon(FontAwesomeIcons.trashCan),
-        onTap: () {},
+        onTap: handleDeleteFolderBtn,
       ),
     ];
     showCupertinoModalBottomSheet(
@@ -85,7 +120,8 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             dynamic data = snapshot.data;
-            debugPrint(data["listTopics"].toString());
+            name = data["name"];
+            description = data["description"];
             return Container(
               margin: const EdgeInsets.only(
                   top: 18, right: 18, bottom: 24, left: 18),

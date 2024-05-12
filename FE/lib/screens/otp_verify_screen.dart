@@ -60,7 +60,6 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
       for (var element in _controllers) {
         otp += element.text;
       }
-      debugPrint(widget.action);
       if (widget.action == 'forget_pass') {
         handleResetPassOTP(otp, widget.userId).then((val) => handleResResult(val["code"], 'forget_pass'));
       } else if (widget.action == 'sign_up') {

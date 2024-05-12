@@ -23,8 +23,10 @@ class SearchScreenState extends State<SearchScreen> {
 
   void handleOnChange (String keyWords) {
     if(keyWords.isNotEmpty){
+      debugPrint(keyWords);
       debouncer.run(() {
-        handleGetAllTopics(null, keyWords, 5).then((val) {
+        handleGetAllTopics(1, keyWords, 5).then((val) {
+          debugPrint(val.toString());
           setState(() {
             suggestList = val["data"];
           });
@@ -47,26 +49,21 @@ class SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Column(children: [
           SearchAnchor(
+            viewOnChanged: (val) {
+              handleOnChange(val);
+            },
             builder: (BuildContext context, SearchController controller) {
               return SearchBar(
-                autoFocus: true,
                 controller: controller,
                 leading: const Padding(padding: EdgeInsets.symmetric(horizontal: 12),child: FaIcon(FontAwesomeIcons.magnifyingGlass),),
                 onTap: () {
                   controller.openView();
                 },
-                onChanged: (val) {
-                  handleOnChange(val);
-                  controller.openView();
-                },
-                onSubmitted: (val) {
-                  controller.closeView(val);
-                  handleOnChange(val);
-                },
               );
             }, 
             suggestionsBuilder: (BuildContext context, SearchController controller) {
-              return suggestList.map((item) {
+              debugPrint('re-render');
+              List<Widget> suggestionWidgets = suggestList.map((item) {
                 return ListTile(
                   title: Text(item["name"]),
                   onTap: () {
@@ -75,7 +72,8 @@ class SearchScreenState extends State<SearchScreen> {
                     });
                   },
                 );
-              });
+              }).toList();
+              return suggestionWidgets;
             }),
             Expanded(
               child: GridView.count(

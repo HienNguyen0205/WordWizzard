@@ -202,18 +202,51 @@ Future<dynamic> handleSaveTopic(String id, List<String> idList) async {
   }
 }
 
-Future<dynamic> handleUpdateTopic(String id, List<String> listWords) async {
+Future<dynamic> handleUpdateTopic(String id, String name, String description, String sercurityView, String tag, List<dynamic> listWords) async {
   final url = Uri.parse('http://$ipv4:5001/api/topic/update/$id');
+  const storage = FlutterSecureStorage();
+
+  List words = listWords.map((val) {
+    return {"general": val["term"], "meaning": val["definition"]};
+  }).toList();
+
+  debugPrint("🚀 ${listWords.toString()}");
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.patch(url, headers: {
+      "Authorization": "Bearer $token",
+    }, body: {
+      'name': name,
+      'description': description,
+      'securityView': sercurityView,
+      'tag': tag,
+      'listWords': jsonEncode(words)
+    });
+    final resData = jsonDecode(res.body);
+    debugPrint("🚀 ${resData.toString()}");
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleDeleteTopic(String id) async {
+  final url = Uri.parse('http://$ipv4:5001/api/topic/delete/$id');
   const storage = FlutterSecureStorage();
 
   try {
     String? token = await storage.read(key: "token");
-    final res = await http.post(url, headers: {
+    final res = await http.delete(url, headers: {
       "Authorization": "Bearer $token",
-    }, body: {
-      'listWords': jsonEncode(listWords),
     });
     final resData = jsonDecode(res.body);
+    debugPrint(resData.toString());
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
     } else {

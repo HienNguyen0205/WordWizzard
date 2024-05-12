@@ -175,7 +175,6 @@ class WordFillingTestScreenState extends State<WordFillingTestScreen> {
       }
       wrongAns++;
     }
-    debugPrint(wrongAns.toString());
   }
 
   void handleClose() {

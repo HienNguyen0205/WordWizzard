@@ -7,23 +7,40 @@ import 'package:wordwizzard/stream/folders_stream.dart';
 import 'package:wordwizzard/widgets/custom_toast.dart';
 
 class AddFolderScreen extends StatefulWidget {
-  const AddFolderScreen({super.key});
+  final String? folderId;
+  final String? name;
+  final String? description;
+  const AddFolderScreen({super.key, this.folderId, this.name, this.description});
 
   @override
   AddFolderScreenState createState() => AddFolderScreenState();
 }
 
 class AddFolderScreenState extends State<AddFolderScreen> {
-  bool canCreate = false;
-  String name = "";
-  String description = "";
+  late bool canCreate;
+  late String name;
+  late String description;
   late FToast toast;
+  late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
 
   @override
   void initState() {
     super.initState();
+    name = widget.name ?? "";
+    description = widget.description ?? "";
+    _nameController = TextEditingController(text: name);
+    _descriptionController = TextEditingController(text: description);
+    canCreate = name != "";
     toast = FToast();
     toast.init(context);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   void handleCancel() {
@@ -34,19 +51,37 @@ class AddFolderScreenState extends State<AddFolderScreen> {
 
   void handleSave() {
     if (name.isNotEmpty) {
-      handleAddFolder(name, description).then((val) {
-        if (val['code'] == 0) {
-          FoldersStream().getFoldersData();
-          toast.showToast(
-              child: const CustomToast(text: "add_success"),
-              gravity: ToastGravity.BOTTOM);
-          Navigator.of(context).pushReplacementNamed(folderDetailRoute,
-              arguments: {"folderId": val['data']['_id']});
-        } else if (val['code'] == -1) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              signInRoute, (Route<dynamic> route) => false);
-        }
-      });
+      if(widget.name == null){
+        handleAddFolder(name, description).then((val) {
+          if (val['code'] == 0) {
+            FoldersStream().getFoldersData();
+            toast.showToast(
+                child: const CustomToast(text: "add_success"),
+                gravity: ToastGravity.BOTTOM);
+            Navigator.of(context).pushReplacementNamed(folderDetailRoute,
+                arguments: {"folderId": val['data']['_id']});
+          } else if (val['code'] == -1) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                signInRoute, (Route<dynamic> route) => false);
+          }
+        });
+      }else{
+        handleEditFolder(widget.folderId as String, name, description).then((val) {
+          int count = 0;
+          if (val['code'] == 0) {
+            FoldersStream().getFolderDetailsData(widget.folderId as String);
+            toast.showToast(
+                child: const CustomToast(text: "edit_success"),
+                gravity: ToastGravity.BOTTOM);
+            Navigator.of(context).popUntil((route) {
+              return count++ == 2;
+            });
+          } else if (val['code'] == -1) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                signInRoute, (Route<dynamic> route) => false);
+          }
+        });
+      }
     }
   }
 
@@ -56,7 +91,7 @@ class AddFolderScreenState extends State<AddFolderScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          getTranslated(context, "new_folder"),
+          getTranslated(context, widget.folderId == null ? "new_folder" : "edit_folder"),
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
         leading: TextButton(
@@ -76,6 +111,7 @@ class AddFolderScreenState extends State<AddFolderScreen> {
         child: Column(
           children: [
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
                 labelText: getTranslated(context, "folder_title"),
@@ -96,6 +132,7 @@ class AddFolderScreenState extends State<AddFolderScreen> {
               },
             ),
             TextField(
+              controller: _descriptionController,
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
                 labelText:

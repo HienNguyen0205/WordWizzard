@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -9,8 +10,11 @@ import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/providers/flashcard_setting_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/topic.dart';
+import 'package:wordwizzard/stream/folders_stream.dart';
+import 'package:wordwizzard/stream/topics_stream.dart';
 import 'package:wordwizzard/utils/tts_controller.dart';
 import 'package:wordwizzard/widgets/avatar.dart';
+import 'package:wordwizzard/widgets/custom_toast.dart';
 import 'package:wordwizzard/widgets/flashcard.dart';
 
 class TopicDetailsScreen extends StatefulWidget {
@@ -27,6 +31,14 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
   TtsController ttsController = TtsController();
   String userId = "";
   Map<String,dynamic> data = {};
+  late FToast toast;
+
+  @override
+  void initState() {
+    super.initState();
+    toast = FToast();
+    toast.init(context);
+  }
 
   void handleBack() {
     if (Navigator.canPop(context)) {
@@ -127,6 +139,24 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
         arguments: {"id": widget.topicId});
   }
 
+  void handleDeleteTopicBtn() {
+    handleDeleteTopic(widget.topicId).then((val) {
+      if(val["code"] == 0){
+        Future<void> refreshTopic() async {
+          TopicStream().getAllTopicData();
+          TopicStream().getMyTopicsData();
+          FoldersStream().getFoldersData();
+        }
+        refreshTopic().then((_) {
+          toast.showToast(
+              child: const CustomToast(text: "delete_success"),
+              gravity: ToastGravity.BOTTOM);
+          Navigator.popUntil(context, (route) => route.isFirst);
+        });
+      }
+    });
+  }
+
   void handleShowSetting() {
     context.read<AuthProvider>().getUserId().then((id) {
       List<Widget?> topicOpts = [
@@ -136,7 +166,7 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                 leading: const FaIcon(FontAwesomeIcons.pencil),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(addTopicRoute,
+                  Navigator.of(context).pushReplacementNamed(addTopicRoute,
                       arguments: {"topicDetails": data});
                 },
               )
@@ -157,7 +187,7 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
             ? ListTile(
                 title: Text(getTranslated(context, "delete_topic")),
                 leading: const FaIcon(FontAwesomeIcons.trashCan),
-                onTap: () {},
+                onTap: handleDeleteTopicBtn,
               )
             : null,
       ];

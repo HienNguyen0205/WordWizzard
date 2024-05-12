@@ -107,11 +107,9 @@ Future<dynamic> handleGetTopicsAddToFolder(String folderId) async {
 Future<int> handleAddTopicsToFolder(String folderId, List<String> idList) async {
   final url = Uri.parse('http://$ipv4:5001/api/folder/update-topics/$folderId');
   const storage = FlutterSecureStorage();
-  debugPrint(idList.toString());
 
   try {
     String? token = await storage.read(key: "token");
-    debugPrint(jsonEncode(idList));
     final res = await http.post(
       url,
       headers: {
@@ -122,10 +120,61 @@ Future<int> handleAddTopicsToFolder(String folderId, List<String> idList) async 
       },
     );
     final resData = jsonDecode(res.body);
+    debugPrint(resData.toString());
     if (res.statusCode == 200) {
       return 0;
     } else {
       return resData["errorCode"];
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return -1;
+  }
+}
+
+Future<dynamic> handleDeleteFolder(
+    String folderId) async {
+  final url = Uri.parse('http://$ipv4:5001/api/folder/delete/$folderId');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.delete(
+      url,
+      headers: {
+        "Authorization": "Bearer $token",
+      }
+    );
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errorCode": resData["errorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return -1;
+  }
+}
+
+Future<dynamic> handleEditFolder(String folderId, String name, String description) async {
+  final url = Uri.parse('http://$ipv4:5001/api/folder/update/$folderId');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(url, headers: {
+      "Authorization": "Bearer $token",
+    }, 
+    body: {
+      'name': name,
+      'description': description,
+    });
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errorCode": resData["errorCode"]};
     }
   } catch (error) {
     debugPrint(error.toString());

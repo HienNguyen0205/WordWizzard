@@ -36,8 +36,11 @@ class SettingAccessScopeState extends State<SettingAccessScope> {
   }
 
   void handleDone() {
+    int count = 0;
     context.read<AccessScopeProvider>().setAccessScope(accessScopeItem[selectedIndex]);
-    handleBack();
+    Navigator.of(context).popUntil((route) {
+      return count++ == 2;
+    });
   }
 
   @override

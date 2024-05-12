@@ -136,5 +136,7 @@
   "your_answer": "Đáp án của bạn",
   "exit": "Thoát",
   "edit_topic": "Sửa học phần",
-  "delete_folder": "Xóa thư mục"
+  "delete_folder": "Xóa thư mục",
+  "delete_success": "Xóa thành công",
+  "edit_folder": "Chỉnh sửa thư mục"
 }

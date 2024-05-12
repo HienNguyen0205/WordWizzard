@@ -23,7 +23,7 @@ class AddTopicScreen extends StatefulWidget {
 }
 
 class AddTopicScreenState extends State<AddTopicScreen> {
-  int tagIndex = 0;
+  late int tagIndex;
   FocusNode desFocusNode = FocusNode();
   int focusIndex = 0;
   late TextEditingController titleController;
@@ -37,15 +37,16 @@ class AddTopicScreenState extends State<AddTopicScreen> {
     super.initState();
     topicDetails = widget.topicDetails;
     List<dynamic>? newList;
-    if(topicDetails?["listWords"] != null){
+    if(topicDetails != null){
       newList = topicDetails?["listWords"].map((item) {
-        return {"term": item["general"], "definition": item["meaning"]};
+        return {"_id": item["_id"], "term": item["general"], "definition": item["meaning"]};
       }).toList();
     }
     topicInputs = newList ?? [
       {"term": "", "definition": ""},
       {"term": "", "definition": ""},
     ];
+    tagIndex = topicDetails == null ? 0 : topicTagItems.indexWhere((item) => item.tag == topicDetails?['tag']['value']);
     titleController = TextEditingController(text: topicDetails?["name"] ?? "");
     desController = TextEditingController(text: topicDetails?["description"] ?? "");
     toast = FToast();
@@ -107,22 +108,39 @@ class AddTopicScreenState extends State<AddTopicScreen> {
     }
     if (title.isNotEmpty && topicInputs.length >= 2 && flag) {
       String accessScope = context.read<AccessScopeProvider>().accessScope;
-      handleAddTopic(title, des, accessScope,
-              topicTagItems[tagIndex].tag, topicInputs)
-          .then((val) {
-        if (val["code"] == 0) {
-          if (accessScope == "PUBLIC") {
-            TopicStream().getAllTopicData();
+      if(topicDetails == null){
+        handleAddTopic(title, des, accessScope,
+                topicTagItems[tagIndex].tag, topicInputs)
+            .then((val) {
+          if (val["code"] == 0) {
+            if (accessScope == "PUBLIC") {
+              TopicStream().getAllTopicData();
+            }
+            TopicStream().getMyTopicsData();
+            toast.showToast(
+                child: const CustomToast(text: "add_success"),
+                gravity: ToastGravity.BOTTOM);
+            context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
+            Navigator.of(context).pushReplacementNamed(topicDetailRoute,
+                arguments: {"topicId": val["data"]["_id"]});
           }
-          TopicStream().getMyTopicsData();
-          toast.showToast(
-              child: const CustomToast(text: "add_success"),
-              gravity: ToastGravity.BOTTOM);
-          context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
-          Navigator.of(context).pushReplacementNamed(topicDetailRoute,
-              arguments: {"topicId": val["data"]["_id"]});
-        }
-      });
+        });
+      }else{
+        handleUpdateTopic(topicDetails?["_id"], title, des, accessScope, topicTagItems[tagIndex].tag, topicInputs).then((val) {
+          if (val["code"] == 0) {
+            if (accessScope == "PUBLIC") {
+              TopicStream().getAllTopicData();
+            }
+            TopicStream().getMyTopicsData();
+            toast.showToast(
+                child: const CustomToast(text: "edit_success"),
+                gravity: ToastGravity.BOTTOM);
+            context.read<AccessScopeProvider>().setAccessScope("PRIVATE");
+            Navigator.of(context).pushReplacementNamed(topicDetailRoute,
+                arguments: {"topicId": val["data"]["_id"]});
+          }
+        });
+      }
     } else if (title.isNotEmpty || flag) {
       showAdaptiveDialog(
           context: context,
@@ -147,7 +165,6 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                       handleAddTopic(title, des, "DRAFT",
                               topicTagItems[tagIndex].tag, topicInputs)
                           .then((val) {
-                        debugPrint(val["code"].toString());
                         if (val["code"] == 0) {}
                       });
                     },
@@ -254,6 +271,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(widget.topicDetails.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

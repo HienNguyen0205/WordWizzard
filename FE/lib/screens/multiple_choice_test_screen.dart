@@ -143,7 +143,6 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
       });
       wrongAns++;
     }
-    debugPrint(testHistory.toString());
     if(widget.isInstantShowAnswer){
       Timer(const Duration(seconds: 2), () {
         currStep++;

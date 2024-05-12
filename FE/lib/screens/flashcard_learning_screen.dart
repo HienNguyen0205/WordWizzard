@@ -315,7 +315,6 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(displayList.toString());
     bool isAutoPronun = context.watch<FlashcardSettingProvider>().autoPronun;
     String frontContentType = context.watch<FlashcardSettingProvider>().frontContent;
     String frontContent = frontContentType == "term" ? "general" : "meaning";

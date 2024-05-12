@@ -33,13 +33,12 @@ class AddTopicSecttionState extends State<AddTopicSecttion> {
     }
   }
 
-  // @override
-  // void didUpdateWidget(AddTopicSecttion oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   debugPrint(widget.termVal.toString());
-  //   _controller1.text = widget.termVal["term"];
-  //   _controller2.text = widget.termVal["definition"];
-  // }
+  @override
+  void didUpdateWidget(AddTopicSecttion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller1.text = widget.termVal["term"];
+    _controller2.text = widget.termVal["definition"];
+  }
 
   @override
   void dispose() {

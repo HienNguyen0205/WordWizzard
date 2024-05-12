@@ -53,7 +53,7 @@ class SettingScreenState extends State<SettingScreen> {
         stream: UserStream().userStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            dynamic userData = snapshot.data;
+            dynamic userData = snapshot.data["data"];
             return SingleChildScrollView(
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,

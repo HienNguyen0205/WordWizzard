@@ -106,36 +106,36 @@ export const listRanks = [
     {
         name: "Bronze",
         value: 1,
-        image: "Beginner-1",
+        tag: "bronze",
     },
     {
         name: "Silver",
         value: 3,
-        image: "Intermediate-1",
+        tag: "silver",
     },
     {
         name: "Gold",
         value: 5,
-        image: "Advanced-1",
+        tag: "gold",
     },
     {
         name: "Platinum",
         value: 7,
-        image: "Expert-1",
+        tag: "platinum",
     },
     {
         name: "Diamond",
         value: 10,
-        image: "Master-1",
+        tag: "diamond",
     },
     {
         name: "Master",
         value: 15,
-        image: "Master-1",
+        tag: "master",
     },
     {
         name: "Challenger",
         value: 20,
-        image: "Challenger-1",
+        tag: "challenger",
     }
 ];

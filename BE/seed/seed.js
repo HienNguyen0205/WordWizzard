@@ -29,7 +29,7 @@ const ranksSchema = new mongoose.Schema({
     type: Number,
     trim: true,
   },
-  image: {
+  tag: {
     type: String,
     trim: true,
   },

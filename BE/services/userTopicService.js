@@ -138,8 +138,9 @@ const saveTopic = async (req, res) => {
 
 const finishTopicQuiz = async (req, res) => {
   const { topic_id } = req.params;
+  const { word_length, correct_percent } = req.body;
   const { _id: user_id } = req.user;
-  const point_earn = 100;
+  const point_earn = (50 * correct_percent * word_length) / 100;
   const topicId = ObjectId(topic_id);
 
   const user_topic = await UserTopic.findOne({

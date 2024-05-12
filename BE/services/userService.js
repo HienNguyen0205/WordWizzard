@@ -1053,7 +1053,7 @@ const get_user = async (userId, res) => {
 };
 const get_user_rank = async (level) => {
   const rank = await Ranks.findOne({ value: { $lte: level } })
-    .select("name image")
+    .select("name tag")
     .sort({ value: -1 })
     .limit(1);
   return rank;

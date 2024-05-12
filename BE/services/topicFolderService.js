@@ -22,12 +22,13 @@ const updateTopicsToFolder = async (req, res) => {
   const topics = await Topic.find({
     _id: { $in: topicIds },
     isDeleted: false,
-    createdBy: req.user._id,
+    // createdBy: req.user._id,
   });
   if (topics.length !== topicIds.length) {
     return res.status(404).send({
       errorCode: "3",
       msg: "Some topics not found!",
+      data: topicIds,
     });
   }
   const deleteQuery = {

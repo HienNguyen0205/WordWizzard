@@ -149,7 +149,13 @@ userController.updateProfile = async (req, res, next) => {
         message: "User Id is required",
       });
     }
-    return await userService.handle_update_profile(userId, fullname, phone, imagePath, res);
+    return await userService.handle_update_profile(
+      userId,
+      fullname,
+      phone,
+      imagePath,
+      res
+    );
   } catch (error) {
     next(error);
   }
@@ -158,43 +164,18 @@ userController.updateProfile = async (req, res, next) => {
 userController.me = async (req, res, next) => {
   try {
     const user_id = req.user._id;
-    return await userService.get_user(user_id, res)
+    return await userService.get_user(user_id, res);
   } catch (error) {
     next(error);
   }
 };
 
-// userController.getAll = async (req, res, next) => {
-//   try {
-//     const { search, page, limit } = req.query;
-//     let queryObject = {};
-//     let sortObject = { createdAt: -1 };
-//     if (search) {
-//       queryObject.$or = [
-//         { name: { $regex: `${search}`, $options: "i" } },
-//         { description: { $regex: `${search}`, $options: "i" } },
-//       ];
-//     }
-
-//     const pages = Number(page);
-//     const limits = Number(limit);
-//     const skip = (pages - 1) * limits;
-
-//     const totalDoc = await UserSchema.countDocuments(queryObject);
-
-//     const data = await UserSchema.find(queryObject)
-//       .sort(sortObject)
-//       .skip(skip)
-//       .limit(limits);
-
-//     return res.send({
-//       data,
-//       totalDoc,
-//       limits,
-//       pages,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+// Leaderboard
+userController.leaderboard = async (req, res, next) => {
+  try {
+    return await userService.get_list_leaderboard(res);
+  } catch (error) {
+    next(error);
+  }
+};
 export default userController;

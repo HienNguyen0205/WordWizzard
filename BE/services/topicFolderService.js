@@ -69,7 +69,6 @@ const chooseFoldersToAdd = async (req, res) => {
   const topic = await Topic.findOne({
     _id: id,
     isDeleted: false,
-    securityView: "PUBLIC",
   });
   if (!topic) {
     return res.status(404).send({

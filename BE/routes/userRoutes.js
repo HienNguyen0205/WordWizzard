@@ -25,4 +25,6 @@ router.post("/api/user/reset-password/:id", userController.resetPassword);
 router.post("/api/user/renew-otp", userController.renewOTP);
 // update profile
 router.post("/api/user/update-profile", authentication, upload.single("image"), userController.updateProfile);
+// leaderboard
+router.get("/api/user/leaderboard", userController.leaderboard);
 export default router;

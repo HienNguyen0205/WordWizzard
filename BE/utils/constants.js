@@ -15,9 +15,24 @@ export default class Constants {
     this.LEVEL_13 = 13500;
     this.LEVEL_14 = 14250;
     this.LEVEL_15 = 15000;
+    this.LEVEL_16 = 16000;
+    this.LEVEL_17 = 17000;
+    this.LEVEL_18 = 18000;
+    this.LEVEL_19 = 19000;
+    this.LEVEL_20 = 20000;
   }
   getUserLevel(score) {
-    if (score >= this.LEVEL_15) {
+    if (score >= this.LEVEL_20) {
+      return 20;
+    } else if (score >= this.LEVEL_19) {
+      return 19;
+    } else if (score >= this.LEVEL_18) {
+      return 18;
+    } else if (score >= this.LEVEL_17) {
+      return 17;
+    } else if (score >= this.LEVEL_16) {
+      return 16;
+    } else if (score >= this.LEVEL_15) {
       return 15;
     } else if (score >= this.LEVEL_14) {
       return 14;

@@ -52,6 +52,7 @@ const addOne = async (req, res) => {
       listWords: topic.listWords,
       tag: {
         tag_name: tag.name,
+        tag_value: tag.value,
         tag_image: tag.image,
       },
       createdBy: topic.createdBy,
@@ -118,6 +119,7 @@ const updateOne = async (req, res) => {
       listWords: topic.listWords,
       tag: {
         tag_name: tag.name,
+        tag_value: tag.value,
         tag_image: tag.image,
       },
       createdBy: topic.createdBy,
@@ -189,6 +191,7 @@ const getAll = async (req, res) => {
           $first: {
             _id: "$topic_tag._id",
             name: "$topic_tag.name",
+            value: "$topic_tag.value",
             image: "$topic_tag.image",
           },
         },
@@ -280,6 +283,7 @@ const getOne = async (req, res) => {
           $first: {
             _id: "$topic_tag._id",
             name: "$topic_tag.name",
+            value: "$topic_tag.value",
             image: "$topic_tag.image",
           },
         },
@@ -363,6 +367,7 @@ const getAllClient = async (req, res) => {
           $first: {
             _id: "$topic_tag._id",
             name: "$topic_tag.name",
+            value: "$topic_tag.value",  
             image: "$topic_tag.image",
           },
         },

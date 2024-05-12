@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import { uploadImage } from "./uploadService.js";
 import Constants from "../utils/constants.js";
+import { Ranks } from "../seed/seed.js";
 import { ObjectId } from "mongodb";
 dotenv.config();
 
@@ -1033,10 +1034,29 @@ const get_user = async (userId, res) => {
       message: "User not found",
     });
   }
+  const user_rank = await get_user_rank(user.level);
+  const response_data = {
+    id: user._id,
+    email: user.email,
+    username: user.username,
+    fullname: user.fullname,
+    phone: user.phone,
+    image: user.image,
+    level: user.level,
+    points: user.points,
+    rank: user_rank,
+  };
   return res.send({
     message: "Success",
-    data: user,
+    data: response_data,
   });
+};
+const get_user_rank = async (level) => {
+  const rank = await Ranks.findOne({ value: { $lte: level } })
+    .select("name image")
+    .sort({ value: -1 })
+    .limit(1);
+  return rank;
 };
 
 const update_points_user = async (userId, points) => {

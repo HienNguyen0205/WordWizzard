@@ -83,3 +83,11 @@ flutter:
   - assets/animation/tick_ani.json
   - assets/animation/wrong_ani.json
   - assets/animation/right_ani.json
+  - assets/images/ranking/Level_1.png
+  - assets/images/ranking/Level_2.png
+  - assets/images/ranking/Level_3.png
+  - assets/images/ranking/Level_4.png
+  - assets/images/ranking/Level_5.png
+  - assets/images/ranking/Level_6.png
+  - assets/images/ranking/Level_7.png
+  - assets/images/ranking/Level_8.png

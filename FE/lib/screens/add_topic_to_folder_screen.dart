@@ -40,8 +40,8 @@ class AddTopicToFolderScreenState extends State<AddTopicToFolderScreen> {
   void handleDone() {
     List<String> idList = context.read<IdContainerProvider>().idList;
     handleAddTopicsToFolder(widget.folderId, idList).then((val) {
+      context.read<IdContainerProvider>().resetList();
       if(val == 0){
-        context.read<IdContainerProvider>().resetList();
         FoldersStream().getFolderDetailsData(widget.folderId);
         FoldersStream().getFoldersData();
         toast.showToast(

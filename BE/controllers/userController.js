@@ -173,7 +173,7 @@ userController.me = async (req, res, next) => {
 // Leaderboard
 userController.leaderboard = async (req, res, next) => {
   try {
-    return await userService.get_list_leaderboard(res);
+    return await userService.get_list_leaderboard(req, res);
   } catch (error) {
     next(error);
   }

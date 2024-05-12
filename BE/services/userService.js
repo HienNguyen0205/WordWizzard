@@ -1076,7 +1076,7 @@ const update_points_user = async (userId, points) => {
   return user;
 };
 
-const get_list_leaderboard = async (res) => {
+const get_list_leaderboard = async (req, res) => {
   const { search, page, limit } = req.query;
   let queryObject = {};
   if (search) {
@@ -1090,14 +1090,24 @@ const get_list_leaderboard = async (res) => {
     .sort({ points: -1 })
     .skip(skip)
     .limit(limits);
-
+  const response_data = [];
   for (let i = 0; i < users.length; i++) {
     const user_rank = await get_user_rank(users[i].level);
-    users[i].rank = user_rank;
+    response_data.push({
+      id: users[i]._id,
+      email: users[i].email,
+      username: users[i].username,
+      fullname: users[i].fullname,
+      phone: users[i].phone,
+      image: users[i].image,
+      level: users[i].level,
+      points: users[i].points,
+      rank: user_rank,
+    });
   }
   return res.send({
     message: "Success",
-    data: users,
+    data: response_data,
   });
 };
 export {

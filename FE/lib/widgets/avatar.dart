@@ -1,7 +1,6 @@
 import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:cloudinary_url_gen/transformation/delivery/delivery.dart';
 import 'package:cloudinary_url_gen/transformation/delivery/delivery_actions.dart';
-import 'package:cloudinary_url_gen/transformation/resize/resize.dart';
 import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -46,9 +45,7 @@ class AvatarState extends State<Avatar> {
                 transformation: Transformation()
                   ..delivery(Delivery.format(Format.auto))
                   ..delivery(Delivery.quality(Quality.auto()))
-                  ..resize(Resize.fit()
-                    ..width(320)
-                    ..height(200)),
+                  ..addTransformation("ar_1.0,c_fill,w_320/r_max/f_auto"),
                 placeholder: (context, url) {
                   return AspectRatio(
                     aspectRatio: 1.6,

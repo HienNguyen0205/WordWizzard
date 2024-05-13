@@ -1,6 +1,4 @@
 import 'package:cloudinary_flutter/image/cld_image.dart';
-import 'package:cloudinary_url_gen/transformation/delivery/delivery.dart';
-import 'package:cloudinary_url_gen/transformation/delivery/delivery_actions.dart';
 import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,14 +7,14 @@ import 'package:lottie/lottie.dart';
 class Avatar extends StatefulWidget {
   final String? publicId;
   final double? radius;
-  const Avatar({super.key, this.publicId, this.radius});
+  const Avatar(
+      {super.key, this.publicId, this.radius});
 
   @override
   AvatarState createState() => AvatarState();
 }
 
 class AvatarState extends State<Avatar> {
-
   late String? publicId;
 
   @override
@@ -26,8 +24,8 @@ class AvatarState extends State<Avatar> {
   }
 
   @override
-  void didUpdateWidget(Avatar oldWidget){
-    if(oldWidget.publicId != widget.publicId){
+  void didUpdateWidget(Avatar oldWidget) {
+    if (oldWidget.publicId != widget.publicId) {
       setState(() {
         publicId = widget.publicId;
       });
@@ -43,9 +41,8 @@ class AvatarState extends State<Avatar> {
             ? CldImageWidget(
                 publicId: publicId as String,
                 transformation: Transformation()
-                  ..delivery(Delivery.format(Format.auto))
-                  ..delivery(Delivery.quality(Quality.auto()))
-                  ..addTransformation("ar_1.0,c_fill,w_320/r_max/f_auto"),
+                  ..addTransformation(
+                      "c_thumb,ar_1.0,c_fill,g_face,b_transparent/r_max/f_auto"),
                 placeholder: (context, url) {
                   return AspectRatio(
                     aspectRatio: 1.6,

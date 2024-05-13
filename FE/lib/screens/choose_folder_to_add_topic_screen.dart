@@ -41,6 +41,7 @@ class ChooseFolderToAddTopicScreenState
   void handleDone() {
     List<String> list = context.read<IdContainerProvider>().idList;
     handleAddTopicsToFolder(widget.id, list).then((res) {
+      context.read<IdContainerProvider>().resetList();
       if(res["code"] == 0){
         toast.showToast(
           child: const CustomToast(text: "edit_folder_success"),

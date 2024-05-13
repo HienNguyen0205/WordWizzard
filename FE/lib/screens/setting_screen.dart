@@ -7,7 +7,7 @@ import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/providers/theme_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/stream/user_stream.dart';
-import 'package:wordwizzard/widgets/avatar.dart';
+import 'package:wordwizzard/widgets/avatar_with_rank_border.dart';
 import 'package:wordwizzard/widgets/setting_section.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class SettingScreenState extends State<SettingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Avatar(publicId: userData["image"], radius: 36),
+                      AvatarWithRankBorder(publicId: userData["image"], radius: 36, rank: ''),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         child: Text(userData["username"],

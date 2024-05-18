@@ -164,6 +164,10 @@ userController.uploadImage = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const imagePath = req.file.path;
+    const image = req.file;
+    console.log("🚀 ~ userController.uploadImage= ~ image:", image)
+    
+    console.log("🚀 ~ userController.uploadImage= ~ imagePath:", imagePath)
     if (!userId) {
       return res.status(400).send({
         errorCode: "1",

@@ -141,8 +141,7 @@ userController.resetPassword = async (req, res, next) => {
 userController.updateProfile = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const imagePath = req.file.path;
-    const { fullname, phone } = req.body;
+    const { fullname, phone, imagePath } = req.body;
     if (!userId) {
       return res.status(400).send({
         errorCode: "1",
@@ -152,10 +151,27 @@ userController.updateProfile = async (req, res, next) => {
     return await userService.handle_update_profile(
       userId,
       fullname,
-      phone,
       imagePath,
+      phone,
       res
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Upload Image
+userController.uploadImage = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const imagePath = req.file.path;
+    if (!userId) {
+      return res.status(400).send({
+        errorCode: "1",
+        message: "User Id is required",
+      });
+    }
+    return await userService.handle_upload_image(userId, imagePath, res);
   } catch (error) {
     next(error);
   }

@@ -26,18 +26,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: false,
-    default: null,
+    default: "",
   },
   phone: {
     type: String,
     trim: true,
     required: false,
-    default: null,
+    default: "",
   },
   image: {
     type: String,
     required: false,
-    default: null,
+    default: "",
   },
   level: {
     type: Number,

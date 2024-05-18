@@ -998,10 +998,13 @@ const handle_reset_password = async (userId, password, res) => {
 const handle_update_profile = async (
   userId,
   fullname,
-  phone,
   imagePath,
+  phone,
   res
 ) => {
+  console.log("🚀 ~ fullname:", fullname)
+  console.log("🚀 ~ imagePath:", imagePath)
+  console.log("🚀 ~ phone:", phone)
   const user = await UserSchema.findById(userId);
   if (!user) {
     return res.status(404).send({
@@ -1009,10 +1012,7 @@ const handle_update_profile = async (
       message: "User not found",
     });
   }
-  if (imagePath) {
-    const uploadImageFile = await uploadImage(imagePath);
-    user.image = uploadImageFile;
-  }
+  user.image = imagePath;
   user.fullname = fullname;
   user.phone = phone;
   await user.save();
@@ -1023,6 +1023,24 @@ const handle_update_profile = async (
     data: user,
   });
 };
+
+const handle_upload_image = async (userId, imagePath, res) => {
+  const user = await UserSchema.findById(userId);
+  if (!user) {
+    return res.status(404).send({
+      errorCode: "2",
+      message: "User not found",
+    });
+  }
+  if (imagePath) {
+    const uploadImageFile = await uploadImage(imagePath);
+    return res.send({
+      status: true,
+      data: uploadImageFile,
+    });
+  }
+};
+
 const get_user = async (userId, res) => {
   const user = await UserSchema.findById(userId).select(
     "id email username fullname phone image level points"
@@ -1135,4 +1153,5 @@ export {
   get_user,
   update_points_user,
   get_list_leaderboard,
+  handle_upload_image,
 };

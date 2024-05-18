@@ -198,6 +198,7 @@ const getPopularTopics = async (req, res) => {
         tag: { $first: "$topic.tag" },
         createdBy: { $first: "$topic.createdBy" },
         createdAt: { $first: "$topic.createdAt" },
+        words: { $first: { $size: "$topic.listWords" } },
         count: { $sum: 1 },
       },
     },
@@ -240,6 +241,7 @@ const getPopularTopics = async (req, res) => {
           image: "$user.image",
         },
         createdAt: 1,
+        words: 1,
       },
     },
   ]);

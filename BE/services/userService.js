@@ -998,13 +998,9 @@ const handle_reset_password = async (userId, password, res) => {
 const handle_update_profile = async (
   userId,
   fullname,
-  imagePath,
   phone,
   res
 ) => {
-  console.log("🚀 ~ fullname:", fullname)
-  console.log("🚀 ~ imagePath:", imagePath)
-  console.log("🚀 ~ phone:", phone)
   const user = await UserSchema.findById(userId);
   if (!user) {
     return res.status(404).send({
@@ -1012,7 +1008,6 @@ const handle_update_profile = async (
       message: "User not found",
     });
   }
-  user.image = imagePath;
   user.fullname = fullname;
   user.phone = phone;
   await user.save();
@@ -1034,10 +1029,19 @@ const handle_upload_image = async (userId, imagePath, res) => {
   }
   if (imagePath) {
     const uploadImageFile = await uploadImage(imagePath);
+    user.image = imagePath;
+    await user.save();
     return res.send({
       status: true,
       data: uploadImageFile,
     });
+  }
+  else {
+    return res.status(400).send({
+      errorCode: "3",
+      message: "Image path is not valid",
+    });
+  
   }
 };
 

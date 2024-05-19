@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class IconBtn extends StatelessWidget {
-  const IconBtn({Key? key, required this.imgUrl}) : super(key: key);
+  const IconBtn({super.key, required this.imgUrl});
 
   final String imgUrl;
 

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wordwizzard/constants/constants.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
-import 'package:wordwizzard/screens/sign_in_screen.dart';
+import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroScreen extends StatelessWidget {
-  const IntroScreen({Key? key}) : super(key: key);
+  const IntroScreen({super.key});
 
   void handleDoneBtn(BuildContext context) {
     setFirstLaunchFlag();
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const SignInScreen()));
+    Navigator.of(context).pushReplacementNamed(signInRoute);
   }
 
   Future<void> setFirstLaunchFlag() async {
@@ -54,7 +54,7 @@ class IntroScreen extends StatelessWidget {
                 .map((item) => PageViewModel(
                     title: getTranslated(context, item.title),
                     body: getTranslated(context, item.body),
-                    image: Image.asset(item.imageUrl),
+                    image: SvgPicture.asset(item.imageUrl),
                     decoration: const PageDecoration(
                         pageMargin: EdgeInsets.symmetric(vertical: 60))))
                 .toList()));

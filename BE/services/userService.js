@@ -1029,7 +1029,7 @@ const handle_upload_image = async (userId, imagePath, res) => {
   }
   if (imagePath) {
     const uploadImageFile = await uploadImage(imagePath);
-    user.image = imagePath;
+    user.image = uploadImageFile;
     await user.save();
     return res.send({
       status: true,

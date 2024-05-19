@@ -106,5 +106,5 @@ List<Rank> rank = [
   Rank(tag: "platinum", border: "assets/images/ranking/Level_4.png"),
   Rank(tag: "diamond", border: "assets/images/ranking/Level_5.png"),
   Rank(tag: "master", border: "assets/images/ranking/Level_6.png"),
-  Rank(tag: "Challenger", border: "assets/images/ranking/Level_7.png"),
+  Rank(tag: "challenger", border: "assets/images/ranking/Level_7.png"),
 ];

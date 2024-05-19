@@ -149,5 +149,6 @@
   "update": "Update",
   "change_pw": "Change password",
   "current_pw": "Current password",
-  "popular_regular": "popular"
+  "popular_regular": "popular",
+  "edit_success": "Edit success"
 }

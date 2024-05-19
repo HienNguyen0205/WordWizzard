@@ -148,5 +148,6 @@
   "update": "Cập nhật",
   "change_pw": "Thay đổi mật khẩu",
   "current_pw": "Mật khẩu hiện tại",
-  "popular_regular": "phổ biến"
+  "popular_regular": "phổ biến",
+  "edit_success": "Thay đổi thành công"
 }

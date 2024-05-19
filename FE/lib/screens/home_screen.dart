@@ -79,6 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
           if (snapshot.hasData) {
             List<dynamic> topics = snapshot.data?[0];
             List<dynamic> folders = snapshot.data?[1];
+            debugPrint(topics.toString());
             return Stack(fit: StackFit.expand, children: [
               Positioned(
                   top: 0,

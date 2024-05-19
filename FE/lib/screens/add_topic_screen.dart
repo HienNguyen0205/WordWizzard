@@ -165,7 +165,9 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                       handleAddTopic(title, des, "DRAFT",
                               topicTagItems[tagIndex].tag, topicInputs)
                           .then((val) {
-                        if (val["code"] == 0) {}
+                        if (val["code"] == 0) {
+                          Navigator.of(context).pop();
+                        }
                       });
                     },
                     child: Text(getTranslated(context, "save"))),

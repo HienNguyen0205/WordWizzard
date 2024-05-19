@@ -34,7 +34,7 @@ final List<String> iconList = [
   'assets/icon/google.svg',
 ];
 
-const String ipv4 = '172.16.0.95';
+const String ipv4 = '192.168.1.102';
 
 class ListItem {
   final String title;

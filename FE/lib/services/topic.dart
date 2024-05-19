@@ -210,8 +210,6 @@ Future<dynamic> handleUpdateTopic(String id, String name, String description, St
     return {"general": val["term"], "meaning": val["definition"]};
   }).toList();
 
-  debugPrint("🚀 ${listWords.toString()}");
-
   try {
     String? token = await storage.read(key: "token");
     final res = await http.patch(url, headers: {
@@ -224,7 +222,6 @@ Future<dynamic> handleUpdateTopic(String id, String name, String description, St
       'listWords': jsonEncode(words)
     });
     final resData = jsonDecode(res.body);
-    debugPrint("🚀 ${resData.toString()}");
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
     } else {

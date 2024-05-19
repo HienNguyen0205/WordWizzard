@@ -107,10 +107,6 @@ Future<dynamic> handleUpdateAvatar(XFile image) async {
   final url = Uri.parse('http://$ipv4:5001/api/user/upload-image');
   const storage = FlutterSecureStorage();
 
-  debugPrint(image.name);
-  debugPrint(image.path);
-  debugPrint(File(image.path).existsSync().toString());
-
   try {
     String? token = await storage.read(key: "token");
     final req = http.MultipartRequest("POST", url)

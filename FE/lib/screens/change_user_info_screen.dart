@@ -172,9 +172,7 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                             ),
                             keyboardType: TextInputType.phone,
                             validator: (val) {
-                              debugPrint(
-                                  isPhoneNumberValid(val as String).toString());
-                              if (!isPhoneNumberValid(val) && val.isNotEmpty) {
+                              if (!isPhoneNumberValid(val as String) && val.isNotEmpty) {
                                 return getTranslated(
                                     context, "invalid_phone_number");
                               }

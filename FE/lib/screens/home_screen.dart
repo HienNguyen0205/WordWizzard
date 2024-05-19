@@ -262,7 +262,6 @@ class HomeScreenState extends State<HomeScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData && snapshot.data["code"] == 0) {
                             popularTopics = snapshot.data["data"];
-                            debugPrint(popularTopics.toString());
                             return GridView.count(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 18, horizontal: 8),

@@ -74,7 +74,7 @@ class OtpVerifyScreenState extends State<OtpVerifyScreen> {
         context.read<AuthProvider>().signIn();
         Navigator.of(context).pushNamedAndRemoveUntil(bottomNavRoute, (route) => false);
       }else if(action == 'forget_pass'){
-        Navigator.of(context).pushNamed(changePassRoute, arguments: {"userId": widget.userId});
+        Navigator.of(context).pushNamed(changePassRoute, arguments: {"userId": widget.userId, "changeType": "reset"});
       }
     } else if (resCode == 3) {
       setState(() {

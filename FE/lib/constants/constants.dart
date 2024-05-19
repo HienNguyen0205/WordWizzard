@@ -34,7 +34,7 @@ final List<String> iconList = [
   'assets/icon/google.svg',
 ];
 
-const String ipv4 = '192.168.1.103';
+const String ipv4 = '172.16.0.95';
 
 class ListItem {
   final String title;
@@ -90,3 +90,21 @@ const double rate = 0.5;
 
 List<String> answerLabel = ['A', 'B', 'C', 'D'];
 List<Color> answerLabelColor = [const Color(0xffEB5353), const Color(0xffFFC55A), const Color(0xff36AE7C), const Color(0xff187498)];
+
+class Rank {
+  String tag = '';
+  String border = '';
+
+  Rank(
+      {required this.tag, required this.border});
+}
+
+List<Rank> rank = [
+  Rank(tag: "bronze", border: "assets/images/ranking/Level_1.png"),
+  Rank(tag: "silver", border: "assets/images/ranking/Level_2.png"),
+  Rank(tag: "gold", border: "assets/images/ranking/Level_3.png"),
+  Rank(tag: "platinum", border: "assets/images/ranking/Level_4.png"),
+  Rank(tag: "diamond", border: "assets/images/ranking/Level_5.png"),
+  Rank(tag: "master", border: "assets/images/ranking/Level_6.png"),
+  Rank(tag: "Challenger", border: "assets/images/ranking/Level_7.png"),
+];

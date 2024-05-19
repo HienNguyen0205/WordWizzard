@@ -26,6 +26,8 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
   String? fullname = '';
   String? phone = '';
   TextEditingController emailController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   late FToast fToast;
   ImagePickerController imagePicker = ImagePickerController();
 
@@ -40,7 +42,22 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
   @override
   void dispose() {
     emailController.dispose();
+    fullNameController.dispose();
+    phoneController.dispose();
     super.dispose();
+  }
+
+  void handleChangeAvatar() async {
+    XFile? image = await handleGetAvatar();
+    if (image != null) {
+      dynamic res = await handleUpdateAvatar(image);
+      debugPrint(res.toString());
+      // if(res["status"]){
+      //   setState(() {
+      //     publicId = res["data"];
+      //   });
+      // }
+    }
   }
 
   void _submitForm() {
@@ -49,6 +66,7 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
       form.save();
       handleUpdateUserInfo(fullname as String, phone as String).then((val) {
         if (val["code"] == 0) {
+          debugPrint(val.toString());
           UserStream().getUserData();
           fToast.showToast(
               child: CustomToast(
@@ -87,6 +105,8 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
           if (snapshot.hasData) {
             dynamic data = snapshot.data["data"];
             emailController = TextEditingController(text: data["email"]);
+            fullNameController = TextEditingController(text: data["fullname"]);
+            phoneController = TextEditingController(text: data["phone"]);
             fullname = data["fullname"];
             phone = data["phone"];
             return Container(
@@ -96,8 +116,18 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                   children: [
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Avatar(publicId: data["image"], radius: 48)),
-                    Padding(padding: const EdgeInsets.only(top: 12, bottom: 32), child: Text(data["username"], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),)),
+                        child: GestureDetector(
+                          onTap: handleChangeAvatar,
+                          child: Avatar(publicId: data["image"], radius: 48)
+                        )
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 32),
+                        child: Text(
+                          data["username"],
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w500),
+                        )),
                     Form(
                         key: _form,
                         child: Column(children: [
@@ -113,6 +143,7 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                           ),
                           const SizedBox(height: 18),
                           TextFormField(
+                            controller: fullNameController,
                             decoration: InputDecoration(
                               labelText: getTranslated(context, "full_name"),
                               border: const OutlineInputBorder(),
@@ -120,6 +151,7 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                               errorBorder: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.next,
                             validator: (val) {
                               if (val!.length > 30) {
                                 return getTranslated(
@@ -136,6 +168,7 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                           ),
                           const SizedBox(height: 18),
                           TextFormField(
+                            controller: phoneController,
                             decoration: InputDecoration(
                               labelText: getTranslated(context, "phone_number"),
                               border: const OutlineInputBorder(),
@@ -144,8 +177,9 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                             ),
                             keyboardType: TextInputType.phone,
                             validator: (val) {
-                              if (!isPhoneNumberValid(val as String) &&
-                                  val != "") {
+                              debugPrint(
+                                  isPhoneNumberValid(val as String).toString());
+                              if (!isPhoneNumberValid(val) && val.isNotEmpty) {
                                 return getTranslated(
                                     context, "invalid_phone_number");
                               }

@@ -134,22 +134,13 @@ class LibraryScreenState extends State<LibraryScreen>
                             top: 18, left: 18, right: 18, bottom: 24),
                       child: snapshot.data?[0].isNotEmpty
                           ? Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 18),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      labelText:
-                                          getTranslated(context, "search"),
-                                    ),
-                                  ),
-                                ),
-                                TopicListView(
+                            children: [
+                              TopicListView(
                                     topicList: topicList,
                                     classifyByWeek: true,
-                                    canSelected: false)
-                              ],
-                            )
+                                    canSelected: false),
+                            ],
+                          )
                           : const EmptyNotification(message: "not_any_topic")
                     ),
                     Container(

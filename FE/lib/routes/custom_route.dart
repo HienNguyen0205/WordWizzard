@@ -6,6 +6,7 @@ import 'package:wordwizzard/screens/add_topic_to_folder_screen.dart';
 import 'package:wordwizzard/screens/bottom_nav.dart';
 import 'package:wordwizzard/screens/change_language_screen.dart';
 import 'package:wordwizzard/screens/change_pass_screen.dart';
+import 'package:wordwizzard/screens/change_user_info_screen.dart';
 import 'package:wordwizzard/screens/choose_folder_to_add_topic_screen.dart';
 import 'package:wordwizzard/screens/flashcard_learning_screen.dart';
 import 'package:wordwizzard/screens/folder_detail_screen.dart';
@@ -15,7 +16,6 @@ import 'package:wordwizzard/screens/test_setting_screen.dart';
 import 'package:wordwizzard/screens/multiple_choice_test_screen.dart';
 import 'package:wordwizzard/screens/not_found_screen.dart';
 import 'package:wordwizzard/screens/otp_verify_screen.dart';
-import 'package:wordwizzard/screens/search_screen.dart';
 import 'package:wordwizzard/screens/setting_access_scope_screen.dart';
 import 'package:wordwizzard/screens/setting_add_topic_screen.dart';
 import 'package:wordwizzard/screens/sign_in_screen.dart';
@@ -77,7 +77,7 @@ class CustomRouter {
       case changePassRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) =>
-                ChangePassScreen(userId: args?["userId"]),
+                ChangePassScreen(userId: args?["userId"], changeType: args?["changeType"],),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
@@ -130,19 +130,6 @@ class CustomRouter {
       case addFolderRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => AddFolderScreen(folderId: args?["folderId"], name: args?["name"], description: args?["description"]),
-            transitionDuration: const Duration(milliseconds: 300),
-            transitionsBuilder: (_, animation, __, child) {
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 1.0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              );
-            });
-      case searchRoute:
-        return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const SearchScreen(),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
@@ -218,6 +205,7 @@ class CustomRouter {
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => TopicDetailsScreen(
                   topicId: args?["topicId"],
+                  ranking: args?["ranking"],
                 ),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
@@ -232,7 +220,9 @@ class CustomRouter {
       case flashcardRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => FlashcardLearningScreen(
-                listWords: args?["listWords"]),
+                listWords: args?["listWords"],
+                id: args?["id"])
+            ,
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {
               return SlideTransition(
@@ -261,6 +251,7 @@ class CustomRouter {
       case testingSettingRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => TestSetting(
+                  id: args?["id"],
                   listWord: args?["listWord"],
                   testType: args?["testType"],
                 ),
@@ -277,6 +268,7 @@ class CustomRouter {
       case multipleChoiceTestRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => MultipleChoiceTestScreen(
+                  id: args?["id"],
                   listWord: args?["listWord"],
                   questionQuantity: args?["questionQuantity"],
                   isInstantShowAnswer: args?["isInstantShowAnswer"],
@@ -296,6 +288,7 @@ class CustomRouter {
       case wordFillingTestRoute:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => WordFillingTestScreen(
+                  id: args?["id"],
                   listWord: args?["listWord"],
                   questionQuantity: args?["questionQuantity"],
                   isInstantShowAnswer: args?["isInstantShowAnswer"],
@@ -307,6 +300,19 @@ class CustomRouter {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(0.0, 1.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            });
+      case changeUserInfoRoute:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => ChangeUserInfoScreen(),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
                   end: Offset.zero,
                 ).animate(animation),
                 child: child,

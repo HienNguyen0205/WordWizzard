@@ -19,3 +19,4 @@ const String chooseFolderToAddTopicRoute = "chooseFolderToAddTopic";
 const String testingSettingRoute = "tesingSetting";
 const String multipleChoiceTestRoute = "multipleChoiceTest";
 const String wordFillingTestRoute = "wordFillingTest";
+const String changeUserInfoRoute = "changeUserInfo";

@@ -1,7 +1,4 @@
 import 'package:cloudinary_flutter/image/cld_image.dart';
-import 'package:cloudinary_url_gen/transformation/delivery/delivery.dart';
-import 'package:cloudinary_url_gen/transformation/delivery/delivery_actions.dart';
-import 'package:cloudinary_url_gen/transformation/resize/resize.dart';
 import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -27,7 +24,7 @@ class TopicItem extends StatefulWidget {
 }
 
 class TopicItemState extends State<TopicItem> {
-  void handleTap() {}
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,11 +38,7 @@ class TopicItemState extends State<TopicItem> {
                 child: CldImageWidget(
                   publicId: widget.publicId,
                   transformation: Transformation()
-                    ..delivery(Delivery.format(Format.auto))
-                    ..delivery(Delivery.quality(Quality.auto()))
-                    ..resize(Resize.fit()
-                      ..width(320)
-                      ..height(200)),
+                    ..addTransformation("c_fill,w_320,h_200/f_auto"),
                   placeholder: (context, url) {
                     return AspectRatio(
                       aspectRatio: 1.6,
@@ -74,27 +67,29 @@ class TopicItemState extends State<TopicItem> {
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.title,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 12,),
-                IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Avatar(publicId: widget.author["avatar"], radius: 14,),
-                      const VerticalDivider(),
-                      Text(widget.author["name"])
-                    ],
-                  ),
-                )
-              ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.title,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500)),
+                    IntrinsicHeight(
+                      child: Row(
+                        children: [
+                          Avatar(publicId: widget.author["avatar"], radius: 14),
+                          const VerticalDivider(indent: 2, endIndent: 2),
+                          Text(widget.author["name"])
+                        ],
+                      ),
+                    )
+                  ],
+                ),
             ),
-          )
+          ),
         ]),
       ),
     );

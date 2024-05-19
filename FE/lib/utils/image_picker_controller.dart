@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerController {
@@ -12,7 +13,12 @@ class ImagePickerController {
   ImagePickerController._internal();
 
   Future<XFile?> getImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    return image;
+    try{
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      return image;
+    }catch(e){
+      debugPrint(e.toString());
+    }
+    return null;
   }
 }

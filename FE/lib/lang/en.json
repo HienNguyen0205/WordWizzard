@@ -139,5 +139,15 @@
   "edit_topic": "Edit topic",
   "delete_folder": "Delete folder",
   "delete_success": "Delete success",
-  "edit_folder": "Edit folder"
+  "edit_folder": "Edit folder",
+  "exceed_username": "Username must not exceed 12 characters",
+  "full_name": "Full name",
+  "exceed_full_name": "Full name must not exceed 30 characters",
+  "phone_number": "Phone number",
+  "invalid_phone_number": "Invalid phone number",
+  "update_profile_success": "Update profile success",
+  "update": "Update",
+  "change_pw": "Change password",
+  "current_pw": "Current password",
+  "popular_regular": "popular"
 }

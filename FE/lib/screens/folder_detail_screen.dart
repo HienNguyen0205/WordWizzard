@@ -103,7 +103,7 @@ class FolderDetailScreenState extends State<FolderDetailScreen> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: handleBack,
-            icon: const FaIcon(FontAwesomeIcons.arrowLeft)),
+            icon: const FaIcon(FontAwesomeIcons.chevronLeft)),
         actions: [
           IconButton(
             onPressed: handleAddTopicToFolder,

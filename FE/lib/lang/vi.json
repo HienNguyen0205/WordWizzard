@@ -90,7 +90,7 @@
   "delete": "Xóa",
   "ranking": "Xếp hạng",
   "empty_folder": "Thư mục trống",
-  "edit_profile": "Chỉnh sửa thông tin cá nhân",
+  "edit_profile": "Sửa thông tin cá nhân",
   "log_out": "Đăng xuất",
   "account": "Tài khoản",
   "languages": "Ngôn ngữ",
@@ -138,5 +138,15 @@
   "edit_topic": "Sửa học phần",
   "delete_folder": "Xóa thư mục",
   "delete_success": "Xóa thành công",
-  "edit_folder": "Chỉnh sửa thư mục"
+  "edit_folder": "Chỉnh sửa thư mục",
+  "exceed_username": "Tên người dùng không được vượt quá 12 ký tự",
+  "full_name": "Tên đầy đủ",
+  "exceed_full_name": "Tên đầy đủ không được vượt quá 30 ký tự",
+  "phone_number": "Số điện thoại",
+  "invalid_phone_number": "Số điện thoại không hợp lệ",
+  "update_profile_success": "Sửa thông tin thành công",
+  "update": "Cập nhật",
+  "change_pw": "Thay đổi mật khẩu",
+  "current_pw": "Mật khẩu hiện tại",
+  "popular_regular": "phổ biến"
 }

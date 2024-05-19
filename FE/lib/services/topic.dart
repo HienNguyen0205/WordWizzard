@@ -246,7 +246,51 @@ Future<dynamic> handleDeleteTopic(String id) async {
       "Authorization": "Bearer $token",
     });
     final resData = jsonDecode(res.body);
-    debugPrint(resData.toString());
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleMarkForUser(String id, int wordLength, double correctPercent) async {
+  final url = Uri.parse('http://$ipv4:5001/api/userTopic/finish/$id');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.post(url, headers: {
+      "Authorization": "Bearer $token",
+    }, body: {
+      'word_length': wordLength.toString(),
+      'correct_percent': correctPercent.toString()
+    });
+    final resData = jsonDecode(res.body);
+    if (res.statusCode == 200) {
+      return {"code": 0, "data": resData["data"]};
+    } else {
+      return {"errrorCode": resData["errrorCode"]};
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return {"code": -1};
+  }
+}
+
+Future<dynamic> handleGetPopularTopic(String search, int limit, int page) async {
+  final url = Uri.parse('http://$ipv4:5001/api/userTopic/popular?search$search&limit=$limit&page=$page');
+  const storage = FlutterSecureStorage();
+
+  try {
+    String? token = await storage.read(key: "token");
+    final res = await http.get(url, headers: {
+      "Authorization": "Bearer $token",
+    });
+    final resData = jsonDecode(res.body);
     if (res.statusCode == 200) {
       return {"code": 0, "data": resData["data"]};
     } else {

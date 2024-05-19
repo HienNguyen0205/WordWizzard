@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/utils/shake_widget_state.dart';
 import 'package:wordwizzard/widgets/shake_widget.dart';
 import 'package:wordwizzard/widgets/test_result_item.dart';
 
 class WordFillingTestScreen extends StatefulWidget {
+  final String id;
   final List<dynamic> listWord;
   final int questionQuantity;
   final bool isInstantShowAnswer;
@@ -18,6 +20,7 @@ class WordFillingTestScreen extends StatefulWidget {
   final bool isAnswerWithDef;
   const WordFillingTestScreen(
       {super.key,
+      required this.id,
       required this.listWord,
       required this.questionQuantity,
       required this.isInstantShowAnswer,
@@ -117,6 +120,7 @@ class WordFillingTestScreenState extends State<WordFillingTestScreen> {
   void updateNewQuestion() {
     currStep++;
     pickQuestion();
+    handleEndQuiz();
   }
 
   void resetQuestionColor() {
@@ -180,6 +184,13 @@ class WordFillingTestScreenState extends State<WordFillingTestScreen> {
   void handleClose() {
     if (Navigator.canPop(context)) {
       Navigator.of(context).pop();
+    }
+  }
+
+  void handleEndQuiz() {
+    if (currStep >= questionQuantity) {
+      double correctPercent = rightAns / questionQuantity * 100;
+      handleMarkForUser(widget.id, rightAns, correctPercent);
     }
   }
 

@@ -146,26 +146,3 @@ Future<dynamic> handleResetPassOTP(String otp, String userId) async {
     return {'code': -1 };
   }
 }
-
-Future<dynamic> handleChangePass(String pass, String userId) async {
-  final url = Uri.parse('http://$ipv4:5001/api/user/reset-password/$userId');
-
-  try {
-    final res = await http.post(
-      url,
-      body: {
-        'password': pass,
-      },
-    );
-
-    final resData = jsonDecode(res.body);
-    if (res.statusCode == 200) {
-      return {'code': 0, 'userId': resData['user_id']};
-    }else{
-      return {'code': int.parse(resData['errorCode'])};
-    }
-  } catch (error) {
-    debugPrint('Failed to send data: $error');
-    return {'code': -1 };
-  }
-}

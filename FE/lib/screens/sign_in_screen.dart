@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/providers/auth_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/services/auth.dart';
 import 'package:wordwizzard/utils/verify.dart';
-// import 'package:wordwizzard/widgets/icon_btn.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -71,11 +69,12 @@ class SignInScreenState extends State<SignInScreen> {
                     children: [
                       TextFormField(
                         autofocus: true,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             labelText: getTranslated(context, "email"),
                             errorText:
                                 _emailErrMess != '' ? _emailErrMess : null),
-                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             setState(() {
@@ -150,15 +149,6 @@ class SignInScreenState extends State<SignInScreen> {
                           getTranslated(context, "sign_in"),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 24),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: iconList
-                      //         .map((item) => IconBtn(imgUrl: item))
-                      //         .toList(),
-                      //   ),
-                      // ),
                       const SizedBox(
                         height: 24,
                       ),

@@ -11,13 +11,15 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
 import 'package:wordwizzard/providers/flashcard_setting_provider.dart';
 import 'package:wordwizzard/routes/route_contants.dart';
+import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/utils/tts_controller.dart';
 import 'package:wordwizzard/widgets/flashcard.dart';
 
 class FlashcardLearningScreen extends StatefulWidget {
+  final String id;
   final List<dynamic> listWords;
   const FlashcardLearningScreen(
-      {super.key, required this.listWords});
+      {super.key, required this.listWords, required this.id});
 
   @override
   FlashcardLearningScreenState createState() => FlashcardLearningScreenState();
@@ -163,7 +165,7 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
   void handleContinueLearn() {
     if (learningList.isNotEmpty) {
       Navigator.of(context).pushReplacementNamed(flashcardRoute,
-          arguments: {"listWords": learningList});
+          arguments: {"listWords": learningList, "id": widget.id});
     } else {
       Navigator.of(context).pop();
     }
@@ -313,13 +315,20 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
     );
   }
 
+  void handleEndLearning(){
+    if(currIndex >= displayList.length) {
+      double correctPercent = memorizedList.length / displayList.length * 100;
+      handleMarkForUser(widget.id, memorizedList.length, correctPercent);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isAutoPronun = context.watch<FlashcardSettingProvider>().autoPronun;
     String frontContentType = context.watch<FlashcardSettingProvider>().frontContent;
     String frontContent = frontContentType == "term" ? "general" : "meaning";
     String backContent = frontContentType == "term" ? "meaning" : "general";
-    if (isFirstLaunch && isAutoPronun) {
+    if (isFirstLaunch && isAutoPronun && currIndex < displayList.length) {
       ttsController.speak(displayList[currIndex]["general"]);
       isFirstLaunch = false;
     }
@@ -472,7 +481,6 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
                                   }
                                 });
                                 undoHistory.add(1);
-                                updateProgress(currIndex);
                               } else {
                                 setState(() {
                                   learningList.add(displayList[currIndex]);
@@ -481,9 +489,10 @@ class FlashcardLearningScreenState extends State<FlashcardLearningScreen> {
                                   }
                                 });
                                 undoHistory.add(0);
-                                updateProgress(currIndex);
                               }
-                              if(isAutoPronun){
+                              updateProgress(currIndex);
+                              handleEndLearning();
+                              if(isAutoPronun && currIndex < displayList.length) {
                                 ttsController.speak(displayList[currIndex]["general"]);
                               }
                             }

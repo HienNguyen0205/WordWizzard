@@ -3,12 +3,13 @@ import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wordwizzard/constants/constants.dart';
 
 class AvatarWithRankBorder extends StatefulWidget {
   final String? publicId;
-  final double? radius;
+  final double radius;
   final String rank;
-  const AvatarWithRankBorder({ super.key, this.publicId, this.radius, required this.rank });
+  const AvatarWithRankBorder({ super.key, this.publicId, required this.radius, required this.rank });
 
   @override
   AvatarWithRankBorderState createState() => AvatarWithRankBorderState();
@@ -17,10 +18,12 @@ class AvatarWithRankBorder extends StatefulWidget {
 class AvatarWithRankBorderState extends State<AvatarWithRankBorder> {
 
   late String? publicId;
+  late double radius;
 
   @override
   void initState() {
     publicId = widget.publicId;
+    radius = widget.radius;
     super.initState();
   }
 
@@ -33,21 +36,24 @@ class AvatarWithRankBorderState extends State<AvatarWithRankBorder> {
     }
     super.didUpdateWidget(oldWidget);
   }
+
+  String getRankBorder(){
+    return rank.firstWhere((item) => item.tag == widget.rank).border;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double size = radius * (512 / 95);
     return SizedBox(
-      height: MediaQuery.of(context).size.width / 2,
-      width: MediaQuery.of(context).size.width / 2,
-      child: LayoutBuilder(
-          builder: (context, constraints) {
-            double avatarRadius = constraints.maxWidth / 5.39;
-            return Stack(
+      height: size,
+      width: size,
+      child: Stack(
               children: [
                 Positioned(
-                  top: constraints.maxHeight / 2 - avatarRadius - constraints.maxHeight / 20.57,
-                  left: constraints.maxWidth / 2 - avatarRadius,
+                  top: size / 2 - radius - size * 19 / 512,
+                  left: size / 2 - radius,
                   child: CircleAvatar(
-                        radius: avatarRadius,
+                        radius: widget.radius,
                         child: publicId != null
                             ? CldImageWidget(
                                 publicId: publicId as String,
@@ -70,12 +76,11 @@ class AvatarWithRankBorderState extends State<AvatarWithRankBorder> {
                             : SvgPicture.asset(
                                 "assets/images/avatar/avatar.svg"))
                 ),
-                Positioned.fill(child: Image.asset('assets/images/ranking/Level_8.png', scale: 1, width: MediaQuery.of(context).size.width / 2,),
+                Positioned.fill(child: Image.asset(
+                getRankBorder(), scale: 1, width: size,),
               )
               ],
-            );
-          },
-        ),
+            )
     );
   }
 }

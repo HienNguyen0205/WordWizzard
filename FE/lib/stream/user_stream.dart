@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:wordwizzard/services/user.dart';
 
 class UserStream {

@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wordwizzard/constants/constants.dart';
 import 'package:wordwizzard/localization/language_constant.dart';
+import 'package:wordwizzard/services/topic.dart';
 import 'package:wordwizzard/widgets/test_result_item.dart';
 
 class MultipleChoiceTestScreen extends StatefulWidget {
@@ -15,13 +16,15 @@ class MultipleChoiceTestScreen extends StatefulWidget {
   final bool isInstantShowAnswer;
   final bool isAnswerWithTerm;
   final bool isAnswerWithDef;
+  final String id;
   const MultipleChoiceTestScreen(
       {super.key,
       required this.listWord,
       required this.questionQuantity,
       required this.isInstantShowAnswer,
       required this.isAnswerWithTerm,
-      required this.isAnswerWithDef});
+      required this.isAnswerWithDef,
+      required this.id});
 
   @override
   MultipleChoiceTestScreenState createState() =>
@@ -88,26 +91,27 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
   }
 
   void pickQuestion() {
-    String type = "";
-    if (isAnswerWithTerm && !isAnswerWithDef) {
-      type = "general";
-    } else if (!isAnswerWithTerm && isAnswerWithDef) {
-      type = "meaning";
-    } else {
-      int rand = Random().nextInt(2);
-      type = rand == 0 ? "general" : "meaning";
+    if(currStep < questionQuantity){
+      String type = "";
+      if (isAnswerWithTerm && !isAnswerWithDef) {
+        type = "general";
+      } else if (!isAnswerWithTerm && isAnswerWithDef) {
+        type = "meaning";
+      } else {
+        int rand = Random().nextInt(2);
+        type = rand == 0 ? "general" : "meaning";
+      }
+      setState(() {
+        question = listWord[currStep][type == "general" ? "meaning" : "general"];
+        answer = getSuffleAnswer(type);
+      });
     }
-    setState(() {
-      updateProgress();
-      question = listWord[currStep][type == "general" ? "meaning" : "general"];
-      answer = getSuffleAnswer(type);
-    });
   }
 
   void handleAnswer(int index) {
     setState(() {
       selectAnsIndex = index;
-      showResult = widget.isInstantShowAnswer == true;
+      showResult = widget.isInstantShowAnswer;
     });
     if(answer[selectAnsIndex]["isRightAns"]){
       testHistory.add({
@@ -144,17 +148,16 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
       wrongAns++;
     }
     if(widget.isInstantShowAnswer){
-      Timer(const Duration(seconds: 2), () {
-        currStep++;
-        showResult = false;
-        pickQuestion();
-        updateProgress();
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {  
+          showResult = false;
+        });
       });
-    }else{
-      currStep++;
-      pickQuestion();
-      updateProgress();
     }
+    currStep++;
+    pickQuestion();
+    updateProgress();
+    handleEndQuiz();
   }
 
   void updateProgress() {
@@ -191,6 +194,13 @@ class MultipleChoiceTestScreenState extends State<MultipleChoiceTestScreen> {
           throw Error();
       }
     });
+  }
+
+  void handleEndQuiz() {
+    if(currStep >= questionQuantity){
+      double correctPercent = rightAns / questionQuantity * 100;
+      handleMarkForUser(widget.id, rightAns, correctPercent);
+    }
   }
 
   @override

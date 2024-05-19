@@ -8,3 +8,8 @@ bool isPasswordValid(String password) {
       RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
   return passwordRegex.hasMatch(password);
 }
+
+bool isPhoneNumberValid(String phoneNumber) {
+  final regex = RegExp(r'^(?:\+84|0)(?:3|5|7|8|9)(?:\d{8})$');
+  return regex.hasMatch(phoneNumber);
+}

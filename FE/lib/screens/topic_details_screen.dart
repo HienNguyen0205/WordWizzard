@@ -19,7 +19,8 @@ import 'package:wordwizzard/widgets/flashcard.dart';
 
 class TopicDetailsScreen extends StatefulWidget {
   final String topicId;
-  const TopicDetailsScreen({super.key, required this.topicId});
+  final int? ranking;
+  const TopicDetailsScreen({super.key, required this.topicId, this.ranking});
 
   @override
   TopicDetailsScreenState createState() => TopicDetailsScreenState();
@@ -77,7 +78,7 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
 
   void handleLearnFlashcard(List<dynamic> list) {
     Navigator.of(context)
-        .pushNamed(flashcardRoute, arguments: {"listWords": list});
+        .pushNamed(flashcardRoute, arguments: {"listWords": list, "id": widget.topicId});
   }
 
   Widget _buildFlashCard(int index) {
@@ -218,12 +219,12 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
 
   void handleLearnQuiz(List<dynamic> listWord) {
     Navigator.of(context).pushNamed(testingSettingRoute,
-        arguments: {"listWord": listWord, "testType": "multipleChoice"});
+        arguments: {"id": widget.topicId, "listWord": listWord, "testType": "multipleChoice"});
   }
 
   void handleLearnFilling(List<dynamic> listWord) {
     Navigator.of(context).pushNamed(testingSettingRoute,
-        arguments: {"listWord": listWord, "testType": "filling"});
+        arguments: {"id": widget.topicId, "listWord": listWord, "testType": "filling"});
   }
 
   List<dynamic> getMarkWords() {
@@ -316,6 +317,10 @@ class TopicDetailsScreenState extends State<TopicDetailsScreen> {
                               )
                             ]),
                           )),
+                          widget.ranking != null ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text("Top ${widget.ranking} ${getTranslated(context, "popular_regular")}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                          ) : const SizedBox.shrink(),
                       _buildActionButton(
                           FontAwesomeIcons.noteSticky, "flashcard", () {
                         handleLearnFlashcard(words);

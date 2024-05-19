@@ -6,9 +6,10 @@ import 'package:wordwizzard/routes/route_contants.dart';
 import 'package:wordwizzard/widgets/select_item.dart';
 
 class TestSetting extends StatefulWidget {
+  final String id;
   final List<dynamic> listWord;
   final String testType;
-  const TestSetting({super.key, required this.listWord, required this.testType});
+  const TestSetting({super.key, required this.id, required this.listWord, required this.testType});
 
   @override
   TestSettingState createState() => TestSettingState();
@@ -131,6 +132,7 @@ class TestSettingState extends State<TestSetting> {
   void handleTakeATest() {
     if(widget.testType == "multipleChoice"){
       Navigator.of(context).pushReplacementNamed(multipleChoiceTestRoute, arguments: {
+        "id": widget.id,
         "listWord": listWord,
         "questionQuantity": questionQuantity,
         "isInstantShowAnswer": isShowAnswerInstantly,
@@ -139,6 +141,7 @@ class TestSettingState extends State<TestSetting> {
       });
     }else{
       Navigator.of(context).pushReplacementNamed(wordFillingTestRoute, arguments: {
+        "id": widget.id,
         "listWord": listWord,
         "questionQuantity": questionQuantity,
         "isInstantShowAnswer": isShowAnswerInstantly,

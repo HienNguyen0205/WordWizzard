@@ -242,10 +242,18 @@ const getPopularTopics = async (req, res) => {
         },
         createdAt: 1,
         words: 1,
+        count: 1,
       },
     },
   ]);
-
+  for (let i = 0; i < 10; i++) {
+    if (i < topics.length) {
+      topics[i].ranking = i + 1;
+    }
+    else {
+      break;
+    }
+  }
   return res.status(200).send({
     message: "Get popular topics successfully.",
     data: topics,

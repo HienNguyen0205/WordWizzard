@@ -3,7 +3,7 @@ import sharp from "sharp";
 const uploadImage = async (imagePath) => {
   try {
     return sharp(imagePath)
-      .resize({ width: 400, height: 200 })
+      .resize({ width: 400, height: 400 })
       .jpeg({ quality: 80 }) 
       .toBuffer() 
       .then((resizedImageBuffer) => {

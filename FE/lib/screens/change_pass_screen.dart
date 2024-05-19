@@ -8,7 +8,8 @@ import 'package:wordwizzard/utils/verify.dart';
 import 'package:wordwizzard/widgets/custom_toast.dart';
 
 class ChangePassScreen extends StatefulWidget {
-  const ChangePassScreen({super.key, required this.userId, required this.changeType});
+  const ChangePassScreen(
+      {super.key, required this.userId, required this.changeType});
   final String userId;
   final String changeType;
 
@@ -38,11 +39,11 @@ class ChangePassScreenState extends State<ChangePassScreen> {
     final FormState? form = _formKey.currentState;
     if (form != null && form.validate()) {
       form.save();
-      if(changeType == "reset"){
+      if (changeType == "reset") {
         handleResetPass(newPw, userId).then((val) {
           changePassRes(val["code"] == 0);
         });
-      }else{
+      } else {
         handleChangePw(pw, newPw).then((val) {
           changePassRes(val["code"] == 0);
         });
@@ -53,24 +54,21 @@ class ChangePassScreenState extends State<ChangePassScreen> {
   void changePassRes(bool status) {
     if (status) {
       fToast.showToast(
-          child: CustomToast(
-              text: getTranslated(context, "change_pass_success"),
+          child: const CustomToast(
+              text: "change_pass_success",
               color: Colors.green),
           gravity: ToastGravity.BOTTOM);
-      if(changeType == "reset"){
+      if (changeType == "reset") {
         Navigator.of(context).popUntil((route) => route.isFirst);
-      }else{
+      } else {
         Navigator.of(context).pop();
       }
     } else {
-      Fluttertoast.showToast(
-          msg: getTranslated(context, "change_pass_fail"),
-          backgroundColor: Colors.red,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      fToast.showToast(
+          child: CustomToast(
+              text: getTranslated(context, "change_pass_fail"),
+              color: Colors.red),
+          gravity: ToastGravity.BOTTOM);
     }
   }
 
@@ -78,7 +76,8 @@ class ChangePassScreenState extends State<ChangePassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, "create_new_pass"), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+        title: Text(getTranslated(context, "create_new_pass"),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
         centerTitle: true,
         leading: IconButton(
           icon: const FaIcon(FontAwesomeIcons.arrowLeft),
@@ -108,31 +107,32 @@ class ChangePassScreenState extends State<ChangePassScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      changeType == "change" ?
-                      TextFormField(
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return getTranslated(
-                                context, "empty_password_err_mess");
-                          } else if (!isPasswordValid(value)) {
-                            return getTranslated(
-                                context, "invalid_password_err_mess");
-                          } else {
-                            return null;
-                          }
-                        },
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: getTranslated(context, "current_pw"),
-                        ),
-                        onSaved: (value) {
-                          pw = value!;
-                        },
-                        onEditingComplete: () {
-                          FocusScope.of(context).nextFocus();
-                        },
-                      ) : const SizedBox.shrink(),
+                      changeType == "change"
+                          ? TextFormField(
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return getTranslated(
+                                      context, "empty_password_err_mess");
+                                } else if (!isPasswordValid(value)) {
+                                  return getTranslated(
+                                      context, "invalid_password_err_mess");
+                                } else {
+                                  return null;
+                                }
+                              },
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: getTranslated(context, "current_pw"),
+                              ),
+                              onSaved: (value) {
+                                pw = value!;
+                              },
+                              onEditingComplete: () {
+                                FocusScope.of(context).nextFocus();
+                              },
+                            )
+                          : const SizedBox.shrink(),
                       const SizedBox(
                         height: 20,
                       ),

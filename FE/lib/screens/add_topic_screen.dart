@@ -205,6 +205,7 @@ class AddTopicScreenState extends State<AddTopicScreen> {
                           return SelectItem(
                             title: topicTagItems[index].title,
                             icon: topicTagItems[index].icon,
+                            useLocale: true,
                             selected: index == tagIndex,
                           );
                         }),
@@ -271,7 +272,6 @@ class AddTopicScreenState extends State<AddTopicScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.topicDetails.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

@@ -51,12 +51,9 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
     XFile? image = await handleGetAvatar();
     if (image != null) {
       dynamic res = await handleUpdateAvatar(image);
-      debugPrint(res.toString());
-      // if(res["status"]){
-      //   setState(() {
-      //     publicId = res["data"];
-      //   });
-      // }
+      if (res["status"]) {
+        UserStream().getUserData();
+      }
     }
   }
 
@@ -66,11 +63,10 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
       form.save();
       handleUpdateUserInfo(fullname as String, phone as String).then((val) {
         if (val["code"] == 0) {
-          debugPrint(val.toString());
           UserStream().getUserData();
           fToast.showToast(
-              child: CustomToast(
-                  text: getTranslated(context, "update_profile_success")),
+              child: const CustomToast(
+                  text: "update_profile_success"),
               gravity: ToastGravity.BOTTOM);
         }
       });
@@ -117,10 +113,9 @@ class ChangeUserInfoScreenState extends State<ChangeUserInfoScreen> {
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: GestureDetector(
-                          onTap: handleChangeAvatar,
-                          child: Avatar(publicId: data["image"], radius: 48)
-                        )
-                    ),
+                            onTap: handleChangeAvatar,
+                            child:
+                                Avatar(publicId: data["image"], radius: 48))),
                     Padding(
                         padding: const EdgeInsets.only(top: 12, bottom: 32),
                         child: Text(

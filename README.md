@@ -28,76 +28,109 @@ Set daily goals to stay motivated and track your daily streak. The app reminds u
 Clean and intuitive UI with a responsive design that ensures a seamless experience on both Android and iOS devices.
 ## Screenshots
 
+## Screenshots
+
 **Splash screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/oiik6lcwp3kepjgxamjv)
-
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/qytpvwftmhqefu6aszvm)
-
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/jexcr67jhumghw3movab)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/oiik6lcwp3kepjgxamjv" width="200"/>
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/qytpvwftmhqefu6aszvm" width="200"/>
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/jexcr67jhumghw3movab" width="200"/>
+</div>
 
 **Sign in**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/wa7f4rspw4usc9a86pqh)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/wa7f4rspw4usc9a86pqh" width="200"/>
+</div>
 
 **Sign up**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/vgxipiu964cguzqovbio)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/vgxipiu964cguzqovbio" width="200"/>
+</div>
 
 **Forgot password**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/zusdptgvmr3u1en8r7x1)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/zusdptgvmr3u1en8r7x1" width="200"/>
+</div>
 
 **OTP screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/wjwr1brqpvtouggv32qi)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/wjwr1brqpvtouggv32qi" width="200"/>
+</div>
 
 **Home screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/hcudihbrcg2qs665vpp5)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/hcudihbrcg2qs665vpp5" width="200"/>
+</div>
 
 **Ranking screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/aepczwlnzgt0kspgwbnd)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/aepczwlnzgt0kspgwbnd" width="200"/>
+</div>
 
 **Library screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/amzikklin94ng3st2zgb)
-
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/pwaxca6kbig4d6qnv1z6)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/amzikklin94ng3st2zgb" width="200"/>
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/pwaxca6kbig4d6qnv1z6" width="200"/>
+</div>
 
 **Create topic screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/q6ub2ycddq8hexr6wcbz)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/q6ub2ycddq8hexr6wcbz" width="200"/>
+</div>
 
 **Create folder screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/kkziss5u3ojmqtohruk0)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/kkziss5u3ojmqtohruk0" width="200"/>
+</div>
 
 **Topic detail screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/rpcwvsrjn3nwjb1tukc7)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/rpcwvsrjn3nwjb1tukc7" width="200"/>
+</div>
 
 **Flashcard screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/urre3kq5lchm3klajnlk)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/urre3kq5lchm3klajnlk" width="200"/>
+</div>
 
 **Quiz screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/tn2vsrhqcpnja0luhrbw)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/tn2vsrhqcpnja0luhrbw" width="200"/>
+</div>
 
-**Typing pratice screen**
+**Typing practice screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/eyiz4b9aq1i2njjer84q)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/eyiz4b9aq1i2njjer84q" width="200"/>
+</div>
 
 **Edit profile screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/c970tpbppkve8y0rlkox)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/c970tpbppkve8y0rlkox" width="200"/>
+</div>
 
 **Change password screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/d5mcwwaqalcik4qjgrgz)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/d5mcwwaqalcik4qjgrgz" width="200"/>
+</div>
 
 **Setting screen**
 
-![App Screenshot](https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/lcztqyimyy7sdy6heitj)
+<div align="center">
+  <img src="https://res.cloudinary.com/dtrtjisrv/image/upload/f_auto,q_auto/v1/github/lcztqyimyy7sdy6heitj" width="200"/>
+</div>

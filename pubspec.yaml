@@ -26,7 +26,7 @@ dependencies:
   http: ^1.2.1
   http_parser: ^4.0.2
   image_picker: ^1.1.1
-  intl: ^0.18.1
+  intl: ^0.19.0
   introduction_screen: ^3.1.12
   jwt_decoder: ^2.0.1
   lottie: ^3.1.0
